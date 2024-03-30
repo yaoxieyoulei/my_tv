@@ -2,7 +2,6 @@ name: my_tv Release
 
 # action事件触发
 on:
-  workflow_dispatch:
   push:
     # push tag时触发
     tags:
@@ -68,3 +67,32 @@ jobs:
           name: my_tv-Release
           path: |
             build/app/outputs/flutter-apk/my_tv-*.apk
+
+  upload:
+    runs-on: ubuntu-latest
+
+    needs:
+      - android
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: my_tv-Release
+          path: ./my_tv-Release
+
+      - name: Install dependencies
+        run: sudo apt-get install tree -y
+
+      - name: Get version
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >>$GITHUB_OUTPUT
+
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: v${{ steps.version.outputs.version }}
+          token: ${{ secrets.GIT_TOKEN }}
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
+          allowUpdates: true
+          artifacts: my_tv-Release/*
