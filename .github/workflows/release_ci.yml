@@ -2,6 +2,7 @@ name: my_tv Release
 
 # action事件触发
 on:
+  workflow_dispatch:
   push:
     # push tag时触发
     tags:
