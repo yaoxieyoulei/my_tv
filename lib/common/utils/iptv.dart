@@ -15,9 +15,11 @@ class IPTVUtil {
         continue;
       }
 
+      final groupName = RegExp('group-title="(.*?)"').firstMatch(line)?.group(1) ?? '其他';
       final name = line.split(',')[1];
 
-      final groupName = RegExp('group-title="(.*?)"').firstMatch(line)?.group(1) ?? '其他';
+      if (groupName != '总台高清' && groupName != '卫视高清') continue;
+
       final group = groupList.firstWhere((it) => it.name == groupName, orElse: () {
         final group = IPTVGroup(idx: groupList.length, name: groupName, list: []);
         groupList.add(group);
