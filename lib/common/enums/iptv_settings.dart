@@ -16,6 +16,9 @@ enum IPTVSetting {
 
   /// epg缓存时间
   epgCacheTime,
+
+  /// 开机自启
+  bootLaunch,
 }
 
 /// 直播源类型
@@ -55,4 +58,7 @@ class IPTVSettings {
 
   static int get epgCacheTime => Global.prefs.getInt(IPTVSetting.epgCacheTime.toString()) ?? 0;
   static set epgCacheTime(int value) => Global.prefs.setInt(IPTVSetting.epgCacheTime.toString(), value);
+
+  static bool get bootLaunch => Global.prefs.getBool(IPTVSetting.bootLaunch.toString()) ?? false;
+  static set bootLaunch(bool value) => Global.prefs.setBool(IPTVSetting.bootLaunch.toString(), value);
 }

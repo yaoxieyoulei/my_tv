@@ -29,6 +29,16 @@ class _SettingsMainState extends State<SettingsMain> {
     _defList = [
       (
         widget: () => _buildSettingsItem(
+              title: '开机自启',
+              value: IPTVSettings.bootLaunch ? '启用' : '禁用',
+              description: '下次重启生效',
+            ),
+        onTap: () {
+          IPTVSettings.bootLaunch = !IPTVSettings.bootLaunch;
+        },
+      ),
+      (
+        widget: () => _buildSettingsItem(
               title: '直播源类型',
               value: IPTVSettings.iptvType.name,
               description:

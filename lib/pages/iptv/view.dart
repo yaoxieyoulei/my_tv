@@ -30,6 +30,12 @@ class _IPTVPageState extends State<IPTVPage> {
     _initData();
   }
 
+  @override
+  void dispose() {
+    playerStore.controller.pause().then((_) => playerStore.controller.dispose());
+    super.dispose();
+  }
+
   Future<void> _initData() async {
     reaction((_) => iptvStore.currentIPTV, (iptv) async {
       IPTVSettings.initialIPTVIdx = iptvStore.iptvList.indexOf(iptv);
