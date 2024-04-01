@@ -60,13 +60,16 @@ class _IPTVPageState extends State<IPTVPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildGestureListener(
-        child: Stack(
-          children: [
-            _buildPlayer(),
-            _buildIPTVInfo(),
-            _buildKeyboardListener(),
-            _buildChannelSelect(),
-          ],
+        child: Container(
+          color: Theme.of(context).colorScheme.background,
+          child: Stack(
+            children: [
+              _buildPlayer(),
+              _buildIPTVInfo(),
+              _buildKeyboardListener(),
+              _buildChannelSelect(),
+            ],
+          ),
         ),
       ),
     );
