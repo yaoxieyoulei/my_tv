@@ -8,21 +8,37 @@ class PanelIPTVInfo extends StatelessWidget {
   PanelIPTVInfo({super.key});
 
   final iptvStore = GetIt.I<IPTVStore>();
+  final playerStore = GetIt.I<PlayerStore>();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Observer(
-          builder: (_) => Text(
-            iptvStore.currentIPTV.name,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground,
-              fontSize: 80.sp,
-              fontWeight: FontWeight.bold,
+        Row(
+          children: [
+            Observer(
+              builder: (_) => Text(
+                iptvStore.currentIPTV.name,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
+                  fontSize: 80.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
+            SizedBox(width: 40.w),
+            Observer(
+              builder: (_) => Text(
+                playerStore.state == PlayerState.failed ? '播放失败' : '',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.error,
+                  fontSize: 80.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          ],
         ),
         Observer(
           builder: (_) => Text(

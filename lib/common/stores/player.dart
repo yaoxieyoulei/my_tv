@@ -7,6 +7,12 @@ part 'player.g.dart';
 
 class PlayerStore = PlayerStoreBase with _$PlayerStore;
 
+enum PlayerState {
+  waiting,
+  playing,
+  failed,
+}
+
 abstract class PlayerStoreBase with Store {
   /// 播放器
   @observable
@@ -20,10 +26,16 @@ abstract class PlayerStoreBase with Store {
   @observable
   Size resolution = Size.zero;
 
+  /// 播放状态
+  @observable
+  PlayerState state = PlayerState.waiting;
+
   /// 播放直播源
   @action
   Future<void> playIPTV(IPTV iptv) async {
     try {
+      state = PlayerState.waiting;
+
       await controller.pause();
       await controller.dispose();
 
@@ -31,10 +43,13 @@ abstract class PlayerStoreBase with Store {
       await controller.initialize();
       await controller.play();
 
+      state = PlayerState.playing;
       aspectRatio = controller.value.aspectRatio;
       resolution = controller.value.size;
     } catch (err) {
       Global.logger.e("播放失败", error: err);
+      state = PlayerState.failed;
+      rethrow;
     }
   }
 }

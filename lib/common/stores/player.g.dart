@@ -57,6 +57,22 @@ mixin _$PlayerStore on PlayerStoreBase, Store {
     });
   }
 
+  late final _$stateAtom =
+      Atom(name: 'PlayerStoreBase.state', context: context);
+
+  @override
+  PlayerState get state {
+    _$stateAtom.reportRead();
+    return super.state;
+  }
+
+  @override
+  set state(PlayerState value) {
+    _$stateAtom.reportWrite(value, super.state, () {
+      super.state = value;
+    });
+  }
+
   late final _$playIPTVAsyncAction =
       AsyncAction('PlayerStoreBase.playIPTV', context: context);
 
@@ -70,7 +86,8 @@ mixin _$PlayerStore on PlayerStoreBase, Store {
     return '''
 controller: ${controller},
 aspectRatio: ${aspectRatio},
-resolution: ${resolution}
+resolution: ${resolution},
+state: ${state}
     ''';
   }
 }
