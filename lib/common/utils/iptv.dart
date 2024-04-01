@@ -36,7 +36,6 @@ class IPTVUtil {
         groupIdx: group.idx,
         name: name,
         url: lines[lineIdx + 1],
-        logo: RegExp('tvg-logo="(.*?)"').firstMatch(line)?.group(1),
       );
 
       group.list.add(iptv);

@@ -15,21 +15,17 @@ class IPTV {
   /// 播放地址
   late String url;
 
-  /// 图标
-  late String? logo;
-
   IPTV({
     required this.idx,
     required this.channel,
     required this.groupIdx,
     required this.name,
     required this.url,
-    this.logo,
   });
 
   @override
   String toString() {
-    return 'IPTV{idx: $idx, channel: $channel, groupIdx: $groupIdx, name: $name, url: $url, logo: $logo}';
+    return 'IPTV{idx: $idx, channel: $channel, groupIdx: $groupIdx, name: $name, url: $url}';
   }
 }
 
