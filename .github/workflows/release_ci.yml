@@ -41,11 +41,17 @@ jobs:
       - name: 下载项目依赖
         run: flutter pub get
 
-      - name: flutter build apk
-        run: flutter build apk --release --split-per-abi
+      - name: 解码生成 jks
+        run: echo $KEYSTORE_BASE64 | base64 -di > android/app/keystore.jks
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
 
       - name: flutter build apk
-        run: flutter build apk --release
+        run: flutter build apk --release --target-platform android-arm64,android-arm
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD}}
 
       - name: 获取版本号
         id: version

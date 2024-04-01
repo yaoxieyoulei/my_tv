@@ -1,3 +1,5 @@
 library pages;
 
-export './live/index.dart';
+export './iptv/index.dart';
+export './panel/index.dart';
+export './settings/index.dart';

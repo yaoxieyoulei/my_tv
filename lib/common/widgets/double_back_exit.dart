@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class DoubleBackExit extends StatefulWidget {
   final Widget child;
@@ -27,7 +26,15 @@ class DoubleBackExitState extends State<DoubleBackExit> {
           if (_lastPressedAt == null || DateTime.now().difference(_lastPressedAt!) > const Duration(seconds: 1)) {
             //两次点击间隔超过1秒则重新计时
             _lastPressedAt = DateTime.now();
-            Fluttertoast.showToast(msg: "再按一次退出", gravity: ToastGravity.TOP);
+
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('再按一次退出'),
+                duration: Duration(seconds: 1),
+              ),
+            );
+
             return;
           }
 

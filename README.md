@@ -1,10 +1,4 @@
 <div align="center">
-    <img width="200" height="200" src="./screenshots/logo.webp">
-</div>
-
-
-
-<div align="center">
     <h1>我的电视</h1>
 <div align="center">
     
@@ -32,12 +26,12 @@
 
 ## 功能
 
-目前着重移动端(Android)，暂时没有适配桌面端、Pad端等
+目前着重移动端(Android)、电视端(Android)，暂时没有适配桌面端、Pad端等
 
-- [ ] 选台反转
+- [x] 选台反转
 - [x] 数字选台
 - [ ] 开机自启
-- [ ] 应用内更新
+- [ ] 应用更新
 
 ## 开发环境
 

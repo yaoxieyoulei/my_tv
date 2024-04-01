@@ -7,7 +7,7 @@ class IPTV {
   late int channel;
 
   /// 所属分组
-  late IPTVGroup group;
+  late int groupIdx;
 
   /// 名称
   late String name;
@@ -21,7 +21,7 @@ class IPTV {
   IPTV({
     required this.idx,
     required this.channel,
-    required this.group,
+    required this.groupIdx,
     required this.name,
     required this.url,
     this.logo,
@@ -29,7 +29,7 @@ class IPTV {
 
   @override
   String toString() {
-    return 'IPTV{idx: $idx, channel: $channel, group: $group, name: $name, url: $url, logo: $logo}';
+    return 'IPTV{idx: $idx, channel: $channel, groupIdx: $groupIdx, name: $name, url: $url, logo: $logo}';
   }
 }
 
