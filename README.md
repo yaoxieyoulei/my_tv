@@ -7,11 +7,14 @@
     
 <img src="./screenshots/shot_1.png" width="96%"/>
 <br/>
+<img src="./screenshots/shot_2.png" width="96%"/>
 </div>
 
 ## 使用
 
-遥控器操作方式主流电视直播软件一致，使用方向键控制频道选择，OK键进入频道，返回键退出频道选择界面。
+遥控器操作方式主流电视直播软件一致；使用方向键控制频道选择；OK键进入频道选择，返回键退出频道选择界面；菜单、帮助键进入设置页面。
+
+触摸操作方式：点击进入频道选择，双击进入设置页面，上下滑动切换频道。
 
 ## 下载
 
@@ -32,6 +35,8 @@
 - [x] 数字选台
 - [ ] 开机自启
 - [ ] 应用更新
+- [ ] 自定义直播源
+- [ ] 性能优化
 
 ## 开发环境
 
@@ -39,8 +44,6 @@
 [√] Flutter (Channel stable, 3.19.4, on Microsoft Windows [版本 10.0.19045.3448], locale zh-CN)
 [√] Windows Version (Installed version of Windows is version 10 or higher)
 [√] Android toolchain - develop for Android devices (Android SDK version 34.0.0)
-[X] Chrome - develop for the web (Cannot find Chrome executable at .\Google\Chrome\Application\chrome.exe)
-    ! Cannot find Chrome. Try setting CHROME_EXECUTABLE to a Chrome executable.
 [√] Visual Studio - develop Windows apps (Visual Studio 生成工具 2022 17.7.5)
 [√] Android Studio (version 2023.2)
 [√] VS Code, 64-bit edition (version 1.87.2)
