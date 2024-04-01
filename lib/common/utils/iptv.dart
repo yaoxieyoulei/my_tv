@@ -31,12 +31,12 @@ class IPTVUtil {
       });
 
       final iptv = IPTV(
-        idx: group.list.length,
-        channel: ++channel,
-        groupIdx: group.idx,
-        name: name,
-        url: lines[lineIdx + 1],
-      );
+          idx: group.list.length,
+          channel: ++channel,
+          groupIdx: group.idx,
+          name: name,
+          url: lines[lineIdx + 1],
+          tvgName: RegExp('tvg-name="(.*?)"').firstMatch(line)?.group(1) ?? '');
 
       group.list.add(iptv);
     }
@@ -68,7 +68,7 @@ class IPTVUtil {
     }
 
     final m3u = response.data.toString();
-    cacheM3u(m3u);
+    await cacheM3u(m3u);
 
     return m3u;
   }
@@ -94,6 +94,60 @@ class IPTVUtil {
   static Future<void> clearCacheM3u() async {
     IPTVSettings.iptvCacheTime = 0;
     final cacheFile = File('${(await getTemporaryDirectory()).path}/IPTV.m3u');
+    if (await cacheFile.exists()) {
+      await cacheFile.delete();
+    }
+  }
+
+  /// 获取远程epg
+  static Future<String> fetchEpg() async {
+    final now = DateTime.now();
+    final cacheAt = DateTime.fromMillisecondsSinceEpoch(IPTVSettings.epgCacheTime * 1000);
+
+    if (now.year == cacheAt.year && now.month == cacheAt.month && now.day == cacheAt.day) {
+      final cache = await getCacheEpg();
+
+      if (cache.isNotEmpty) {
+        Global.logger.d('[IPTV] 使用缓存epg');
+        return cache;
+      }
+    }
+
+    Global.logger.d('[IPTV] 获取远程epg: ${Constants.iptvEpg}');
+    final response = await Global.dio.get(Constants.iptvEpg);
+    if (response.statusCode != 200) {
+      final err = '[IPTV] 获取远程epg失败: ${response.statusCode}';
+      Global.logger.e(err);
+      throw Exception(err);
+    }
+
+    final epg = response.data.toString();
+    await cacheEpg(epg);
+
+    return epg;
+  }
+
+  /// 缓存epg
+  static Future<void> cacheEpg(String epg) async {
+    final cacheFile = File('${(await getTemporaryDirectory()).path}/IPTV_epg.xml');
+    await cacheFile.writeAsString(epg);
+    IPTVSettings.epgCacheTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+  }
+
+  /// 获取缓存epg
+  static Future<String> getCacheEpg() async {
+    final cacheFile = File('${(await getTemporaryDirectory()).path}/IPTV_epg.xml');
+    if (await cacheFile.exists()) {
+      return cacheFile.readAsString();
+    }
+
+    return '';
+  }
+
+  /// 清除epg缓存
+  static Future<void> clearCacheEpg() async {
+    IPTVSettings.epgCacheTime = 0;
+    final cacheFile = File('${(await getTemporaryDirectory()).path}/IPTV_epg.xml');
     if (await cacheFile.exists()) {
       await cacheFile.delete();
     }

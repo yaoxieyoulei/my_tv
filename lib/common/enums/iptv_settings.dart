@@ -13,6 +13,9 @@ enum IPTVSetting {
 
   /// 直播源缓存时间
   iptvCacheTime,
+
+  /// epg缓存时间
+  epgCacheTime,
 }
 
 /// 直播源类型
@@ -49,4 +52,7 @@ class IPTVSettings {
 
   static int get iptvCacheTime => Global.prefs.getInt(IPTVSetting.iptvCacheTime.toString()) ?? 0;
   static set iptvCacheTime(int value) => Global.prefs.setInt(IPTVSetting.iptvCacheTime.toString(), value);
+
+  static int get epgCacheTime => Global.prefs.getInt(IPTVSetting.epgCacheTime.toString()) ?? 0;
+  static set epgCacheTime(int value) => Global.prefs.setInt(IPTVSetting.epgCacheTime.toString(), value);
 }

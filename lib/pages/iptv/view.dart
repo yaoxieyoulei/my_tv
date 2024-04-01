@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:my_tv/common/index.dart';
 import 'package:my_tv/pages/index.dart';
+import 'package:my_tv/pages/panel/widgets/iptv_info.dart';
 import 'package:video_player/video_player.dart';
 
 class IPTVPage extends StatefulWidget {
@@ -44,6 +45,7 @@ class _IPTVPageState extends State<IPTVPage> {
       });
     });
 
+    iptvStore.refreshEpgXML();
     await iptvStore.refreshIPTVList();
     iptvStore.currentIPTV = iptvStore.iptvList[IPTVSettings.initialIPTVIdx];
   }
@@ -99,15 +101,7 @@ class _IPTVPageState extends State<IPTVPage> {
                   right: 0,
                   child: Container(
                     padding: const EdgeInsets.all(40).r,
-                    child: Text(
-                      iptvStore.currentIPTV.name,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onBackground,
-                        fontSize: 80.sp,
-                        fontWeight: FontWeight.bold,
-                        height: 1,
-                      ),
-                    ),
+                    child: PanelIPTVInfo(),
                   ),
                 ),
               ],

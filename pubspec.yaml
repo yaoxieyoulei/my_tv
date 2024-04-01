@@ -66,6 +66,8 @@ dependencies:
   dio_smart_retry: ^6.0.0
 
   path_provider: ^2.1.2
+  xml: ^6.5.0
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:
