@@ -21,6 +21,7 @@ class IPTVPage extends StatefulWidget {
 class _IPTVPageState extends State<IPTVPage> {
   final playerStore = GetIt.I<PlayerStore>();
   final iptvStore = GetIt.I<IPTVStore>();
+  final updateStore = GetIt.I<UpdateStore>();
 
   final _focusNode = FocusNode();
 
@@ -57,6 +58,8 @@ class _IPTVPageState extends State<IPTVPage> {
 
     await iptvStore.refreshIPTVList();
     iptvStore.currentIPTV = iptvStore.iptvList[IPTVSettings.initialIPTVIdx];
+
+    updateStore.refreshLatestRelease();
   }
 
   @override

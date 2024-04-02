@@ -70,6 +70,7 @@ dependencies:
   xml: ^6.5.0
   collection: ^1.18.0
   json_annotation: ^4.8.1
+  package_info_plus: ^6.0.0
 
 dev_dependencies:
   flutter_test:

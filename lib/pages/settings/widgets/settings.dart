@@ -15,6 +15,7 @@ class SettingsMain extends StatefulWidget {
 
 class _SettingsMainState extends State<SettingsMain> {
   final iptvStore = GetIt.I<IPTVStore>();
+  final updateStore = GetIt.I<UpdateStore>();
 
   final _focusNode = FocusNode();
   final _scrollController = ScrollController();
@@ -30,6 +31,22 @@ class _SettingsMainState extends State<SettingsMain> {
 
   void refreshDefList() {
     _defList = [
+      (
+        widget: () => _buildSettingsItem(
+              title: '应用更新',
+              value: updateStore.needUpdate ? '新版本' : '无更新',
+              description: '最新版本：${updateStore.latestRelease.tagName}',
+            ),
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text(updateStore.latestRelease.tagName),
+              content: Text(updateStore.latestRelease.description),
+            ),
+          );
+        },
+      ),
       (
         widget: () => _buildSettingsItem(
               title: '开机自启',
@@ -57,7 +74,7 @@ class _SettingsMainState extends State<SettingsMain> {
         widget: () => _buildSettingsItem(
               title: '节目单',
               value: IPTVSettings.epgEnable ? '启用' : '禁用',
-              description: '可能会有跳帧风险',
+              description: '首次加载时可能会有跳帧风险',
             ),
         onTap: () {
           IPTVSettings.epgEnable = !IPTVSettings.epgEnable;

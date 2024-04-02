@@ -26,7 +26,7 @@ class SettingsPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SettingsAppInfo(),
+                        SettingsAppInfo(),
                         SizedBox(height: 40.h),
                         const SettingsMain(),
                       ],

@@ -27,8 +27,10 @@ void main() async {
 
   await Global.init();
 
+  // 注册全局Store
   GetIt.I.registerSingleton(PlayerStore());
   GetIt.I.registerSingleton(IPTVStore());
+  GetIt.I.registerSingleton(UpdateStore());
 
   HttpOverrides.global = MyHttpOverrides();
 

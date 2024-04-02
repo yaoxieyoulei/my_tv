@@ -5,4 +5,7 @@ class Constants {
 
   /// 直播EPG
   static const iptvEpg = 'https://live.fanmingming.com/e.xml';
+
+  /// github release latest
+  static const githubReleaseLatest = 'https://api.github.com/repos/yaoxieyoulei/my_tv/releases/latest';
 }
