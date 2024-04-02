@@ -99,6 +99,22 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
+  late final _$epgListAtom =
+      Atom(name: 'IPTVStoreBase.epgList', context: context);
+
+  @override
+  List<Epg>? get epgList {
+    _$epgListAtom.reportRead();
+    return super.epgList;
+  }
+
+  @override
+  set epgList(List<Epg>? value) {
+    _$epgListAtom.reportWrite(value, super.epgList, () {
+      super.epgList = value;
+    });
+  }
+
   late final _$refreshIPTVListAsyncAction =
       AsyncAction('IPTVStoreBase.refreshIPTVList', context: context);
 
@@ -115,6 +131,7 @@ iptvList: ${iptvList},
 currentIPTV: ${currentIPTV},
 iptvInfoVisible: ${iptvInfoVisible},
 channelNo: ${channelNo},
+epgList: ${epgList},
 currentIPTVProgrammes: ${currentIPTVProgrammes}
     ''';
   }

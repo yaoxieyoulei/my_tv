@@ -49,6 +49,7 @@ class _SettingsMainState extends State<SettingsMain> {
         onTap: () {
           IPTVSettings.iptvType =
               IPTVSettingIPTVType.values[(IPTVSettings.iptvType.index + 1) % IPTVSettingIPTVType.values.length];
+          IPTVSettings.epgCacheHash = 0;
           iptvStore.refreshIPTVList();
         },
       ),
@@ -80,7 +81,8 @@ class _SettingsMainState extends State<SettingsMain> {
             ),
         onTap: () {
           if (IPTVSettings.iptvCacheTime > 0) {
-            IPTVUtil.clearCacheM3u();
+            IPTVSettings.iptvCacheTime = 0;
+            iptvStore.refreshIPTVList();
           }
         },
       ),

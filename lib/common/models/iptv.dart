@@ -1,22 +1,22 @@
 /// 直播源
 class IPTV {
   /// 序号
-  late int idx;
+  late final int idx;
 
   /// 频道号
-  late int channel;
+  late final int channel;
 
   /// 所属分组
-  late int groupIdx;
+  late final int groupIdx;
 
   /// 名称
-  late String name;
+  late final String name;
 
   /// 播放地址
-  late String url;
+  late final String url;
 
   /// tvg名称
-  late String tvgName;
+  late final String tvgName;
 
   IPTV({
     required this.idx,
@@ -38,13 +38,13 @@ class IPTV {
 /// 直播源分组
 class IPTVGroup {
   /// 序号
-  late int idx;
+  late final int idx;
 
   /// 名称
-  late String name;
+  late final String name;
 
   /// 直播源列表
-  late List<IPTV> list;
+  late final List<IPTV> list;
 
   IPTVGroup({required this.idx, required this.name, required this.list});
 

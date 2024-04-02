@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:mobx/mobx.dart';
 import 'package:my_tv/common/index.dart';
-import 'package:xml/xml.dart';
-import 'package:collection/collection.dart';
 
 part 'iptv.g.dart';
 
@@ -34,7 +33,8 @@ abstract class IPTVStoreBase with Store {
   Timer? confirmChannelTimer;
 
   /// 节目单
-  XmlDocument? epg;
+  @observable
+  List<Epg>? epgList;
 
   /// 获取上一个直播源
   IPTV getPrevIPTV({IPTV? iptv}) {
@@ -65,10 +65,11 @@ abstract class IPTVStoreBase with Store {
   /// 刷新直播源列表
   @action
   Future<void> refreshIPTVList() async {
-    iptvGroupList = IPTVUtil.parseFromM3u(await IPTVUtil.fetchM3u());
+    iptvGroupList = await IPTVUtil.refreshAndGet();
     iptvList = iptvGroupList.expand((e) => e.list).toList();
   }
 
+  /// 手动输入频道号
   void inputChannelNo(String no) {
     confirmChannelTimer?.cancel();
 
@@ -81,47 +82,15 @@ abstract class IPTVStoreBase with Store {
     });
   }
 
-  /// 刷新epg
-  Future<void> refreshEpgXML() async {
-    epg = XmlDocument.parse(await IPTVUtil.fetchEpg());
-  }
-
   @computed
   ({String current, String next}) get currentIPTVProgrammes {
-    final programmeList = epg
-        ?.getElement('tv')
-        ?.findAllElements('programme')
-        .where((element) => element.getAttribute('channel') == currentIPTV.tvgName)
-        .toList();
+    final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-    final currentProgramme = programmeList?.firstWhereOrNull((element) {
-      final start = element.getAttribute('start')!;
-      final startTime = DateTime(
-        int.parse(start.substring(0, 4)),
-        int.parse(start.substring(4, 6)),
-        int.parse(start.substring(6, 8)),
-        int.parse(start.substring(8, 10)),
-        int.parse(start.substring(10, 12)),
-        int.parse(start.substring(12, 14)),
-      );
+    final epg = epgList?.firstWhereOrNull((element) => element.channel == currentIPTV.tvgName);
 
-      final stop = element.getAttribute('stop')!;
-      final stopTime = DateTime(
-        int.parse(stop.substring(0, 4)),
-        int.parse(stop.substring(4, 6)),
-        int.parse(stop.substring(6, 8)),
-        int.parse(stop.substring(8, 10)),
-        int.parse(stop.substring(10, 12)),
-        int.parse(stop.substring(12, 14)),
-      );
+    final currentProgramme = epg?.programmes.firstWhereOrNull((element) => element.start <= now && element.stop >= now);
+    final nextProgramme = epg?.programmes.firstWhereOrNull((element) => element.start > now);
 
-      return startTime.isBefore(DateTime.now()) && stopTime.isAfter(DateTime.now());
-    });
-    final nextProgramme = currentProgramme?.nextElementSibling;
-
-    return (
-      current: currentProgramme?.getElement('title')?.innerText ?? '无节目',
-      next: nextProgramme?.getElement('title')?.innerText ?? '无节目'
-    );
+    return (current: currentProgramme?.title ?? '无节目', next: nextProgramme?.title ?? '无节目');
   }
 }

@@ -12,7 +12,7 @@ class Global {
   static late final SharedPreferences prefs;
 
   static Future<void> init() async {
-    logger = Logger();
+    logger = Logger(printer: PrettyPrinter(printTime: true));
 
     dio = Dio();
     dio.interceptors.add(RetryInterceptor(

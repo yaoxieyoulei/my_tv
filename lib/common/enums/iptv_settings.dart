@@ -15,7 +15,10 @@ enum IPTVSetting {
   iptvCacheTime,
 
   /// epg缓存时间
-  epgCacheTime,
+  epgXmlCacheTime,
+
+  /// epg解析hash
+  epgCacheHash,
 
   /// 开机自启
   bootLaunch,
@@ -59,8 +62,11 @@ class IPTVSettings {
   static int get iptvCacheTime => Global.prefs.getInt(IPTVSetting.iptvCacheTime.toString()) ?? 0;
   static set iptvCacheTime(int value) => Global.prefs.setInt(IPTVSetting.iptvCacheTime.toString(), value);
 
-  static int get epgCacheTime => Global.prefs.getInt(IPTVSetting.epgCacheTime.toString()) ?? 0;
-  static set epgCacheTime(int value) => Global.prefs.setInt(IPTVSetting.epgCacheTime.toString(), value);
+  static int get epgXmlCacheTime => Global.prefs.getInt(IPTVSetting.epgXmlCacheTime.toString()) ?? 0;
+  static set epgXmlCacheTime(int value) => Global.prefs.setInt(IPTVSetting.epgXmlCacheTime.toString(), value);
+
+  static int get epgCacheHash => Global.prefs.getInt(IPTVSetting.epgCacheHash.toString()) ?? 0;
+  static set epgCacheHash(int value) => Global.prefs.setInt(IPTVSetting.epgCacheHash.toString(), value);
 
   static bool get bootLaunch => Global.prefs.getBool(IPTVSetting.bootLaunch.toString()) ?? false;
   static set bootLaunch(bool value) => Global.prefs.setBool(IPTVSetting.bootLaunch.toString(), value);

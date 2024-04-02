@@ -51,8 +51,10 @@ class _IPTVPageState extends State<IPTVPage> {
       });
     });
 
-    // TODO 卡顿
-    // iptvStore.refreshEpgXML();
+    reaction((_) => iptvStore.iptvList, (list) async {
+      iptvStore.epgList = await EpgUtil.refreshAndGet(list.map((e) => e.tvgName).toList());
+    });
+
     await iptvStore.refreshIPTVList();
     iptvStore.currentIPTV = iptvStore.iptvList[IPTVSettings.initialIPTVIdx];
   }

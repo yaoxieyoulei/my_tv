@@ -32,7 +32,6 @@
 - 只在自家电视上测过，其他电视稳定性未知
 - 为了减少安装包大小，仅支持`armeabi-v7a`、`arm64-v8a`架构，`x86_64`自行编译
 
-
 ## 功能
 
 目前着重移动端(Android)、电视端(Android)，暂时没有适配桌面端、Pad端等
@@ -66,5 +65,6 @@
 - [my-tv](https://github.com/lizongying/my-tv)
 - [参考设计稿](https://github.com/lizongying/my-tv/issues/594)
 - [IPV6直播源](https://github.com/zhumeng11/IPTV)
+- [live](https://github.com/fanmingming/live)
 - [pilipala](https://github.com/guozhigq/pilipala)
 - 等等
