@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:my_tv/common/index.dart';
 
 class DirectionGestureDetector extends StatelessWidget {
   DirectionGestureDetector({
@@ -36,10 +35,8 @@ class DirectionGestureDetector extends StatelessWidget {
       },
       onVerticalDragEnd: (details) {
         if (_verticalTracker.getVelocity().pixelsPerSecond.dy > 100) {
-          Global.logger.d('[滑动] 向下滑动');
           onDragDown?.call();
         } else if (_verticalTracker.getVelocity().pixelsPerSecond.dy < -100) {
-          Global.logger.d('[滑动] 向上滑动');
           onDragUp?.call();
         }
       },
@@ -55,10 +52,8 @@ class DirectionGestureDetector extends StatelessWidget {
       },
       onHorizontalDragEnd: (details) {
         if (_horizontalTracker.getVelocity().pixelsPerSecond.dx > 100) {
-          Global.logger.d('[滑动] 向左滑动');
           onDragLeft?.call();
         } else if (_horizontalTracker.getVelocity().pixelsPerSecond.dx < -100) {
-          Global.logger.d('[滑动] 向右滑动');
           onDragRight?.call();
         }
       },

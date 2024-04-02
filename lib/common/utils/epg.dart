@@ -10,12 +10,12 @@ import 'package:xml/xml.dart';
 class EpgUtil {
   /// 获取远程epg xml
   static Future<String> _fetchXml() async {
-    Global.logger.d('[EPG] 获取远程epg xml: ${Constants.iptvEpg}');
+    Global.logger.debug('[EPG] 获取远程epg xml: ${Constants.iptvEpg}');
 
     final response = await Global.dio.get(Constants.iptvEpg);
     if (response.statusCode != 200) {
       final err = '[EPG] 获取远程epg失败: ${response.statusCode}';
-      Global.logger.e(err);
+      Global.logger.handle(err);
       throw Exception(err);
     }
 
@@ -37,7 +37,7 @@ class EpgUtil {
 
       return null;
     } catch (err) {
-      Global.logger.e(err);
+      Global.logger.handle(err);
       return null;
     }
   }
@@ -51,7 +51,7 @@ class EpgUtil {
       final cache = await _getCacheXml();
 
       if (cache != null) {
-        Global.logger.d('[EPG] 使用缓存epg xml');
+        Global.logger.debug('[EPG] 使用缓存epg xml');
         return cache;
       }
     }
@@ -127,7 +127,7 @@ class EpgUtil {
 
       return null;
     } catch (err) {
-      Global.logger.e(err);
+      Global.logger.handle(err);
       return null;
     }
   }
@@ -144,15 +144,15 @@ class EpgUtil {
       final cache = await _getCache();
 
       if (cache != null) {
-        Global.logger.d('[EPG] 使用缓存epg');
+        Global.logger.debug('[EPG] 使用缓存epg');
         return cache;
       }
     }
 
-    Global.logger.d('[EPG] 开始解析epg');
+    Global.logger.debug('[EPG] 开始解析epg');
     final startAt = DateTime.now().millisecondsSinceEpoch;
     final epgList = await compute((_) => _parseFromXml(xml, filteredChannels), 0);
-    Global.logger.d('[EPG] 解析epg完成，共${epgList.length}个频道，耗时：${DateTime.now().millisecondsSinceEpoch - startAt}ms');
+    Global.logger.debug('[EPG] 解析epg完成，共${epgList.length}个频道，耗时：${DateTime.now().millisecondsSinceEpoch - startAt}ms');
 
     final cacheFile = await _getCacheFile();
     await cacheFile.writeAsString(jsonEncode(epgList.map((e) => e.toJson()).toList()));

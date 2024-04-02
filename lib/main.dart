@@ -7,6 +7,7 @@ import 'package:my_tv/common/index.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_tv/pages/index.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,7 @@ void main() async {
   ));
 
   // 保持屏幕常亮
-  // WakelockPlus.enable();
+  WakelockPlus.enable();
 
   await Global.init();
 

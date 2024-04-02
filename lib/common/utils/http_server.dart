@@ -15,7 +15,7 @@ class HttpServerUtil {
     app.get('/api/iptv_settings/customIptvM3u', (request) async {
       var m3u = request.url.queryParameters['m3u'] as String;
 
-      Global.logger.d('[服务端] 设置自定义m3u: $m3u');
+      Global.logger.debug('[服务端] 设置自定义m3u: $m3u');
       IptvSettings.customIptvM3u = m3u;
       IptvSettings.iptvType = IptvSettingIptvType.full;
       IptvSettings.iptvCacheTime = 0;
@@ -28,6 +28,6 @@ class HttpServerUtil {
 
     var server = await io.serve(handler, InternetAddress.anyIPv4, Constants.httpServerPort);
 
-    Global.logger.d('[服务端] 启动 http://${server.address.host}:${server.port}');
+    Global.logger.debug('[服务端] 启动 http://${server.address.host}:${server.port}');
   }
 }

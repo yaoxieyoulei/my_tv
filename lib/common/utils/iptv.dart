@@ -9,12 +9,12 @@ class IptvUtil {
   static Future<String> _fetchM3u() async {
     final iptvM3u = IptvSettings.customIptvM3u.isNotEmpty ? IptvSettings.customIptvM3u : Constants.iptvM3u;
 
-    Global.logger.d('[Iptv] 获取远程m3u: $iptvM3u');
+    Global.logger.debug('[iptv] 获取远程m3u: $iptvM3u');
 
     final response = await Global.dio.get(iptvM3u);
     if (response.statusCode != 200) {
-      final err = '[Iptv] 获取远程m3u失败: ${response.statusCode}';
-      Global.logger.e(err);
+      final err = '[iptv] 获取远程m3u失败: ${response.statusCode}';
+      Global.logger.handle(err);
       throw Exception(err);
     }
 
@@ -36,7 +36,7 @@ class IptvUtil {
 
       return '';
     } catch (err) {
-      Global.logger.e(err);
+      Global.logger.handle(err);
       return '';
     }
   }
@@ -77,7 +77,7 @@ class IptvUtil {
       group.list.add(iptv);
     }
 
-    Global.logger.d('[Iptv] 解析m3u完成: ${groupList.length}个分组, $channel个频道');
+    Global.logger.debug('[iptv] 解析m3u完成: ${groupList.length}个分组, $channel个频道');
 
     return groupList;
   }
@@ -90,7 +90,7 @@ class IptvUtil {
       final cache = await _getCache();
 
       if (cache.isNotEmpty) {
-        Global.logger.d('[Iptv] 使用缓存m3u');
+        Global.logger.debug('[iptv] 使用缓存m3u');
         return _parseFromM3u(cache);
       }
     }

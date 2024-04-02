@@ -37,7 +37,7 @@ abstract class PlayerStoreBase with Store {
   @action
   Future<void> playIptv(Iptv iptv) async {
     try {
-      Global.logger.d('播放直播源: $iptv');
+      Global.logger.debug('播放直播源: $iptv');
       state = PlayerState.waiting;
 
       if (IptvSettings.smoothChangeChannel) {
@@ -67,7 +67,7 @@ abstract class PlayerStoreBase with Store {
       aspectRatio = controller.value.aspectRatio;
       resolution = controller.value.size;
     } catch (err) {
-      Global.logger.e("播放失败", error: err);
+      Global.logger.handle(err);
       state = PlayerState.failed;
       rethrow;
     }

@@ -39,7 +39,7 @@ abstract class UpdateStoreBase with Store {
   /// 获取最新release
   @action
   Future<void> refreshLatestRelease() async {
-    Global.logger.d('[更新] 开始检查更新: ${Constants.githubReleaseLatest}');
+    Global.logger.debug('[更新] 开始检查更新: ${Constants.githubReleaseLatest}');
 
     final packageInfo = await PackageInfo.fromPlatform();
     currentVersion = packageInfo.version;
@@ -48,7 +48,7 @@ abstract class UpdateStoreBase with Store {
 
     if (response.statusCode != 200) {
       final err = '[更新] 检查更新失败: ${response.statusCode}';
-      Global.logger.e(err);
+      Global.logger.handle(err);
       throw Exception(err);
     }
 
@@ -58,6 +58,6 @@ abstract class UpdateStoreBase with Store {
       description: response.data['body'],
     );
 
-    Global.logger.d('[更新] 检查更新成功: $latestRelease');
+    Global.logger.debug('[更新] 检查更新成功: $latestRelease');
   }
 }
