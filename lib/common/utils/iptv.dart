@@ -7,9 +7,11 @@ import 'package:path_provider/path_provider.dart';
 class IPTVUtil {
   /// 获取远程m3u
   static Future<String> _fetchM3u() async {
-    Global.logger.d('[IPTV] 获取远程m3u: ${Constants.iptvM3u}');
+    final iptvM3u = IPTVSettings.customIptvM3u.isNotEmpty ? IPTVSettings.customIptvM3u : Constants.iptvM3u;
 
-    final response = await Global.dio.get(Constants.iptvM3u);
+    Global.logger.d('[IPTV] 获取远程m3u: $iptvM3u');
+
+    final response = await Global.dio.get(iptvM3u);
     if (response.statusCode != 200) {
       final err = '[IPTV] 获取远程m3u失败: ${response.statusCode}';
       Global.logger.e(err);

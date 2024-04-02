@@ -8,4 +8,7 @@ class Constants {
 
   /// github release latest
   static const githubReleaseLatest = 'https://api.github.com/repos/yaoxieyoulei/my_tv/releases/latest';
+
+  /// http服务器端口
+  static const httpServerPort = 10381;
 }

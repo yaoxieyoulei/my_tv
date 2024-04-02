@@ -13,14 +13,11 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
 
   @override
   ({String current, String next}) get currentIPTVProgrammes =>
-      (_$currentIPTVProgrammesComputed ??=
-              Computed<({String current, String next})>(
-                  () => super.currentIPTVProgrammes,
-                  name: 'IPTVStoreBase.currentIPTVProgrammes'))
+      (_$currentIPTVProgrammesComputed ??= Computed<({String current, String next})>(() => super.currentIPTVProgrammes,
+              name: 'IPTVStoreBase.currentIPTVProgrammes'))
           .value;
 
-  late final _$iptvGroupListAtom =
-      Atom(name: 'IPTVStoreBase.iptvGroupList', context: context);
+  late final _$iptvGroupListAtom = Atom(name: 'IPTVStoreBase.iptvGroupList', context: context);
 
   @override
   List<IPTVGroup> get iptvGroupList {
@@ -35,8 +32,7 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
-  late final _$iptvListAtom =
-      Atom(name: 'IPTVStoreBase.iptvList', context: context);
+  late final _$iptvListAtom = Atom(name: 'IPTVStoreBase.iptvList', context: context);
 
   @override
   List<IPTV> get iptvList {
@@ -51,8 +47,7 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
-  late final _$currentIPTVAtom =
-      Atom(name: 'IPTVStoreBase.currentIPTV', context: context);
+  late final _$currentIPTVAtom = Atom(name: 'IPTVStoreBase.currentIPTV', context: context);
 
   @override
   IPTV get currentIPTV {
@@ -67,8 +62,7 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
-  late final _$iptvInfoVisibleAtom =
-      Atom(name: 'IPTVStoreBase.iptvInfoVisible', context: context);
+  late final _$iptvInfoVisibleAtom = Atom(name: 'IPTVStoreBase.iptvInfoVisible', context: context);
 
   @override
   bool get iptvInfoVisible {
@@ -83,8 +77,7 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
-  late final _$channelNoAtom =
-      Atom(name: 'IPTVStoreBase.channelNo', context: context);
+  late final _$channelNoAtom = Atom(name: 'IPTVStoreBase.channelNo', context: context);
 
   @override
   String get channelNo {
@@ -99,8 +92,7 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
-  late final _$epgListAtom =
-      Atom(name: 'IPTVStoreBase.epgList', context: context);
+  late final _$epgListAtom = Atom(name: 'IPTVStoreBase.epgList', context: context);
 
   @override
   List<Epg>? get epgList {
@@ -115,16 +107,14 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
-  late final _$refreshIPTVListAsyncAction =
-      AsyncAction('IPTVStoreBase.refreshIPTVList', context: context);
+  late final _$refreshIPTVListAsyncAction = AsyncAction('IPTVStoreBase.refreshIPTVList', context: context);
 
   @override
   Future<void> refreshIPTVList() {
     return _$refreshIPTVListAsyncAction.run(() => super.refreshIPTVList());
   }
 
-  late final _$refreshEpgListAsyncAction =
-      AsyncAction('IPTVStoreBase.refreshEpgList', context: context);
+  late final _$refreshEpgListAsyncAction = AsyncAction('IPTVStoreBase.refreshEpgList', context: context);
 
   @override
   Future<void> refreshEpgList() {

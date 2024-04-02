@@ -20,6 +20,9 @@ enum IPTVSetting {
   /// 直播源缓存时间
   iptvCacheTime,
 
+  /// 自定义直播源
+  customIptvM3u,
+
   /// 启用epg
   epgEnable,
 
@@ -70,6 +73,9 @@ class IPTVSettings {
 
   static int get iptvCacheTime => Global.prefs.getInt(IPTVSetting.iptvCacheTime.toString()) ?? 0;
   static set iptvCacheTime(int value) => Global.prefs.setInt(IPTVSetting.iptvCacheTime.toString(), value);
+
+  static String get customIptvM3u => Global.prefs.getString(IPTVSetting.customIptvM3u.toString()) ?? '';
+  static set customIptvM3u(String value) => Global.prefs.setString(IPTVSetting.customIptvM3u.toString(), value);
 
   static bool get epgEnable => Global.prefs.getBool(IPTVSetting.epgEnable.toString()) ?? true;
   static set epgEnable(bool value) => Global.prefs.setBool(IPTVSetting.epgEnable.toString(), value);

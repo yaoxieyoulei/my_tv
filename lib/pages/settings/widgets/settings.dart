@@ -74,6 +74,16 @@ class _SettingsMainState extends State<SettingsMain> {
       ),
       (
         widget: () => _buildSettingsItem(
+              title: '自定义直播源',
+              value: IPTVSettings.customIptvM3u.isNotEmpty ? '已启用' : '未启用',
+              description: '访问以下网址进行配置：http:://<设备IP>:${Constants.httpServerPort}',
+            ),
+        onTap: () {
+          iptvStore.refreshIPTVList();
+        },
+      ),
+      (
+        widget: () => _buildSettingsItem(
               title: '节目单',
               value: IPTVSettings.epgEnable ? '启用' : '禁用',
               description: '首次加载时可能会有跳帧风险',
