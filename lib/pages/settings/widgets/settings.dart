@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
 import 'package:my_tv/common/index.dart';
 
 class SettingsMain extends StatefulWidget {
@@ -13,6 +14,8 @@ class SettingsMain extends StatefulWidget {
 }
 
 class _SettingsMainState extends State<SettingsMain> {
+  final iptvStore = GetIt.I<IPTVStore>();
+
   final _focusNode = FocusNode();
   final _scrollController = ScrollController();
   late final List<({Widget Function(int) Function() widget, void Function() onTap})> _defList;
@@ -41,12 +44,12 @@ class _SettingsMainState extends State<SettingsMain> {
         widget: () => _buildSettingsItem(
               title: '直播源类型',
               value: IPTVSettings.iptvType.name,
-              description:
-                  IPTVSettings.iptvType == IPTVSettingIPTVType.full ? '显示完整直播源; 下次重启生效' : '显示精简直播源(仅央视、地方卫视); 下次重启生效',
+              description: IPTVSettings.iptvType == IPTVSettingIPTVType.full ? '显示完整直播源' : '显示精简直播源(仅央视、地方卫视)',
             ),
         onTap: () {
           IPTVSettings.iptvType =
               IPTVSettingIPTVType.values[(IPTVSettings.iptvType.index + 1) % IPTVSettingIPTVType.values.length];
+          iptvStore.refreshIPTVList();
         },
       ),
       (
@@ -57,6 +60,16 @@ class _SettingsMainState extends State<SettingsMain> {
             ),
         onTap: () {
           IPTVSettings.channelChangeFlip = !IPTVSettings.channelChangeFlip;
+        },
+      ),
+      (
+        widget: () => _buildSettingsItem(
+              title: '平滑换台',
+              value: IPTVSettings.smoothChangeChannel ? '启用' : '禁用',
+              description: '切换频道时无黑屏，启用后部分设备可能无法换台',
+            ),
+        onTap: () {
+          IPTVSettings.smoothChangeChannel = !IPTVSettings.smoothChangeChannel;
         },
       ),
       (

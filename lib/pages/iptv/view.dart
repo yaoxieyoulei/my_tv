@@ -51,7 +51,8 @@ class _IPTVPageState extends State<IPTVPage> {
       });
     });
 
-    iptvStore.refreshEpgXML();
+    // TODO 卡顿
+    // iptvStore.refreshEpgXML();
     await iptvStore.refreshIPTVList();
     iptvStore.currentIPTV = iptvStore.iptvList[IPTVSettings.initialIPTVIdx];
   }

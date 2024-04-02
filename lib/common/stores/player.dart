@@ -18,6 +18,9 @@ abstract class PlayerStoreBase with Store {
   @observable
   VideoPlayerController controller = VideoPlayerController.networkUrl(Uri.parse(''));
 
+  /// 下一个播放器
+  VideoPlayerController? nextController;
+
   /// 宽高比
   @observable
   double? aspectRatio;
@@ -34,14 +37,31 @@ abstract class PlayerStoreBase with Store {
   @action
   Future<void> playIPTV(IPTV iptv) async {
     try {
+      Global.logger.d('播放直播源: $iptv');
       state = PlayerState.waiting;
 
-      await controller.pause();
-      await controller.dispose();
+      if (IPTVSettings.smoothChangeChannel) {
+        await nextController?.pause();
+        await nextController?.dispose();
 
-      controller = VideoPlayerController.networkUrl(Uri.parse(iptv.url));
-      await controller.initialize();
-      await controller.play();
+        final oldPlayer = controller;
+        await oldPlayer.pause();
+
+        nextController = VideoPlayerController.networkUrl(Uri.parse(iptv.url));
+        await nextController!.initialize();
+        await nextController!.play();
+
+        controller = nextController!;
+        nextController = null;
+        await oldPlayer.dispose();
+      } else {
+        await controller.pause();
+        await controller.dispose();
+
+        controller = VideoPlayerController.networkUrl(Uri.parse(iptv.url));
+        await controller.initialize();
+        await controller.play();
+      }
 
       state = PlayerState.playing;
       aspectRatio = controller.value.aspectRatio;

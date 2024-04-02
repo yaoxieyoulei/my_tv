@@ -19,6 +19,9 @@ enum IPTVSetting {
 
   /// 开机自启
   bootLaunch,
+
+  /// 平滑换台
+  smoothChangeChannel,
 }
 
 /// 直播源类型
@@ -61,4 +64,7 @@ class IPTVSettings {
 
   static bool get bootLaunch => Global.prefs.getBool(IPTVSetting.bootLaunch.toString()) ?? false;
   static set bootLaunch(bool value) => Global.prefs.setBool(IPTVSetting.bootLaunch.toString(), value);
+
+  static bool get smoothChangeChannel => Global.prefs.getBool(IPTVSetting.smoothChangeChannel.toString()) ?? false;
+  static set smoothChangeChannel(bool value) => Global.prefs.setBool(IPTVSetting.smoothChangeChannel.toString(), value);
 }
