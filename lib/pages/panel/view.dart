@@ -26,53 +26,56 @@ class _PanelPageState extends State<PanelPage> {
       backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.5),
       body: SafeArea(
         child: _buildGestureListener(
-          child: Stack(
-            children: [
-              // 右上角
-              Positioned(
-                top: 20.h,
-                right: 20.w,
-                child: Row(
-                  children: [
-                    Observer(
-                      builder: (_) => PanelIPTVChannel(iptvStore.currentIPTV.channel.toString().padLeft(2, '0')),
-                    ),
-                    // 分隔
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(4, 0, 12, 0).r,
-                      child: SizedBox(
-                        height: 50.w,
-                        child: VerticalDivider(
-                          thickness: 2.w,
-                          color: Theme.of(context).colorScheme.onBackground,
+          child: Container(
+            color: Colors.transparent,
+            child: Stack(
+              children: [
+                // 右上角
+                Positioned(
+                  top: 20.h,
+                  right: 20.w,
+                  child: Row(
+                    children: [
+                      Observer(
+                        builder: (_) => PanelIPTVChannel(iptvStore.currentIPTV.channel.toString().padLeft(2, '0')),
+                      ),
+                      // 分隔
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(4, 0, 12, 0).r,
+                        child: SizedBox(
+                          height: 50.w,
+                          child: VerticalDivider(
+                            thickness: 2.w,
+                            color: Theme.of(context).colorScheme.onBackground,
+                          ),
                         ),
                       ),
-                    ),
-                    const PanelTime(),
-                  ],
-                ),
-              ),
-
-              // 底部
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.only(top: 20, left: 40).r,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PanelIPTVInfo(),
-                      SizedBox(height: 40.h),
-                      PanelPlayerInfo(),
-                      SizedBox(height: 40.h),
-                      const PanelIPTVList(),
+                      const PanelTime(),
                     ],
                   ),
                 ),
-              ),
-            ],
+
+                // 底部
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 20, left: 40).r,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        PanelIPTVInfo(),
+                        SizedBox(height: 40.h),
+                        PanelPlayerInfo(),
+                        SizedBox(height: 40.h),
+                        const PanelIPTVList(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

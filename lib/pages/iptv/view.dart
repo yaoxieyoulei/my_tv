@@ -61,7 +61,7 @@ class _IPTVPageState extends State<IPTVPage> {
     return Scaffold(
       body: _buildGestureListener(
         child: Container(
-          color: Theme.of(context).colorScheme.background,
+          color: Colors.transparent,
           child: Stack(
             children: [
               _buildPlayer(),
