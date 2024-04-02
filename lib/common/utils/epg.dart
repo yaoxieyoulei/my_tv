@@ -45,7 +45,7 @@ class EpgUtil {
   /// 刷新并获取epg xml
   static Future<String> _refreshAndGetXml() async {
     final now = DateTime.now();
-    final cacheAt = DateTime.fromMillisecondsSinceEpoch(IPTVSettings.epgXmlCacheTime * 1000);
+    final cacheAt = DateTime.fromMillisecondsSinceEpoch(IptvSettings.epgXmlCacheTime * 1000);
 
     if (now.year == cacheAt.year && now.month == cacheAt.month && now.day == cacheAt.day) {
       final cache = await _getCacheXml();
@@ -60,8 +60,8 @@ class EpgUtil {
 
     final cacheFile = await _getCacheXmlFile();
     await cacheFile.writeAsString(xml);
-    IPTVSettings.epgXmlCacheTime = now.millisecondsSinceEpoch ~/ 1000;
-    IPTVSettings.epgCacheHash = 0;
+    IptvSettings.epgXmlCacheTime = now.millisecondsSinceEpoch ~/ 1000;
+    IptvSettings.epgCacheHash = 0;
 
     return xml;
   }
@@ -134,13 +134,13 @@ class EpgUtil {
 
   /// 刷新并获取epg
   static Future<List<Epg>> refreshAndGet(List<String> filteredChannels) async {
-    if (!IPTVSettings.epgEnable) return [];
+    if (!IptvSettings.epgEnable) return [];
 
     final xml = await _refreshAndGetXml();
 
     final hashcode = filteredChannels.map((str) => str.hashCode).reduce((value, element) => value ^ element);
 
-    if (IPTVSettings.epgCacheHash == hashcode) {
+    if (IptvSettings.epgCacheHash == hashcode) {
       final cache = await _getCache();
 
       if (cache != null) {
@@ -156,7 +156,7 @@ class EpgUtil {
 
     final cacheFile = await _getCacheFile();
     await cacheFile.writeAsString(jsonEncode(epgList.map((e) => e.toJson()).toList()));
-    IPTVSettings.epgCacheHash = hashcode;
+    IptvSettings.epgCacheHash = hashcode;
 
     return epgList;
   }

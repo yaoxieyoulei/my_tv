@@ -14,7 +14,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final playerStore = GetIt.I<PlayerStore>();
-  final iptvStore = GetIt.I<IPTVStore>();
+  final iptvStore = GetIt.I<IptvStore>();
 
   @override
   void initState() {

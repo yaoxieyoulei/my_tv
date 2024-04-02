@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class PanelIPTVChannel extends StatelessWidget {
-  const PanelIPTVChannel(this.channel, {super.key});
+class PanelIptvChannel extends StatelessWidget {
+  const PanelIptvChannel(this.channel, {super.key});
 
   final String channel;
 

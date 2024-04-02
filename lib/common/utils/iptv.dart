@@ -3,17 +3,17 @@ import 'dart:io';
 import 'package:my_tv/common/index.dart';
 import 'package:path_provider/path_provider.dart';
 
-/// IPTV工具类
-class IPTVUtil {
+/// Iptv工具类
+class IptvUtil {
   /// 获取远程m3u
   static Future<String> _fetchM3u() async {
-    final iptvM3u = IPTVSettings.customIptvM3u.isNotEmpty ? IPTVSettings.customIptvM3u : Constants.iptvM3u;
+    final iptvM3u = IptvSettings.customIptvM3u.isNotEmpty ? IptvSettings.customIptvM3u : Constants.iptvM3u;
 
-    Global.logger.d('[IPTV] 获取远程m3u: $iptvM3u');
+    Global.logger.d('[Iptv] 获取远程m3u: $iptvM3u');
 
     final response = await Global.dio.get(iptvM3u);
     if (response.statusCode != 200) {
-      final err = '[IPTV] 获取远程m3u失败: ${response.statusCode}';
+      final err = '[Iptv] 获取远程m3u失败: ${response.statusCode}';
       Global.logger.e(err);
       throw Exception(err);
     }
@@ -23,7 +23,7 @@ class IPTVUtil {
 
   /// 获取缓存m3u文件
   static Future<File> _getCacheFile() async {
-    return File('${(await getTemporaryDirectory()).path}/IPTV.m3u');
+    return File('${(await getTemporaryDirectory()).path}/iptv.m3u');
   }
 
   /// 获取缓存m3u
@@ -42,8 +42,8 @@ class IPTVUtil {
   }
 
   /// 解析m3u
-  static List<IPTVGroup> _parseFromM3u(String m3u) {
-    var groupList = <IPTVGroup>[];
+  static List<IptvGroup> _parseFromM3u(String m3u) {
+    var groupList = <IptvGroup>[];
 
     final lines = m3u.split('\n');
 
@@ -56,17 +56,17 @@ class IPTVUtil {
       final groupName = RegExp('group-title="(.*?)"').firstMatch(line)?.group(1) ?? '其他';
       final name = line.split(',')[1];
 
-      if (IPTVSettings.iptvType == IPTVSettingIPTVType.simple) {
+      if (IptvSettings.iptvType == IptvSettingIptvType.simple) {
         if (groupName != '总台高清' && groupName != '卫视高清') continue;
       }
 
       final group = groupList.firstWhere((it) => it.name == groupName, orElse: () {
-        final group = IPTVGroup(idx: groupList.length, name: groupName, list: []);
+        final group = IptvGroup(idx: groupList.length, name: groupName, list: []);
         groupList.add(group);
         return group;
       });
 
-      final iptv = IPTV(
+      final iptv = Iptv(
           idx: group.list.length,
           channel: ++channel,
           groupIdx: group.idx,
@@ -77,20 +77,20 @@ class IPTVUtil {
       group.list.add(iptv);
     }
 
-    Global.logger.d('[IPTV] 解析m3u完成: ${groupList.length}个分组, $channel个频道');
+    Global.logger.d('[Iptv] 解析m3u完成: ${groupList.length}个分组, $channel个频道');
 
     return groupList;
   }
 
   /// 刷新并获取iptv
-  static Future<List<IPTVGroup>> refreshAndGet() async {
+  static Future<List<IptvGroup>> refreshAndGet() async {
     final now = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-    if (now - IPTVSettings.iptvCacheTime < 24 * 60 * 60) {
+    if (now - IptvSettings.iptvCacheTime < 24 * 60 * 60) {
       final cache = await _getCache();
 
       if (cache.isNotEmpty) {
-        Global.logger.d('[IPTV] 使用缓存m3u');
+        Global.logger.d('[Iptv] 使用缓存m3u');
         return _parseFromM3u(cache);
       }
     }
@@ -99,7 +99,7 @@ class IPTVUtil {
 
     final cacheFile = await _getCacheFile();
     await cacheFile.writeAsString(m3u);
-    IPTVSettings.iptvCacheTime = now;
+    IptvSettings.iptvCacheTime = now;
 
     return _parseFromM3u(m3u);
   }

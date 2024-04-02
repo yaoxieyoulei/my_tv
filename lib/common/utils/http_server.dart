@@ -16,10 +16,10 @@ class HttpServerUtil {
       var m3u = request.url.queryParameters['m3u'] as String;
 
       Global.logger.d('[服务端] 设置自定义m3u: $m3u');
-      IPTVSettings.customIptvM3u = m3u;
-      IPTVSettings.iptvType = IPTVSettingIPTVType.full;
-      IPTVSettings.iptvCacheTime = 0;
-      IPTVSettings.epgCacheHash = 0;
+      IptvSettings.customIptvM3u = m3u;
+      IptvSettings.iptvType = IptvSettingIptvType.full;
+      IptvSettings.iptvCacheTime = 0;
+      IptvSettings.epgCacheHash = 0;
 
       return shelf.Response.ok('success');
     });

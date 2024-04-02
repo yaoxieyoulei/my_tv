@@ -1,12 +1,12 @@
 import 'package:my_tv/common/index.dart';
 
 /// 直播设置
-enum IPTVSetting {
+enum IptvSetting {
   /// 开机自启
   bootLaunch,
 
   /// 初始直播源序号
-  initialIPTVIdx,
+  initialIptvIdx,
 
   /// 换台反转
   channelChangeFlip,
@@ -34,7 +34,7 @@ enum IPTVSetting {
 }
 
 /// 直播源类型
-enum IPTVSettingIPTVType {
+enum IptvSettingIptvType {
   /// 完整
   full,
 
@@ -42,47 +42,47 @@ enum IPTVSettingIPTVType {
   simple,
 }
 
-extension IPTVSettingIPTVTypeExtension on IPTVSettingIPTVType {
+extension IptvSettingIptvTypeExtension on IptvSettingIptvType {
   String get name {
     switch (this) {
-      case IPTVSettingIPTVType.full:
+      case IptvSettingIptvType.full:
         return '完整';
-      case IPTVSettingIPTVType.simple:
+      case IptvSettingIptvType.simple:
         return '精简';
     }
   }
 }
 
 /// 直播设置
-class IPTVSettings {
-  static bool get bootLaunch => Global.prefs.getBool(IPTVSetting.bootLaunch.toString()) ?? false;
-  static set bootLaunch(bool value) => Global.prefs.setBool(IPTVSetting.bootLaunch.toString(), value);
+class IptvSettings {
+  static bool get bootLaunch => Global.prefs.getBool(IptvSetting.bootLaunch.toString()) ?? false;
+  static set bootLaunch(bool value) => Global.prefs.setBool(IptvSetting.bootLaunch.toString(), value);
 
-  static int get initialIPTVIdx => Global.prefs.getInt(IPTVSetting.initialIPTVIdx.toString()) ?? 0;
-  static set initialIPTVIdx(int value) => Global.prefs.setInt(IPTVSetting.initialIPTVIdx.toString(), value);
+  static int get initialIptvIdx => Global.prefs.getInt(IptvSetting.initialIptvIdx.toString()) ?? 0;
+  static set initialIptvIdx(int value) => Global.prefs.setInt(IptvSetting.initialIptvIdx.toString(), value);
 
-  static bool get channelChangeFlip => Global.prefs.getBool(IPTVSetting.channelChangeFlip.toString()) ?? false;
-  static set channelChangeFlip(bool value) => Global.prefs.setBool(IPTVSetting.channelChangeFlip.toString(), value);
+  static bool get channelChangeFlip => Global.prefs.getBool(IptvSetting.channelChangeFlip.toString()) ?? false;
+  static set channelChangeFlip(bool value) => Global.prefs.setBool(IptvSetting.channelChangeFlip.toString(), value);
 
-  static bool get smoothChangeChannel => Global.prefs.getBool(IPTVSetting.smoothChangeChannel.toString()) ?? false;
-  static set smoothChangeChannel(bool value) => Global.prefs.setBool(IPTVSetting.smoothChangeChannel.toString(), value);
+  static bool get smoothChangeChannel => Global.prefs.getBool(IptvSetting.smoothChangeChannel.toString()) ?? false;
+  static set smoothChangeChannel(bool value) => Global.prefs.setBool(IptvSetting.smoothChangeChannel.toString(), value);
 
-  static IPTVSettingIPTVType get iptvType =>
-      IPTVSettingIPTVType.values[Global.prefs.getInt(IPTVSetting.iptvType.toString()) ?? 0];
-  static set iptvType(IPTVSettingIPTVType value) => Global.prefs.setInt(IPTVSetting.iptvType.toString(), value.index);
+  static IptvSettingIptvType get iptvType =>
+      IptvSettingIptvType.values[Global.prefs.getInt(IptvSetting.iptvType.toString()) ?? 0];
+  static set iptvType(IptvSettingIptvType value) => Global.prefs.setInt(IptvSetting.iptvType.toString(), value.index);
 
-  static int get iptvCacheTime => Global.prefs.getInt(IPTVSetting.iptvCacheTime.toString()) ?? 0;
-  static set iptvCacheTime(int value) => Global.prefs.setInt(IPTVSetting.iptvCacheTime.toString(), value);
+  static int get iptvCacheTime => Global.prefs.getInt(IptvSetting.iptvCacheTime.toString()) ?? 0;
+  static set iptvCacheTime(int value) => Global.prefs.setInt(IptvSetting.iptvCacheTime.toString(), value);
 
-  static String get customIptvM3u => Global.prefs.getString(IPTVSetting.customIptvM3u.toString()) ?? '';
-  static set customIptvM3u(String value) => Global.prefs.setString(IPTVSetting.customIptvM3u.toString(), value);
+  static String get customIptvM3u => Global.prefs.getString(IptvSetting.customIptvM3u.toString()) ?? '';
+  static set customIptvM3u(String value) => Global.prefs.setString(IptvSetting.customIptvM3u.toString(), value);
 
-  static bool get epgEnable => Global.prefs.getBool(IPTVSetting.epgEnable.toString()) ?? true;
-  static set epgEnable(bool value) => Global.prefs.setBool(IPTVSetting.epgEnable.toString(), value);
+  static bool get epgEnable => Global.prefs.getBool(IptvSetting.epgEnable.toString()) ?? true;
+  static set epgEnable(bool value) => Global.prefs.setBool(IptvSetting.epgEnable.toString(), value);
 
-  static int get epgXmlCacheTime => Global.prefs.getInt(IPTVSetting.epgXmlCacheTime.toString()) ?? 0;
-  static set epgXmlCacheTime(int value) => Global.prefs.setInt(IPTVSetting.epgXmlCacheTime.toString(), value);
+  static int get epgXmlCacheTime => Global.prefs.getInt(IptvSetting.epgXmlCacheTime.toString()) ?? 0;
+  static set epgXmlCacheTime(int value) => Global.prefs.setInt(IptvSetting.epgXmlCacheTime.toString(), value);
 
-  static int get epgCacheHash => Global.prefs.getInt(IPTVSetting.epgCacheHash.toString()) ?? 0;
-  static set epgCacheHash(int value) => Global.prefs.setInt(IPTVSetting.epgCacheHash.toString(), value);
+  static int get epgCacheHash => Global.prefs.getInt(IptvSetting.epgCacheHash.toString()) ?? 0;
+  static set epgCacheHash(int value) => Global.prefs.setInt(IptvSetting.epgCacheHash.toString(), value);
 }

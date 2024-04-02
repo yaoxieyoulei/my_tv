@@ -8,61 +8,67 @@ part of 'iptv.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$IPTVStore on IPTVStoreBase, Store {
-  Computed<({String current, String next})>? _$currentIPTVProgrammesComputed;
+mixin _$IptvStore on IptvStoreBase, Store {
+  Computed<({String current, String next})>? _$currentIptvProgrammesComputed;
 
   @override
-  ({String current, String next}) get currentIPTVProgrammes =>
-      (_$currentIPTVProgrammesComputed ??= Computed<({String current, String next})>(() => super.currentIPTVProgrammes,
-              name: 'IPTVStoreBase.currentIPTVProgrammes'))
+  ({String current, String next}) get currentIptvProgrammes =>
+      (_$currentIptvProgrammesComputed ??=
+              Computed<({String current, String next})>(
+                  () => super.currentIptvProgrammes,
+                  name: 'IptvStoreBase.currentIptvProgrammes'))
           .value;
 
-  late final _$iptvGroupListAtom = Atom(name: 'IPTVStoreBase.iptvGroupList', context: context);
+  late final _$iptvGroupListAtom =
+      Atom(name: 'IptvStoreBase.iptvGroupList', context: context);
 
   @override
-  List<IPTVGroup> get iptvGroupList {
+  List<IptvGroup> get iptvGroupList {
     _$iptvGroupListAtom.reportRead();
     return super.iptvGroupList;
   }
 
   @override
-  set iptvGroupList(List<IPTVGroup> value) {
+  set iptvGroupList(List<IptvGroup> value) {
     _$iptvGroupListAtom.reportWrite(value, super.iptvGroupList, () {
       super.iptvGroupList = value;
     });
   }
 
-  late final _$iptvListAtom = Atom(name: 'IPTVStoreBase.iptvList', context: context);
+  late final _$iptvListAtom =
+      Atom(name: 'IptvStoreBase.iptvList', context: context);
 
   @override
-  List<IPTV> get iptvList {
+  List<Iptv> get iptvList {
     _$iptvListAtom.reportRead();
     return super.iptvList;
   }
 
   @override
-  set iptvList(List<IPTV> value) {
+  set iptvList(List<Iptv> value) {
     _$iptvListAtom.reportWrite(value, super.iptvList, () {
       super.iptvList = value;
     });
   }
 
-  late final _$currentIPTVAtom = Atom(name: 'IPTVStoreBase.currentIPTV', context: context);
+  late final _$currentIptvAtom =
+      Atom(name: 'IptvStoreBase.currentIptv', context: context);
 
   @override
-  IPTV get currentIPTV {
-    _$currentIPTVAtom.reportRead();
-    return super.currentIPTV;
+  Iptv get currentIptv {
+    _$currentIptvAtom.reportRead();
+    return super.currentIptv;
   }
 
   @override
-  set currentIPTV(IPTV value) {
-    _$currentIPTVAtom.reportWrite(value, super.currentIPTV, () {
-      super.currentIPTV = value;
+  set currentIptv(Iptv value) {
+    _$currentIptvAtom.reportWrite(value, super.currentIptv, () {
+      super.currentIptv = value;
     });
   }
 
-  late final _$iptvInfoVisibleAtom = Atom(name: 'IPTVStoreBase.iptvInfoVisible', context: context);
+  late final _$iptvInfoVisibleAtom =
+      Atom(name: 'IptvStoreBase.iptvInfoVisible', context: context);
 
   @override
   bool get iptvInfoVisible {
@@ -77,7 +83,8 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
-  late final _$channelNoAtom = Atom(name: 'IPTVStoreBase.channelNo', context: context);
+  late final _$channelNoAtom =
+      Atom(name: 'IptvStoreBase.channelNo', context: context);
 
   @override
   String get channelNo {
@@ -92,7 +99,8 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
-  late final _$epgListAtom = Atom(name: 'IPTVStoreBase.epgList', context: context);
+  late final _$epgListAtom =
+      Atom(name: 'IptvStoreBase.epgList', context: context);
 
   @override
   List<Epg>? get epgList {
@@ -107,14 +115,16 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     });
   }
 
-  late final _$refreshIPTVListAsyncAction = AsyncAction('IPTVStoreBase.refreshIPTVList', context: context);
+  late final _$refreshIptvListAsyncAction =
+      AsyncAction('IptvStoreBase.refreshIptvList', context: context);
 
   @override
-  Future<void> refreshIPTVList() {
-    return _$refreshIPTVListAsyncAction.run(() => super.refreshIPTVList());
+  Future<void> refreshIptvList() {
+    return _$refreshIptvListAsyncAction.run(() => super.refreshIptvList());
   }
 
-  late final _$refreshEpgListAsyncAction = AsyncAction('IPTVStoreBase.refreshEpgList', context: context);
+  late final _$refreshEpgListAsyncAction =
+      AsyncAction('IptvStoreBase.refreshEpgList', context: context);
 
   @override
   Future<void> refreshEpgList() {
@@ -126,11 +136,11 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     return '''
 iptvGroupList: ${iptvGroupList},
 iptvList: ${iptvList},
-currentIPTV: ${currentIPTV},
+currentIptv: ${currentIptv},
 iptvInfoVisible: ${iptvInfoVisible},
 channelNo: ${channelNo},
 epgList: ${epgList},
-currentIPTVProgrammes: ${currentIPTVProgrammes}
+currentIptvProgrammes: ${currentIptvProgrammes}
     ''';
   }
 }

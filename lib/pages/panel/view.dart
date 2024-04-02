@@ -18,7 +18,7 @@ class PanelPage extends StatefulWidget {
 
 class _PanelPageState extends State<PanelPage> {
   final playerStore = GetIt.I<PlayerStore>();
-  final iptvStore = GetIt.I<IPTVStore>();
+  final iptvStore = GetIt.I<IptvStore>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class _PanelPageState extends State<PanelPage> {
                   child: Row(
                     children: [
                       Observer(
-                        builder: (_) => PanelIPTVChannel(iptvStore.currentIPTV.channel.toString().padLeft(2, '0')),
+                        builder: (_) => PanelIptvChannel(iptvStore.currentIptv.channel.toString().padLeft(2, '0')),
                       ),
                       // 分隔
                       Container(
@@ -65,11 +65,11 @@ class _PanelPageState extends State<PanelPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        PanelIPTVInfo(),
+                        PanelIptvInfo(),
                         SizedBox(height: 40.h),
                         PanelPlayerInfo(),
                         SizedBox(height: 40.h),
-                        const PanelIPTVList(),
+                        const PanelIptvList(),
                       ],
                     ),
                   ),

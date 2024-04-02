@@ -11,16 +11,16 @@ import 'package:my_tv/pages/index.dart';
 import 'package:my_tv/pages/panel/widgets/iptv_info.dart';
 import 'package:video_player/video_player.dart';
 
-class IPTVPage extends StatefulWidget {
-  const IPTVPage({super.key});
+class IptvPage extends StatefulWidget {
+  const IptvPage({super.key});
 
   @override
-  State<IPTVPage> createState() => _IPTVPageState();
+  State<IptvPage> createState() => _IptvPageState();
 }
 
-class _IPTVPageState extends State<IPTVPage> {
+class _IptvPageState extends State<IptvPage> {
   final playerStore = GetIt.I<PlayerStore>();
-  final iptvStore = GetIt.I<IPTVStore>();
+  final iptvStore = GetIt.I<IptvStore>();
   final updateStore = GetIt.I<UpdateStore>();
 
   final _focusNode = FocusNode();
@@ -38,15 +38,15 @@ class _IPTVPageState extends State<IPTVPage> {
   }
 
   Future<void> _initData() async {
-    reaction((_) => iptvStore.currentIPTV, (iptv) async {
-      IPTVSettings.initialIPTVIdx = iptvStore.iptvList.indexOf(iptv);
+    reaction((_) => iptvStore.currentIptv, (iptv) async {
+      IptvSettings.initialIptvIdx = iptvStore.iptvList.indexOf(iptv);
 
       iptvStore.iptvInfoVisible = true;
 
-      await playerStore.playIPTV(iptvStore.currentIPTV);
+      await playerStore.playIptv(iptvStore.currentIptv);
 
       Timer(const Duration(seconds: 1), () {
-        if (iptv == iptvStore.currentIPTV) {
+        if (iptv == iptvStore.currentIptv) {
           iptvStore.iptvInfoVisible = false;
         }
       });
@@ -56,8 +56,8 @@ class _IPTVPageState extends State<IPTVPage> {
       iptvStore.refreshEpgList();
     });
 
-    await iptvStore.refreshIPTVList();
-    iptvStore.currentIPTV = iptvStore.iptvList[IPTVSettings.initialIPTVIdx];
+    await iptvStore.refreshIptvList();
+    iptvStore.currentIptv = iptvStore.iptvList[IptvSettings.initialIptvIdx];
 
     updateStore.refreshLatestRelease();
   }
@@ -71,7 +71,7 @@ class _IPTVPageState extends State<IPTVPage> {
           child: Stack(
             children: [
               _buildPlayer(),
-              _buildIPTVInfo(),
+              _buildIptvInfo(),
               _buildKeyboardListener(),
               _buildChannelSelect(),
             ],
@@ -93,7 +93,7 @@ class _IPTVPageState extends State<IPTVPage> {
     );
   }
 
-  Widget _buildIPTVInfo() {
+  Widget _buildIptvInfo() {
     return Observer(
       builder: (_) => iptvStore.iptvInfoVisible
           ? Stack(
@@ -102,7 +102,7 @@ class _IPTVPageState extends State<IPTVPage> {
                   top: 20.h,
                   right: 20.w,
                   child: Text(
-                    iptvStore.currentIPTV.channel.toString().padLeft(2, '0'),
+                    iptvStore.currentIptv.channel.toString().padLeft(2, '0'),
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 90.sp,
@@ -116,7 +116,7 @@ class _IPTVPageState extends State<IPTVPage> {
                   right: 0,
                   child: Container(
                     padding: const EdgeInsets.all(40).r,
-                    child: PanelIPTVInfo(),
+                    child: PanelIptvInfo(),
                   ),
                 ),
               ],
@@ -135,22 +135,22 @@ class _IPTVPageState extends State<IPTVPage> {
         if (event.runtimeType == KeyUpEvent) {
           // 频道切换
           if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            if (IPTVSettings.channelChangeFlip) {
-              iptvStore.currentIPTV = iptvStore.getNextIPTV();
+            if (IptvSettings.channelChangeFlip) {
+              iptvStore.currentIptv = iptvStore.getNextIptv();
             } else {
-              iptvStore.currentIPTV = iptvStore.getPrevIPTV();
+              iptvStore.currentIptv = iptvStore.getPrevIptv();
             }
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            if (IPTVSettings.channelChangeFlip) {
-              iptvStore.currentIPTV = iptvStore.getPrevIPTV();
+            if (IptvSettings.channelChangeFlip) {
+              iptvStore.currentIptv = iptvStore.getPrevIptv();
             } else {
-              iptvStore.currentIPTV = iptvStore.getNextIPTV();
+              iptvStore.currentIptv = iptvStore.getNextIptv();
             }
           }
           // else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-          //   iptvStore.currentIPTV = iptvStore.getPrevGroupIPTV();
+          //   iptvStore.currentIptv = iptvStore.getPrevGroupIptv();
           // } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-          //   iptvStore.currentIPTV = iptvStore.getNextGroupIPTV();
+          //   iptvStore.currentIptv = iptvStore.getNextGroupIptv();
           // }
 
           // 打开面板
@@ -203,10 +203,10 @@ class _IPTVPageState extends State<IPTVPage> {
   /// 手势事件监听
   Widget _buildGestureListener({required Widget child}) {
     return DirectionGestureDetector(
-      onDragUp: () => iptvStore.currentIPTV = iptvStore.getNextIPTV(),
-      onDragDown: () => iptvStore.currentIPTV = iptvStore.getPrevIPTV(),
-      // onDragLeft: () => iptvStore.currentIPTV = iptvStore.getPrevGroupIPTV(),
-      // onDragRight: () => iptvStore.currentIPTV = iptvStore.getNextGroupIPTV(),
+      onDragUp: () => iptvStore.currentIptv = iptvStore.getNextIptv(),
+      onDragDown: () => iptvStore.currentIptv = iptvStore.getPrevIptv(),
+      // onDragLeft: () => iptvStore.currentIptv = iptvStore.getPrevGroupIptv(),
+      // onDragRight: () => iptvStore.currentIptv = iptvStore.getNextGroupIptv(),
       child: GestureDetector(
         onTap: () {
           _focusNode.requestFocus();

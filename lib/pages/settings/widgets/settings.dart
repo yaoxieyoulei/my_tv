@@ -14,7 +14,7 @@ class SettingsMain extends StatefulWidget {
 }
 
 class _SettingsMainState extends State<SettingsMain> {
-  final iptvStore = GetIt.I<IPTVStore>();
+  final iptvStore = GetIt.I<IptvStore>();
   final updateStore = GetIt.I<UpdateStore>();
 
   final _focusNode = FocusNode();
@@ -52,77 +52,77 @@ class _SettingsMainState extends State<SettingsMain> {
       (
         widget: () => _buildSettingsItem(
               title: '开机自启',
-              value: IPTVSettings.bootLaunch ? '启用' : '禁用',
+              value: IptvSettings.bootLaunch ? '启用' : '禁用',
               description: '下次重启生效',
             ),
         onTap: () {
-          IPTVSettings.bootLaunch = !IPTVSettings.bootLaunch;
+          IptvSettings.bootLaunch = !IptvSettings.bootLaunch;
         },
       ),
       (
         widget: () => _buildSettingsItem(
               title: '直播源类型',
-              value: IPTVSettings.iptvType.name,
-              description: IPTVSettings.iptvType == IPTVSettingIPTVType.full ? '显示完整直播源' : '显示精简直播源(仅央视、地方卫视)',
+              value: IptvSettings.iptvType.name,
+              description: IptvSettings.iptvType == IptvSettingIptvType.full ? '显示完整直播源' : '显示精简直播源(仅央视、地方卫视)',
             ),
         onTap: () {
-          IPTVSettings.iptvType =
-              IPTVSettingIPTVType.values[(IPTVSettings.iptvType.index + 1) % IPTVSettingIPTVType.values.length];
-          IPTVSettings.epgCacheHash = 0;
-          iptvStore.refreshIPTVList();
+          IptvSettings.iptvType =
+              IptvSettingIptvType.values[(IptvSettings.iptvType.index + 1) % IptvSettingIptvType.values.length];
+          IptvSettings.epgCacheHash = 0;
+          iptvStore.refreshIptvList();
         },
       ),
       (
         widget: () => _buildSettingsItem(
               title: '自定义直播源',
-              value: IPTVSettings.customIptvM3u.isNotEmpty ? '已启用' : '未启用',
+              value: IptvSettings.customIptvM3u.isNotEmpty ? '已启用' : '未启用',
               description: '访问以下网址进行配置：http:://<设备IP>:${Constants.httpServerPort}',
             ),
         onTap: () {
-          iptvStore.refreshIPTVList();
+          iptvStore.refreshIptvList();
         },
       ),
       (
         widget: () => _buildSettingsItem(
               title: '节目单',
-              value: IPTVSettings.epgEnable ? '启用' : '禁用',
+              value: IptvSettings.epgEnable ? '启用' : '禁用',
               description: '首次加载时可能会有跳帧风险',
             ),
         onTap: () {
-          IPTVSettings.epgEnable = !IPTVSettings.epgEnable;
+          IptvSettings.epgEnable = !IptvSettings.epgEnable;
           iptvStore.refreshEpgList();
         },
       ),
       (
         widget: () => _buildSettingsItem(
               title: '换台反转',
-              value: IPTVSettings.channelChangeFlip ? '反转' : '正常',
-              description: IPTVSettings.channelChangeFlip ? '方向键上：下一个频道，方向键下：上一个频道' : '方向键上：上一个频道，方向键下：下一个频道',
+              value: IptvSettings.channelChangeFlip ? '反转' : '正常',
+              description: IptvSettings.channelChangeFlip ? '方向键上：下一个频道，方向键下：上一个频道' : '方向键上：上一个频道，方向键下：下一个频道',
             ),
         onTap: () {
-          IPTVSettings.channelChangeFlip = !IPTVSettings.channelChangeFlip;
+          IptvSettings.channelChangeFlip = !IptvSettings.channelChangeFlip;
         },
       ),
       (
         widget: () => _buildSettingsItem(
               title: '平滑换台',
-              value: IPTVSettings.smoothChangeChannel ? '启用' : '禁用',
+              value: IptvSettings.smoothChangeChannel ? '启用' : '禁用',
               description: '切换频道时无黑屏，启用后部分设备可能无法换台',
             ),
         onTap: () {
-          IPTVSettings.smoothChangeChannel = !IPTVSettings.smoothChangeChannel;
+          IptvSettings.smoothChangeChannel = !IptvSettings.smoothChangeChannel;
         },
       ),
       (
         widget: () => _buildSettingsItem(
               title: '直播源缓存',
               value: '24小时',
-              description: IPTVSettings.iptvCacheTime > 0 ? "已缓存(点击清除缓存)" : "未缓存",
+              description: IptvSettings.iptvCacheTime > 0 ? "已缓存(点击清除缓存)" : "未缓存",
             ),
         onTap: () {
-          if (IPTVSettings.iptvCacheTime > 0) {
-            IPTVSettings.iptvCacheTime = 0;
-            iptvStore.refreshIPTVList();
+          if (IptvSettings.iptvCacheTime > 0) {
+            IptvSettings.iptvCacheTime = 0;
+            iptvStore.refreshIptvList();
           }
         },
       ),
@@ -130,12 +130,12 @@ class _SettingsMainState extends State<SettingsMain> {
         widget: () => _buildSettingsItem(
               title: '节目单缓存',
               value: '当天',
-              description: IPTVSettings.epgXmlCacheTime > 0 ? "已缓存(点击清除缓存)" : "未缓存",
+              description: IptvSettings.epgXmlCacheTime > 0 ? "已缓存(点击清除缓存)" : "未缓存",
             ),
         onTap: () {
-          if (IPTVSettings.epgXmlCacheTime > 0) {
-            IPTVSettings.epgXmlCacheTime = 0;
-            IPTVSettings.epgCacheHash = 0;
+          if (IptvSettings.epgXmlCacheTime > 0) {
+            IptvSettings.epgXmlCacheTime = 0;
+            IptvSettings.epgCacheHash = 0;
             iptvStore.refreshEpgList();
           }
         },

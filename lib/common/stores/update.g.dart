@@ -26,14 +26,10 @@ mixin _$UpdateStore on UpdateStoreBase, Store {
     return super.latestRelease;
   }
 
-  bool _latestReleaseIsInitialized = false;
-
   @override
   set latestRelease(GithubRelease value) {
-    _$latestReleaseAtom.reportWrite(
-        value, _latestReleaseIsInitialized ? super.latestRelease : null, () {
+    _$latestReleaseAtom.reportWrite(value, super.latestRelease, () {
       super.latestRelease = value;
-      _latestReleaseIsInitialized = true;
     });
   }
 
@@ -46,14 +42,10 @@ mixin _$UpdateStore on UpdateStoreBase, Store {
     return super.currentVersion;
   }
 
-  bool _currentVersionIsInitialized = false;
-
   @override
   set currentVersion(String value) {
-    _$currentVersionAtom.reportWrite(
-        value, _currentVersionIsInitialized ? super.currentVersion : null, () {
+    _$currentVersionAtom.reportWrite(value, super.currentVersion, () {
       super.currentVersion = value;
-      _currentVersionIsInitialized = true;
     });
   }
 

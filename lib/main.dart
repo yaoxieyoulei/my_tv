@@ -29,7 +29,7 @@ void main() async {
 
   // 注册全局Store
   GetIt.I.registerSingleton(PlayerStore());
-  GetIt.I.registerSingleton(IPTVStore());
+  GetIt.I.registerSingleton(IptvStore());
   GetIt.I.registerSingleton(UpdateStore());
 
   HttpOverrides.global = MyHttpOverrides();
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         ),
         localizationsDelegates: const [...GlobalMaterialLocalizations.delegates, GlobalWidgetsLocalizations.delegate],
         supportedLocales: const [Locale("zh", "CH"), Locale("en", "US")],
-        home: const DoubleBackExit(child: IPTVPage()),
+        home: const DoubleBackExit(child: IptvPage()),
       ),
     );
   }

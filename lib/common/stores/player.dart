@@ -35,12 +35,12 @@ abstract class PlayerStoreBase with Store {
 
   /// 播放直播源
   @action
-  Future<void> playIPTV(IPTV iptv) async {
+  Future<void> playIptv(Iptv iptv) async {
     try {
       Global.logger.d('播放直播源: $iptv');
       state = PlayerState.waiting;
 
-      if (IPTVSettings.smoothChangeChannel) {
+      if (IptvSettings.smoothChangeChannel) {
         await nextController?.pause();
         await nextController?.dispose();
 

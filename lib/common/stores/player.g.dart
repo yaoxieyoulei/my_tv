@@ -73,12 +73,12 @@ mixin _$PlayerStore on PlayerStoreBase, Store {
     });
   }
 
-  late final _$playIPTVAsyncAction =
-      AsyncAction('PlayerStoreBase.playIPTV', context: context);
+  late final _$playIptvAsyncAction =
+      AsyncAction('PlayerStoreBase.playIptv', context: context);
 
   @override
-  Future<void> playIPTV(IPTV iptv) {
-    return _$playIPTVAsyncAction.run(() => super.playIPTV(iptv));
+  Future<void> playIptv(Iptv iptv) {
+    return _$playIptvAsyncAction.run(() => super.playIptv(iptv));
   }
 
   @override

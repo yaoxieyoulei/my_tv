@@ -4,10 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tv/common/index.dart';
 
-class PanelIPTVInfo extends StatelessWidget {
-  PanelIPTVInfo({super.key});
+class PanelIptvInfo extends StatelessWidget {
+  PanelIptvInfo({super.key});
 
-  final iptvStore = GetIt.I<IPTVStore>();
+  final iptvStore = GetIt.I<IptvStore>();
   final playerStore = GetIt.I<PlayerStore>();
 
   @override
@@ -19,7 +19,7 @@ class PanelIPTVInfo extends StatelessWidget {
           children: [
             Observer(
               builder: (_) => Text(
-                iptvStore.currentIPTV.name,
+                iptvStore.currentIptv.name,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onBackground,
                   fontSize: 80.sp,
@@ -42,7 +42,7 @@ class PanelIPTVInfo extends StatelessWidget {
         ),
         Observer(
           builder: (_) => Text(
-            '正在播放：${iptvStore.currentIPTVProgrammes.current}',
+            '正在播放：${iptvStore.currentIptvProgrammes.current}',
             style: TextStyle(
               color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
               fontSize: 36.sp,

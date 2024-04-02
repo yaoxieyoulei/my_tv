@@ -1,5 +1,5 @@
 /// 直播源
-class IPTV {
+class Iptv {
   /// 序号
   late final int idx;
 
@@ -18,7 +18,7 @@ class IPTV {
   /// tvg名称
   late final String tvgName;
 
-  IPTV({
+  Iptv({
     required this.idx,
     required this.channel,
     required this.groupIdx,
@@ -29,14 +29,14 @@ class IPTV {
 
   @override
   String toString() {
-    return 'IPTV{idx: $idx, channel: $channel, groupIdx: $groupIdx, name: $name, url: $url, tvgName: $tvgName}';
+    return 'Iptv{idx: $idx, channel: $channel, groupIdx: $groupIdx, name: $name, url: $url, tvgName: $tvgName}';
   }
 
-  static IPTV get empty => IPTV(idx: 0, channel: 0, groupIdx: 0, name: '', url: '', tvgName: '');
+  static Iptv get empty => Iptv(idx: 0, channel: 0, groupIdx: 0, name: '', url: '', tvgName: '');
 }
 
 /// 直播源分组
-class IPTVGroup {
+class IptvGroup {
   /// 序号
   late final int idx;
 
@@ -44,14 +44,14 @@ class IPTVGroup {
   late final String name;
 
   /// 直播源列表
-  late final List<IPTV> list;
+  late final List<Iptv> list;
 
-  IPTVGroup({required this.idx, required this.name, required this.list});
+  IptvGroup({required this.idx, required this.name, required this.list});
 
   @override
   String toString() {
-    return 'IPTVGroup{idx: $idx, name: $name, list: ${list.length}}';
+    return 'IptvGroup{idx: $idx, name: $name, list: ${list.length}}';
   }
 
-  static IPTVGroup get empty => IPTVGroup(idx: 0, name: '', list: []);
+  static IptvGroup get empty => IptvGroup(idx: 0, name: '', list: []);
 }
