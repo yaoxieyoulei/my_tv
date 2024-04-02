@@ -1,6 +1,10 @@
 <div align="center">
     <h1>我的电视</h1>
 <div align="center">
+
+![GitHub repo size](https://img.shields.io/github/repo-size/yaoxieyoulei/my_tv)
+![GitHub Repo stars](https://img.shields.io/github/stars/yaoxieyoulei/my_tv)
+![GitHub all releases](https://img.shields.io/github/downloads/yaoxieyoulei/my_tv/total)
     
 </div>
     <p>使用Flutter开发的电视直播软件</p>
@@ -56,9 +60,9 @@
 - [x] 数字选台
 - [x] 节目单（正在播放）
 - [x] 开机自启
-- [ ] 应用更新
+- [x] 检测更新
 - [x] 平滑换台（换台时无黑屏）
-- [ ] 自定义直播源
+- [x] 自定义直播源
 - [ ] 性能优化
 
 ## 更新日志
