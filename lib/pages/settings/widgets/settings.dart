@@ -99,6 +99,20 @@ class _SettingsMainState extends State<SettingsMain> {
       ),
       (
         widget: () => _buildSettingsItem(
+              title: '节目单缓存',
+              value: '当天',
+              description: IPTVSettings.epgXmlCacheTime > 0 ? "已缓存(点击清除缓存)" : "未缓存",
+            ),
+        onTap: () {
+          if (IPTVSettings.epgXmlCacheTime > 0) {
+            IPTVSettings.epgXmlCacheTime = 0;
+            IPTVSettings.epgCacheHash = 0;
+            iptvStore.refreshEpgList();
+          }
+        },
+      ),
+      (
+        widget: () => _buildSettingsItem(
               title: '按键测试',
               value: '',
               description: '选中该项后，按任意键测试',
