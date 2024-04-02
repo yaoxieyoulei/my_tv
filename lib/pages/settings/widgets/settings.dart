@@ -42,7 +42,9 @@ class _SettingsMainState extends State<SettingsMain> {
             context: context,
             builder: (_) => AlertDialog(
               title: Text(updateStore.latestRelease.tagName),
-              content: Text(updateStore.latestRelease.description),
+              content: SingleChildScrollView(
+                child: Text(updateStore.latestRelease.description),
+              ),
             ),
           );
         },
