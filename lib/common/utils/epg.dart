@@ -134,6 +134,8 @@ class EpgUtil {
 
   /// 刷新并获取epg
   static Future<List<Epg>> refreshAndGet(List<String> filteredChannels) async {
+    if (!IPTVSettings.epgEnable) return [];
+
     final xml = await _refreshAndGetXml();
 
     final hashcode = filteredChannels.map((str) => str.hashCode).reduce((value, element) => value ^ element);

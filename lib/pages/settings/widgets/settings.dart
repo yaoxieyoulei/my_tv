@@ -55,6 +55,17 @@ class _SettingsMainState extends State<SettingsMain> {
       ),
       (
         widget: () => _buildSettingsItem(
+              title: '节目单',
+              value: IPTVSettings.epgEnable ? '启用' : '禁用',
+              description: '可能会有跳帧风险',
+            ),
+        onTap: () {
+          IPTVSettings.epgEnable = !IPTVSettings.epgEnable;
+          iptvStore.refreshEpgList();
+        },
+      ),
+      (
+        widget: () => _buildSettingsItem(
               title: '换台反转',
               value: IPTVSettings.channelChangeFlip ? '反转' : '正常',
               description: IPTVSettings.channelChangeFlip ? '方向键上：下一个频道，方向键下：上一个频道' : '方向键上：上一个频道，方向键下：下一个频道',

@@ -123,6 +123,14 @@ mixin _$IPTVStore on IPTVStoreBase, Store {
     return _$refreshIPTVListAsyncAction.run(() => super.refreshIPTVList());
   }
 
+  late final _$refreshEpgListAsyncAction =
+      AsyncAction('IPTVStoreBase.refreshEpgList', context: context);
+
+  @override
+  Future<void> refreshEpgList() {
+    return _$refreshEpgListAsyncAction.run(() => super.refreshEpgList());
+  }
+
   @override
   String toString() {
     return '''

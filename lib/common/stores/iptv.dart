@@ -69,6 +69,12 @@ abstract class IPTVStoreBase with Store {
     iptvList = iptvGroupList.expand((e) => e.list).toList();
   }
 
+  /// 刷新节目单
+  @action
+  Future<void> refreshEpgList() async {
+    epgList = await EpgUtil.refreshAndGet(iptvList.map((e) => e.tvgName).toList());
+  }
+
   /// 手动输入频道号
   void inputChannelNo(String no) {
     confirmChannelTimer?.cancel();

@@ -52,7 +52,7 @@ class _IPTVPageState extends State<IPTVPage> {
     });
 
     reaction((_) => iptvStore.iptvList, (list) async {
-      iptvStore.epgList = await EpgUtil.refreshAndGet(list.map((e) => e.tvgName).toList());
+      iptvStore.refreshEpgList();
     });
 
     await iptvStore.refreshIPTVList();
