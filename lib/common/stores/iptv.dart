@@ -34,7 +34,7 @@ abstract class IPTVStoreBase with Store {
   Timer? confirmChannelTimer;
 
   /// 节目单
-  var epg = XmlDocument.parse('<?xml version="1.0" encoding="UTF-8"?><tv></tv>');
+  XmlDocument? epg;
 
   /// 获取上一个直播源
   IPTV getPrevIPTV({IPTV? iptv}) {
@@ -89,7 +89,7 @@ abstract class IPTVStoreBase with Store {
   @computed
   ({String current, String next}) get currentIPTVProgrammes {
     final programmeList = epg
-        .getElement('tv')
+        ?.getElement('tv')
         ?.findAllElements('programme')
         .where((element) => element.getAttribute('channel') == currentIPTV.tvgName)
         .toList();
