@@ -129,63 +129,69 @@ class _IPTVPageState extends State<IPTVPage> {
       focusNode: _focusNode,
       child: Container(),
       onKeyEvent: (event) {
-        if (event.runtimeType != KeyUpEvent) return;
-
-        // 频道切换
-        if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-          if (IPTVSettings.channelChangeFlip) {
-            iptvStore.currentIPTV = iptvStore.getNextIPTV();
-          } else {
-            iptvStore.currentIPTV = iptvStore.getPrevIPTV();
+        if (event.runtimeType == KeyUpEvent) {
+          // 频道切换
+          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+            if (IPTVSettings.channelChangeFlip) {
+              iptvStore.currentIPTV = iptvStore.getNextIPTV();
+            } else {
+              iptvStore.currentIPTV = iptvStore.getPrevIPTV();
+            }
+          } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+            if (IPTVSettings.channelChangeFlip) {
+              iptvStore.currentIPTV = iptvStore.getPrevIPTV();
+            } else {
+              iptvStore.currentIPTV = iptvStore.getNextIPTV();
+            }
           }
-        } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-          if (IPTVSettings.channelChangeFlip) {
-            iptvStore.currentIPTV = iptvStore.getPrevIPTV();
-          } else {
-            iptvStore.currentIPTV = iptvStore.getNextIPTV();
+          // else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+          //   iptvStore.currentIPTV = iptvStore.getPrevGroupIPTV();
+          // } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+          //   iptvStore.currentIPTV = iptvStore.getNextGroupIPTV();
+          // }
+
+          // 打开面板
+          else if (event.logicalKey == LogicalKeyboardKey.select) {
+            _openPanel();
+          }
+
+          // 打开设置
+          else if ([
+            LogicalKeyboardKey.settings,
+            LogicalKeyboardKey.contextMenu,
+            LogicalKeyboardKey.help,
+          ].any((it) => it == event.logicalKey)) {
+            _openSettings();
+          }
+
+          // 数字选台
+          else if (event.logicalKey == LogicalKeyboardKey.digit0) {
+            iptvStore.inputChannelNo('0');
+          } else if (event.logicalKey == LogicalKeyboardKey.digit1) {
+            iptvStore.inputChannelNo('1');
+          } else if (event.logicalKey == LogicalKeyboardKey.digit2) {
+            iptvStore.inputChannelNo('2');
+          } else if (event.logicalKey == LogicalKeyboardKey.digit3) {
+            iptvStore.inputChannelNo('3');
+          } else if (event.logicalKey == LogicalKeyboardKey.digit4) {
+            iptvStore.inputChannelNo('4');
+          } else if (event.logicalKey == LogicalKeyboardKey.digit5) {
+            iptvStore.inputChannelNo('5');
+          } else if (event.logicalKey == LogicalKeyboardKey.digit6) {
+            iptvStore.inputChannelNo('6');
+          } else if (event.logicalKey == LogicalKeyboardKey.digit7) {
+            iptvStore.inputChannelNo('7');
+          } else if (event.logicalKey == LogicalKeyboardKey.digit8) {
+            iptvStore.inputChannelNo('8');
+          } else if (event.logicalKey == LogicalKeyboardKey.digit9) {
+            iptvStore.inputChannelNo('9');
           }
         }
-        // else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-        //   iptvStore.currentIPTV = iptvStore.getPrevGroupIPTV();
-        // } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        //   iptvStore.currentIPTV = iptvStore.getNextGroupIPTV();
-        // }
 
-        // 打开面板
-        else if (event.logicalKey == LogicalKeyboardKey.select) {
-          _openPanel();
-        }
-
-        // 打开设置
-        else if ([
-          LogicalKeyboardKey.settings,
-          LogicalKeyboardKey.contextMenu,
-          LogicalKeyboardKey.help,
-        ].any((it) => it == event.logicalKey)) {
-          _openSettings();
-        }
-
-        // 数字选台
-        else if (event.logicalKey == LogicalKeyboardKey.digit0) {
-          iptvStore.inputChannelNo('0');
-        } else if (event.logicalKey == LogicalKeyboardKey.digit1) {
-          iptvStore.inputChannelNo('1');
-        } else if (event.logicalKey == LogicalKeyboardKey.digit2) {
-          iptvStore.inputChannelNo('2');
-        } else if (event.logicalKey == LogicalKeyboardKey.digit3) {
-          iptvStore.inputChannelNo('3');
-        } else if (event.logicalKey == LogicalKeyboardKey.digit4) {
-          iptvStore.inputChannelNo('4');
-        } else if (event.logicalKey == LogicalKeyboardKey.digit5) {
-          iptvStore.inputChannelNo('5');
-        } else if (event.logicalKey == LogicalKeyboardKey.digit6) {
-          iptvStore.inputChannelNo('6');
-        } else if (event.logicalKey == LogicalKeyboardKey.digit7) {
-          iptvStore.inputChannelNo('7');
-        } else if (event.logicalKey == LogicalKeyboardKey.digit8) {
-          iptvStore.inputChannelNo('8');
-        } else if (event.logicalKey == LogicalKeyboardKey.digit9) {
-          iptvStore.inputChannelNo('9');
+        if (event.runtimeType == KeyRepeatEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.select) {
+            _openSettings();
+          }
         }
       },
     );

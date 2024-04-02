@@ -20,7 +20,7 @@ class _SettingsMainState extends State<SettingsMain> {
   final _scrollController = ScrollController();
   late final List<({Widget Function(int) Function() widget, void Function() onTap})> _defList;
 
-  var _selectedIdx = 0;
+  var _selectedIdx = -1;
 
   @override
   void initState() {
@@ -247,7 +247,9 @@ class _SettingsMainState extends State<SettingsMain> {
           _changeSelected(_selectedIdx + 1);
         } else if (event.logicalKey == LogicalKeyboardKey.select) {
           setState(() {
-            _defList[_selectedIdx].onTap();
+            if (_selectedIdx >= 0) {
+              _defList.elementAtOrNull(_selectedIdx)?.onTap();
+            }
           });
         } else {
           if (_selectedIdx == _defList.length - 1) {
