@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:my_tv/common/index.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
@@ -12,21 +13,27 @@ class HttpServerUtil {
 
   static var _isInitialized = false;
 
+  static String serverUrl = 'http://0.0.0.0:${Constants.httpServerPort}';
+
   static Future<void> init() async {
     if (_isInitialized) {
       return;
     }
 
     var app = Router();
-    app.get('/', (request) {
-      return shelf.Response.ok('Hello, world!');
+
+    app.get('/', (request) async {
+      return shelf.Response.ok(
+        await rootBundle.loadString('assets/web/index.html'),
+        headers: {'content-type': 'text/html'},
+      );
     });
 
-    app.get('/api/iptv_setting/customIptvSource', (request) async {
-      var m3u = request.url.queryParameters['m3u'] as String;
+    app.get('/api/IptvSettings/customIptvSource', (request) async {
+      var source = request.url.queryParameters['source'] as String;
 
-      _logger.debug('设置自定义m3u: $m3u');
-      IptvSettings.customIptvSource = m3u;
+      _logger.debug('设置自定义直播源: $source');
+      IptvSettings.customIptvSource = source;
       IptvSettings.iptvSourceSimplify = false;
       IptvSettings.iptvSourceCacheTime = 0;
       IptvSettings.epgCacheHash = 0;
@@ -37,7 +44,21 @@ class HttpServerUtil {
     var handler = const shelf.Pipeline().addMiddleware(shelf.logRequests()).addHandler(app.call);
 
     var server = await io.serve(handler, InternetAddress.anyIPv4, Constants.httpServerPort);
+
     _isInitialized = true;
-    _logger.debug('启动 http://${server.address.host}:${server.port}');
+    serverUrl = 'http://${await _getLocalIPV4()}:${server.port}';
+    _logger.debug('启动 $serverUrl');
+  }
+
+  static Future<String> _getLocalIPV4() async {
+    for (var interface in await NetworkInterface.list()) {
+      for (var addr in interface.addresses) {
+        if (addr.type == InternetAddressType.IPv4) {
+          return addr.address;
+        }
+      }
+    }
+
+    return '0.0.0.0';
   }
 }

@@ -27,11 +27,14 @@ class _PanelPageState extends State<PanelPage> {
       body: SafeArea(
         child: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: Stack(
-            children: [
-              _buildTopRight(context),
-              _buildBottom(),
-            ],
+          child: Container(
+            color: Colors.transparent,
+            child: Stack(
+              children: [
+                _buildTopRight(context),
+                _buildBottom(),
+              ],
+            ),
           ),
         ),
       ),

@@ -111,6 +111,7 @@ class IptvUtil {
         group = IptvGroup(idx: groupList.length, name: groupName, list: []);
         groupList.add(group);
       } else {
+        print(line);
         final name = line.split(',')[0];
         final url = line.split(',')[1];
 

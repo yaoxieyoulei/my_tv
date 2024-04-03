@@ -93,7 +93,7 @@ class _SettingsMainState extends State<SettingsMain> {
         SettingItem(
           title: '自定义直播源',
           value: () => IptvSettings.customIptvSource.isNotEmpty ? '已启用' : '未启用',
-          description: () => '访问以下网址进行配置：http:://<设备IP>:${Constants.httpServerPort}',
+          description: () => '访问以下网址进行配置：${HttpServerUtil.serverUrl}',
           onTap: () {
             if (IptvSettings.customIptvSource.isNotEmpty) {
               iptvStore.refreshIptvList();

@@ -30,25 +30,28 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SafeArea(
         child: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: Stack(
-            children: [
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  padding: const EdgeInsets.all(40).r,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SettingsAppInfo(),
-                      SizedBox(height: 30.h),
-                      const SettingsMain(),
-                    ],
+          child: Container(
+            color: Colors.transparent,
+            child: Stack(
+              children: [
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Container(
+                    padding: const EdgeInsets.all(40).r,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SettingsAppInfo(),
+                        SizedBox(height: 30.h),
+                        const SettingsMain(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
