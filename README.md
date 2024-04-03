@@ -9,6 +9,8 @@
 </div>
     <p>使用Flutter开发的电视直播软件</p>
     
+<img src="./screenshots/shot_3.png" width="96%"/>
+<br/>
 <img src="./screenshots/shot_1.png" width="96%"/>
 <br/>
 <img src="./screenshots/shot_2.png" width="96%"/>
