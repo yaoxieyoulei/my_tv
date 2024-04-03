@@ -8,8 +8,10 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:my_tv/common/index.dart';
 import 'package:my_tv/pages/index.dart';
+import 'package:my_tv/pages/panel/widgets/iptv_ch.dart';
 import 'package:my_tv/pages/panel/widgets/iptv_info.dart';
 import 'package:video_player/video_player.dart';
+import 'package:collection/collection.dart';
 
 class IptvPage extends StatefulWidget {
   const IptvPage({super.key});
@@ -42,9 +44,7 @@ class _IptvPageState extends State<IptvPage> {
       IptvSettings.initialIptvIdx = iptvStore.iptvList.indexOf(iptv);
 
       iptvStore.iptvInfoVisible = true;
-
       await playerStore.playIptv(iptvStore.currentIptv);
-
       Timer(const Duration(seconds: 1), () {
         if (iptv == iptvStore.currentIptv) {
           iptvStore.iptvInfoVisible = false;
@@ -52,12 +52,12 @@ class _IptvPageState extends State<IptvPage> {
       });
     });
 
-    reaction((_) => iptvStore.iptvList, (list) async {
+    reaction((_) => iptvStore.iptvList, (list) {
       iptvStore.refreshEpgList();
     });
 
     await iptvStore.refreshIptvList();
-    iptvStore.currentIptv = iptvStore.iptvList[IptvSettings.initialIptvIdx];
+    iptvStore.currentIptv = iptvStore.iptvList.elementAtOrNull(IptvSettings.initialIptvIdx) ?? iptvStore.iptvList.first;
 
     updateStore.refreshLatestRelease();
   }
@@ -66,16 +66,13 @@ class _IptvPageState extends State<IptvPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildGestureListener(
-        child: Container(
-          color: Colors.transparent,
-          child: Stack(
-            children: [
-              _buildPlayer(),
-              _buildIptvInfo(),
-              _buildKeyboardListener(),
-              _buildChannelSelect(),
-            ],
-          ),
+        child: Stack(
+          children: [
+            _buildPlayer(),
+            _buildIptvInfo(),
+            _buildKeyboardListener(),
+            _buildChannelSelect(),
+          ],
         ),
       ),
     );
@@ -93,30 +90,37 @@ class _IptvPageState extends State<IptvPage> {
     );
   }
 
+  /// 当前直播源信息
   Widget _buildIptvInfo() {
     return Observer(
       builder: (_) => iptvStore.iptvInfoVisible
           ? Stack(
               children: [
+                // 频道号
                 Positioned(
                   top: 20.h,
                   right: 20.w,
-                  child: Text(
-                    iptvStore.currentIptv.channel.toString().padLeft(2, '0'),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 90.sp,
-                      height: 1,
-                    ),
-                  ),
+                  child: PanelIptvChannel(iptvStore.currentIptv.channel.toString().padLeft(2, '0')),
                 ),
+                // 频道信息
                 Positioned(
                   bottom: 0,
                   left: 0,
                   right: 0,
                   child: Container(
-                    padding: const EdgeInsets.all(40).r,
-                    child: PanelIptvInfo(),
+                    padding: const EdgeInsets.all(20).r,
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20).r,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background.withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(20).r,
+                          ),
+                          child: PanelIptvInfo(epgShowFull: false),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -202,9 +206,9 @@ class _IptvPageState extends State<IptvPage> {
 
   /// 手势事件监听
   Widget _buildGestureListener({required Widget child}) {
-    return DirectionGestureDetector(
-      onDragUp: () => iptvStore.currentIptv = iptvStore.getNextIptv(),
-      onDragDown: () => iptvStore.currentIptv = iptvStore.getPrevIptv(),
+    return SwipeGestureDetector(
+      onSwipeUp: () => iptvStore.currentIptv = iptvStore.getNextIptv(),
+      onSwipeDown: () => iptvStore.currentIptv = iptvStore.getPrevIptv(),
       // onDragLeft: () => iptvStore.currentIptv = iptvStore.getPrevGroupIptv(),
       // onDragRight: () => iptvStore.currentIptv = iptvStore.getNextGroupIptv(),
       child: GestureDetector(
@@ -226,59 +230,16 @@ class _IptvPageState extends State<IptvPage> {
       top: 20.h,
       right: 20.w,
       child: Observer(
-        builder: (_) => Text(
-          iptvStore.channelNo,
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onBackground,
-            fontSize: 90.sp,
-            height: 1,
-          ),
-        ),
+        builder: (_) => PanelIptvChannel(iptvStore.channelNo),
       ),
     );
   }
 
-  Future<void> _openPanel() async {
-    await Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          // 透明渐变
-          return FadeTransition(
-            opacity: animation.drive(
-              Tween<double>(begin: 0.0, end: 1.0).chain(
-                CurveTween(curve: Curves.easeInOut),
-              ),
-            ),
-            child: child,
-          );
-        },
-        pageBuilder: (context, _, __) {
-          return const PanelPage();
-        },
-      ),
-    );
+  void _openPanel() {
+    NavigatorUtil.push(context, const PanelPage());
   }
 
-  Future<void> _openSettings() async {
-    await Navigator.of(context).push(
-      PageRouteBuilder(
-        opaque: false,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          // 透明渐变
-          return FadeTransition(
-            opacity: animation.drive(
-              Tween<double>(begin: 0.0, end: 1.0).chain(
-                CurveTween(curve: Curves.easeInOut),
-              ),
-            ),
-            child: child,
-          );
-        },
-        pageBuilder: (context, _, __) {
-          return const SettingsPage();
-        },
-      ),
-    );
+  void _openSettings() {
+    NavigatorUtil.push(context, const SettingsPage());
   }
 }

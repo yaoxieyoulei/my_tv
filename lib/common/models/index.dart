@@ -1,5 +1,5 @@
 library models;
 
-export './iptv.dart';
-export './epg.dart';
-export './release.dart';
+export 'iptv.dart';
+export 'epg.dart';
+export 'github_release.dart';

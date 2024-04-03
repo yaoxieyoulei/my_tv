@@ -25,67 +25,65 @@ class _PanelPageState extends State<PanelPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.5),
       body: SafeArea(
-        child: _buildGestureListener(
-          child: Container(
-            color: Colors.transparent,
-            child: Stack(
-              children: [
-                // 右上角
-                Positioned(
-                  top: 20.h,
-                  right: 20.w,
-                  child: Row(
-                    children: [
-                      Observer(
-                        builder: (_) => PanelIptvChannel(iptvStore.currentIptv.channel.toString().padLeft(2, '0')),
-                      ),
-                      // 分隔
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(4, 0, 12, 0).r,
-                        child: SizedBox(
-                          height: 50.w,
-                          child: VerticalDivider(
-                            thickness: 2.w,
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                        ),
-                      ),
-                      const PanelTime(),
-                    ],
-                  ),
-                ),
-
-                // 底部
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.only(top: 20, left: 40, right: 40).r,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        PanelIptvInfo(),
-                        SizedBox(height: 40.h),
-                        PanelPlayerInfo(),
-                        SizedBox(height: 40.h),
-                        const PanelIptvList(),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+        child: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Stack(
+            children: [
+              _buildTopRight(context),
+              _buildBottom(),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildGestureListener({required Widget child}) {
-    return GestureDetector(
-      onTap: () => Navigator.pop(context),
-      child: child,
+  // 右上角
+  Widget _buildTopRight(BuildContext context) {
+    return Positioned(
+      top: 20.h,
+      right: 20.w,
+      child: Row(
+        children: [
+          Observer(
+            builder: (_) => PanelIptvChannel(iptvStore.currentIptv.channel.toString().padLeft(2, '0')),
+          ),
+          // 分隔符
+          Container(
+            padding: const EdgeInsets.fromLTRB(4, 0, 12, 0).r,
+            child: SizedBox(
+              height: 50.w,
+              child: VerticalDivider(
+                thickness: 2.w,
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+            ),
+          ),
+          const PanelTime(),
+        ],
+      ),
+    );
+  }
+
+  // 底部
+  Positioned _buildBottom() {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        padding: const EdgeInsets.only(top: 20, left: 40).r,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            PanelIptvInfo(),
+            SizedBox(height: 30.h),
+            PanelPlayerInfo(),
+            SizedBox(height: 30.h),
+            const PanelIptvList(),
+          ],
+        ),
+      ),
     );
   }
 }

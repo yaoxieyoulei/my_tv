@@ -21,10 +21,10 @@ class Epg {
 
 @JsonSerializable()
 class EpgProgramme {
-  /// 开始时间（时间戳-秒）
+  /// 开始时间
   late final int start;
 
-  /// 结束时间（时间戳-秒）
+  /// 结束时间
   late final int stop;
 
   /// 节目名称

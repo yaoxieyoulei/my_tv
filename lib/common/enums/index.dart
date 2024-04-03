@@ -1,3 +1,4 @@
 library enums;
 
-export 'iptv_settings.dart';
+export 'iptv_setting.dart';
+export 'app_setting.dart';

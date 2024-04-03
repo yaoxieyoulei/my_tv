@@ -34,14 +34,12 @@ class _PanelIptvListState extends State<PanelIptvList> {
     _selectedIptv = iptvStore.currentIptv;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _groupScrollController.jumpTo(clampDouble(
-        _selectedIptv.groupIdx * 180.h,
+      _groupScrollController.jumpTo((_selectedIptv.groupIdx * 140.h).clamp(
         _groupScrollController.position.minScrollExtent,
         _groupScrollController.position.maxScrollExtent,
       ));
 
-      _listScrollController.jumpTo(clampDouble(
-        (_selectedIptv.idx - 1) * 300.w,
+      _listScrollController.jumpTo(((_selectedIptv.idx - 1) * 280.w).clamp(
         _listScrollController.position.minScrollExtent,
         _listScrollController.position.maxScrollExtent,
       ));
@@ -54,23 +52,21 @@ class _PanelIptvListState extends State<PanelIptvList> {
     });
 
     await _groupScrollController.animateTo(
-      clampDouble(
-        _selectedIptv.groupIdx * 180.h,
+      (_selectedIptv.groupIdx * 140.h).clamp(
         _groupScrollController.position.minScrollExtent,
         _groupScrollController.position.maxScrollExtent,
       ),
       duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
+      curve: Curves.linear,
     );
 
     await _listScrollController.animateTo(
-      clampDouble(
-        (_selectedIptv.idx - 1) * 300.w,
+      ((_selectedIptv.idx - 1) * 280.w).clamp(
         _listScrollController.position.minScrollExtent,
         _listScrollController.position.maxScrollExtent,
       ),
       duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
+      curve: Curves.linear,
     );
   }
 
@@ -87,7 +83,7 @@ class _PanelIptvListState extends State<PanelIptvList> {
   /// 直播源分组列表
   Widget _buildIptvGroupList() {
     return SizedBox(
-      height: 280.h,
+      height: 240.h,
       child: Observer(
         builder: (_) => ListView.separated(
           controller: _groupScrollController,
@@ -95,15 +91,16 @@ class _PanelIptvListState extends State<PanelIptvList> {
             final group = iptvStore.iptvGroupList[index];
 
             return SizedBox(
-              height: 160.h,
+              height: 120.h,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // 分组名称
                   Text(
                     group.name,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onBackground,
-                      fontSize: 30.sp,
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -123,7 +120,7 @@ class _PanelIptvListState extends State<PanelIptvList> {
   /// 直播源列表
   Widget _buildIptvList(IptvGroup group) {
     return SizedBox(
-      height: 100.h,
+      height: 80.h,
       child: ListView.separated(
         controller: group.idx == _selectedIptv.groupIdx ? _listScrollController : null,
         itemBuilder: (context, index) => _buildIptvItem(group.list[index]),
@@ -144,24 +141,41 @@ class _PanelIptvListState extends State<PanelIptvList> {
         Navigator.pop(context);
       },
       child: Container(
-          width: 280.w,
+          width: 260.w,
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10).r,
           decoration: BoxDecoration(
             color: _selectedIptv == iptv
                 ? Theme.of(context).colorScheme.onBackground
                 : Theme.of(context).colorScheme.background.withOpacity(0.8),
             borderRadius: BorderRadius.circular(20).r,
           ),
-          child: Center(
-            child: Text(
-              textAlign: TextAlign.center,
-              iptv.name.replaceFirst(' ', '\n'),
-              style: TextStyle(
-                color: _selectedIptv == iptv
-                    ? Theme.of(context).colorScheme.background
-                    : Theme.of(context).colorScheme.onBackground,
-                fontSize: 36.sp,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                iptv.name,
+                style: TextStyle(
+                  color: _selectedIptv == iptv
+                      ? Theme.of(context).colorScheme.background
+                      : Theme.of(context).colorScheme.onBackground,
+                  fontSize: 30.sp,
+                ),
+                maxLines: 1,
               ),
-            ),
+              Observer(
+                builder: (_) => Text(
+                  iptvStore.getIptvProgrammes(iptv).current,
+                  style: TextStyle(
+                    color: _selectedIptv == iptv
+                        ? Theme.of(context).colorScheme.background.withOpacity(0.8)
+                        : Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
+                    fontSize: 24.sp,
+                  ),
+                  maxLines: 1,
+                ),
+              ),
+            ],
           )),
     );
   }
@@ -173,22 +187,20 @@ class _PanelIptvListState extends State<PanelIptvList> {
       focusNode: _focusNode,
       child: Container(),
       onKeyEvent: (event) {
-        if (event.runtimeType != KeyUpEvent) return;
-
-        setState(() {
+        if (event.runtimeType == KeyUpEvent) {
           if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            _changeSelectedIptv(iptvStore.getPrevGroupIptv(iptv: _selectedIptv));
+            _changeSelectedIptv(iptvStore.getPrevGroupIptv(_selectedIptv));
           } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            _changeSelectedIptv(iptvStore.getNextGroupIptv(iptv: _selectedIptv));
+            _changeSelectedIptv(iptvStore.getNextGroupIptv(_selectedIptv));
           } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-            _changeSelectedIptv(iptvStore.getPrevIptv(iptv: _selectedIptv));
+            _changeSelectedIptv(iptvStore.getPrevIptv(_selectedIptv));
           } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-            _changeSelectedIptv(iptvStore.getNextIptv(iptv: _selectedIptv));
+            _changeSelectedIptv(iptvStore.getNextIptv(_selectedIptv));
           } else if (event.logicalKey == LogicalKeyboardKey.select) {
             iptvStore.currentIptv = _selectedIptv;
             Navigator.pop(context);
           }
-        });
+        }
       },
     );
   }

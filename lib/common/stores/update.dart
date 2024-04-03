@@ -23,6 +23,8 @@ int _compareVersions(String version1, String version2) {
   return 0;
 }
 
+final _logger = LoggerUtil.create(['更新']);
+
 abstract class UpdateStoreBase with Store {
   /// 最新release
   @observable
@@ -32,32 +34,25 @@ abstract class UpdateStoreBase with Store {
   @observable
   String currentVersion = '0.0.0';
 
-  /// 需要更新
+  /// 发现更新
   @computed
   bool get needUpdate => _compareVersions(latestRelease.tagName.substring(1), currentVersion) > 0;
 
   /// 获取最新release
   @action
   Future<void> refreshLatestRelease() async {
-    Global.logger.debug('[更新] 开始检查更新: ${Constants.githubReleaseLatest}');
+    _logger.debug('开始检查更新: ${Constants.githubReleaseLatest}');
 
     final packageInfo = await PackageInfo.fromPlatform();
     currentVersion = packageInfo.version;
 
-    final response = await Global.dio.get(Constants.githubReleaseLatest);
-
-    if (response.statusCode != 200) {
-      final err = '[更新] 检查更新失败: ${response.statusCode}';
-      Global.logger.handle(err);
-      throw Exception(err);
-    }
-
+    final result = await RequestUtil.get(Constants.githubReleaseLatest);
     latestRelease = GithubRelease(
-      tagName: response.data['tag_name'],
-      downloadUrl: response.data['assets'][0]['browser_download_url'],
-      description: response.data['body'],
+      tagName: result['tag_name'],
+      downloadUrl: result['assets'][0]['browser_download_url'],
+      description: result['body'],
     );
 
-    Global.logger.debug('[更新] 检查更新成功: $latestRelease');
+    _logger.debug('检查更新成功: $latestRelease');
   }
 }

@@ -22,7 +22,7 @@ class SettingsAppInfo extends StatelessWidget {
               '我的电视',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onBackground,
-                fontSize: 80.sp,
+                fontSize: 60.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -32,7 +32,7 @@ class SettingsAppInfo extends StatelessWidget {
                 'v${updateStore.currentVersion}',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
-                  fontSize: 36.sp,
+                  fontSize: 30.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -43,7 +43,7 @@ class SettingsAppInfo extends StatelessWidget {
           'https://github.com/yaoxieyoulei/my_tv',
           style: TextStyle(
             color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
-            fontSize: 36.sp,
+            fontSize: 30.sp,
           ),
         ),
       ],

@@ -10,7 +10,7 @@ class BootReceiver : BroadcastReceiver() {
         if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
             val prefs: SharedPreferences =
                 context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-            val bootLaunch = prefs.getBoolean("flutter.IptvSetting.bootLaunch", false)
+            val bootLaunch = prefs.getBoolean("flutter.AppSetting.bootLaunch", false)
 
             if(bootLaunch) {
                 val i = Intent(context, MainActivity::class.java)

@@ -6,20 +6,17 @@ import 'package:my_tv/common/index.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xml/xml.dart';
 
-/// 电视节目单
+final _logger = LoggerUtil.create(['epg']);
+
+/// 节目单工具
 class EpgUtil {
+  EpgUtil._();
+
   /// 获取远程epg xml
   static Future<String> _fetchXml() async {
-    Global.logger.debug('[EPG] 获取远程epg xml: ${Constants.iptvEpg}');
-
-    final response = await Global.dio.get(Constants.iptvEpg);
-    if (response.statusCode != 200) {
-      final err = '[EPG] 获取远程epg失败: ${response.statusCode}';
-      Global.logger.handle(err);
-      throw Exception(err);
-    }
-
-    return response.data.toString();
+    _logger.debug('获取远程xml: ${Constants.iptvEpgXml}');
+    final result = await RequestUtil.get(Constants.iptvEpgXml);
+    return result.toString();
   }
 
   /// 获取缓存epg xml文件
@@ -36,8 +33,8 @@ class EpgUtil {
       }
 
       return null;
-    } catch (err) {
-      Global.logger.handle(err);
+    } catch (e, st) {
+      _logger.handle(e, st);
       return null;
     }
   }
@@ -45,14 +42,20 @@ class EpgUtil {
   /// 刷新并获取epg xml
   static Future<String> _refreshAndGetXml() async {
     final now = DateTime.now();
-    final cacheAt = DateTime.fromMillisecondsSinceEpoch(IptvSettings.epgXmlCacheTime * 1000);
+    final cacheAt = DateTime.fromMillisecondsSinceEpoch(IptvSettings.epgXmlCacheTime);
 
     if (now.year == cacheAt.year && now.month == cacheAt.month && now.day == cacheAt.day) {
       final cache = await _getCacheXml();
 
       if (cache != null) {
-        Global.logger.debug('[EPG] 使用缓存epg xml');
+        _logger.debug('使用缓存xml');
         return cache;
+      }
+    } else {
+      // 1点前，远程epg可能未更新
+      if (now.hour < 1) {
+        _logger.debug('未到1点，不刷新epg');
+        return XmlBuilder().buildDocument().toXmlString();
       }
     }
 
@@ -60,8 +63,8 @@ class EpgUtil {
 
     final cacheFile = await _getCacheXmlFile();
     await cacheFile.writeAsString(xml);
-    IptvSettings.epgXmlCacheTime = now.millisecondsSinceEpoch ~/ 1000;
-    IptvSettings.epgCacheHash = 0;
+    IptvSettings.epgXmlCacheTime = now.millisecondsSinceEpoch;
+    IptvSettings.epgCacheHash = 0; // 重置epg解析
 
     return xml;
   }
@@ -72,42 +75,42 @@ class EpgUtil {
       if (time == null || time.length < 14) return 0;
 
       return DateTime(
-            int.parse(time.substring(0, 4)),
-            int.parse(time.substring(4, 6)),
-            int.parse(time.substring(6, 8)),
-            int.parse(time.substring(8, 10)),
-            int.parse(time.substring(10, 12)),
-            int.parse(time.substring(12, 14)),
-          ).millisecondsSinceEpoch ~/
-          1000;
+        int.parse(time.substring(0, 4)),
+        int.parse(time.substring(4, 6)),
+        int.parse(time.substring(6, 8)),
+        int.parse(time.substring(8, 10)),
+        int.parse(time.substring(10, 12)),
+        int.parse(time.substring(12, 14)),
+      ).millisecondsSinceEpoch;
     }
 
     final doc = XmlDocument.parse(xml);
     final tvEl = doc.getElement('tv');
 
-    final epgList = <Epg>[];
-    Epg? epg;
+    final epgMap = <String, Epg>{};
     tvEl?.childElements.forEach((el) {
       final id = el.getAttribute('id');
-      if (id != null) {
-        if (epg != null) {
-          epgList.add(epg!);
-          epg = null;
-        }
 
-        if (filteredChannels.contains(id)) {
-          epg = Epg(channel: id, programmes: []);
+      if (id != null) {
+        final channelName = el.getElement('display-name')?.innerText ?? '';
+
+        if (filteredChannels.contains(channelName)) {
+          epgMap[id] = Epg(channel: channelName, programmes: []);
         }
-      } else if (epg != null) {
-        epg!.programmes.add(EpgProgramme(
-          start: parseTime(el.getAttribute('start')),
-          stop: parseTime(el.getAttribute('stop')),
-          title: el.getElement('title')?.innerText ?? '',
-        ));
+      } else {
+        final channel = el.getAttribute('channel');
+
+        if (epgMap.containsKey(channel)) {
+          final start = parseTime(el.getAttribute('start'));
+          final stop = parseTime(el.getAttribute('stop'));
+          final title = el.getElement('title')?.innerText ?? '';
+
+          epgMap[channel]!.programmes.add(EpgProgramme(start: start, stop: stop, title: title));
+        }
       }
     });
 
-    return epgList;
+    return epgMap.values.toList();
   }
 
   /// 获取缓存文件
@@ -126,8 +129,8 @@ class EpgUtil {
       }
 
       return null;
-    } catch (err) {
-      Global.logger.handle(err);
+    } catch (e, st) {
+      _logger.handle(e, st);
       return null;
     }
   }
@@ -144,15 +147,15 @@ class EpgUtil {
       final cache = await _getCache();
 
       if (cache != null) {
-        Global.logger.debug('[EPG] 使用缓存epg');
+        _logger.debug('使用缓存epg');
         return cache;
       }
     }
 
-    Global.logger.debug('[EPG] 开始解析epg');
+    _logger.debug('开始解析epg');
     final startAt = DateTime.now().millisecondsSinceEpoch;
     final epgList = await compute((_) => _parseFromXml(xml, filteredChannels), 0);
-    Global.logger.debug('[EPG] 解析epg完成，共${epgList.length}个频道，耗时：${DateTime.now().millisecondsSinceEpoch - startAt}ms');
+    _logger.debug('解析epg完成，共${epgList.length}个频道，耗时：${DateTime.now().millisecondsSinceEpoch - startAt}ms');
 
     final cacheFile = await _getCacheFile();
     await cacheFile.writeAsString(jsonEncode(epgList.map((e) => e.toJson()).toList()));

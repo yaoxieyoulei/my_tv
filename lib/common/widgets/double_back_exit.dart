@@ -23,8 +23,7 @@ class DoubleBackExitState extends State<DoubleBackExit> {
         if (didPop) {
           return;
         } else {
-          if (_lastPressedAt == null || DateTime.now().difference(_lastPressedAt!) > const Duration(seconds: 1)) {
-            //两次点击间隔超过1秒则重新计时
+          if (_lastPressedAt == null || DateTime.now().difference(_lastPressedAt!) > const Duration(seconds: 2)) {
             _lastPressedAt = DateTime.now();
 
             ScaffoldMessenger.of(context).clearSnackBars();

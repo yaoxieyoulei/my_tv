@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
@@ -26,14 +24,16 @@ void main() async {
   // 保持屏幕常亮
   WakelockPlus.enable();
 
-  await Global.init();
+  // 初始化
+  await PrefsUtil.init();
+  LoggerUtil.init();
+  HttpOverridesUtil.init();
+  RequestUtil.init();
 
   // 注册全局Store
   GetIt.I.registerSingleton(PlayerStore());
   GetIt.I.registerSingleton(IptvStore());
   GetIt.I.registerSingleton(UpdateStore());
-
-  HttpOverrides.global = MyHttpOverrides();
 
   runApp(const MyApp());
 }

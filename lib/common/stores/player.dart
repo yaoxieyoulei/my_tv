@@ -7,19 +7,24 @@ part 'player.g.dart';
 
 class PlayerStore = PlayerStoreBase with _$PlayerStore;
 
+/// 播放状态
 enum PlayerState {
+  /// 等待播放
   waiting,
+
+  /// 播放中
   playing,
+
+  /// 播放失败
   failed,
 }
+
+final _logger = LoggerUtil.create(['播放器']);
 
 abstract class PlayerStoreBase with Store {
   /// 播放器
   @observable
   VideoPlayerController controller = VideoPlayerController.networkUrl(Uri.parse(''));
-
-  /// 下一个播放器
-  VideoPlayerController? nextController;
 
   /// 宽高比
   @observable
@@ -37,37 +42,22 @@ abstract class PlayerStoreBase with Store {
   @action
   Future<void> playIptv(Iptv iptv) async {
     try {
-      Global.logger.debug('播放直播源: $iptv');
+      _logger.debug('播放直播源: $iptv');
       state = PlayerState.waiting;
 
-      if (IptvSettings.smoothChangeChannel) {
-        await nextController?.pause();
-        await nextController?.dispose();
+      // TODO 切换频道时存在黑屏问题
+      await controller.pause();
+      await controller.dispose();
 
-        final oldPlayer = controller;
-        await oldPlayer.pause();
-
-        nextController = VideoPlayerController.networkUrl(Uri.parse(iptv.url));
-        await nextController!.initialize();
-        await nextController!.play();
-
-        controller = nextController!;
-        nextController = null;
-        await oldPlayer.dispose();
-      } else {
-        await controller.pause();
-        await controller.dispose();
-
-        controller = VideoPlayerController.networkUrl(Uri.parse(iptv.url));
-        await controller.initialize();
-        await controller.play();
-      }
+      controller = VideoPlayerController.networkUrl(Uri.parse(iptv.url));
+      await controller.initialize();
+      await controller.play();
 
       state = PlayerState.playing;
       aspectRatio = controller.value.aspectRatio;
       resolution = controller.value.size;
-    } catch (err) {
-      Global.logger.handle(err);
+    } catch (e, st) {
+      _logger.handle(e, st);
       state = PlayerState.failed;
       rethrow;
     }

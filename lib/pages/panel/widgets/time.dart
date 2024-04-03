@@ -41,12 +41,18 @@ class _PanelTimeState extends State<PanelTime> {
       children: [
         Text(
           DateFormat('MM月dd日   E', 'zh-CN').format(_now),
-          style: TextStyle(color: Theme.of(context).colorScheme.onBackground, fontSize: 20.sp),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onBackground,
+            fontSize: 20.sp,
+          ),
         ),
         Text(
           DateFormat('HH:mm:ss').format(_now),
           style: TextStyle(
-              color: Theme.of(context).colorScheme.onBackground, fontWeight: FontWeight.bold, fontSize: 40.sp),
+            color: Theme.of(context).colorScheme.onBackground,
+            fontWeight: FontWeight.bold,
+            fontSize: 40.sp,
+          ),
         ),
       ],
     );
