@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:my_tv/common/index.dart';
 import 'package:retry/retry.dart';
 import 'package:http/http.dart' as http;
@@ -23,6 +25,6 @@ class RequestUtil {
       throw Exception('请求失败: ${response.statusCode}: ${response.reasonPhrase}');
     }
 
-    return response.body;
+    return utf8.decode(response.bodyBytes);
   }
 }
