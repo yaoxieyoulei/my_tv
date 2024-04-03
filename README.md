@@ -32,15 +32,6 @@
 2. 请求网址：`http://<设备IP>:10381`
 3. 按界面提示操作
 
-注意事项
-
-- 启用自定义直播源后，请确认直播源类型设为完整。
-- 直播源文件格式如下
-    ```
-    #EXTINF:-1 tvg-id="A01" tvg-name="CCTV1" tvg-logo="https://cdn.jsdelivr.net/gh/wanglindl/TVlogo@main/img/CCTV1.png" group-title="总台高清",CCTV-1 综合
-    http://[2409:8087:1a01:df::4077]/ottrrs.hl.chinamobile.com/PLTV/88888888/8/3221226016/index.m3u8
-    ```
-
 ## 下载
 
 可以通过右侧release进行下载或拉取代码到本地进行编译
@@ -60,10 +51,9 @@
 
 - [x] 换台反转
 - [x] 数字选台
-- [x] 节目单（正在播放）
+- [x] 节目单
 - [x] 开机自启
 - [x] 检测更新
-- [x] 平滑换台（换台时无黑屏）
 - [x] 自定义直播源
 - [ ] 性能优化
 
