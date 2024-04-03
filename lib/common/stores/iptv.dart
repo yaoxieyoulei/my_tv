@@ -96,7 +96,7 @@ abstract class IptvStoreBase with Store {
     final currentProgramme = epg?.programmes.firstWhereOrNull((element) => element.start <= now && element.stop >= now);
     final nextProgramme = epg?.programmes.firstWhereOrNull((element) => element.start > now);
 
-    return (current: currentProgramme?.title ?? '无节目', next: nextProgramme?.title ?? '无节目');
+    return (current: currentProgramme?.title ?? '', next: nextProgramme?.title ?? '');
   }
 
   @computed

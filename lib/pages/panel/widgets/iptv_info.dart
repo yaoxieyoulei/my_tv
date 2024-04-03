@@ -49,7 +49,7 @@ class PanelIptvInfo extends StatelessWidget {
           builder: (_) => ConstrainedBox(
             constraints: BoxConstraints(maxWidth: epgShowFull ? 1.sw : 500.w),
             child: Text(
-              '正在播放：${iptvStore.currentIptvProgrammes.current}',
+              '正在播放：${iptvStore.currentIptvProgrammes.current.isNotEmpty ? iptvStore.currentIptvProgrammes.current : '无节目'}',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
                 fontSize: 30.sp,
@@ -63,7 +63,7 @@ class PanelIptvInfo extends StatelessWidget {
           builder: (_) => ConstrainedBox(
             constraints: BoxConstraints(maxWidth: epgShowFull ? 1.sw : 500.w),
             child: Text(
-              '稍后播放：${iptvStore.currentIptvProgrammes.next}',
+              '稍后播放：${iptvStore.currentIptvProgrammes.next.isNotEmpty ? iptvStore.currentIptvProgrammes.next : '无节目'}',
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
                 fontSize: 30.sp,
