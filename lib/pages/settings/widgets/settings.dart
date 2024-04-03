@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,12 +17,14 @@ class SettingItem {
   final String Function() value;
   final String Function() description;
   final void Function() onTap;
+  int groupIdx;
 
   SettingItem({
     required this.title,
     required this.value,
     required this.description,
     required this.onTap,
+    this.groupIdx = 0,
   });
 }
 
@@ -38,11 +41,11 @@ class _SettingsMainState extends State<SettingsMain> {
 
   final _focusNode = FocusNode();
   late final List<SettingItem> _settingItemList;
-  var _selectedIdx = -1;
+  var _selectedIdx = 0;
   final _scrollController = ScrollController();
 
   void refreshSettingGroupList() {
-    _settingItemList = [
+    final groupList = [
       SettingGroup(name: '应用', items: [
         SettingItem(
           title: '应用更新',
@@ -135,7 +138,16 @@ class _SettingsMainState extends State<SettingsMain> {
           },
         ),
       ]),
-    ].expand((element) => element.items).toList();
+    ];
+
+    // 设置组索引
+    for (var i = 0; i < groupList.length; i++) {
+      for (var j = 0; j < groupList[i].items.length; j++) {
+        groupList[i].items[j].groupIdx = i;
+      }
+    }
+
+    _settingItemList = groupList.expand((element) => element.items).toList();
   }
 
   @override
@@ -172,10 +184,11 @@ class _SettingsMainState extends State<SettingsMain> {
 
   Widget _buildSettingGroupList() {
     return SizedBox(
-      height: 150.h,
-      child: ListView.separated(
+      height: 190.w,
+      child: SliverListView.separated(
         itemBuilder: (context, index) => _buildSettingItem(_settingItemList[index]),
         separatorBuilder: ((context, idx) => SizedBox(width: 20.w)),
+        endSeparator: true,
         itemCount: _settingItemList.length,
         scrollDirection: Axis.horizontal,
         controller: _scrollController,
@@ -248,10 +261,21 @@ class _SettingsMainState extends State<SettingsMain> {
       child: Container(),
       onKeyEvent: (event) {
         if (event.runtimeType == KeyUpEvent) {
+          // 上一分组
           if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            _changeSelected(_selectedIdx - 1);
-          } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            _changeSelected(_selectedIdx + 1);
+            final preGroupIdx = _settingItemList.elementAt(_selectedIdx).groupIdx - 1;
+            final item = _settingItemList.firstWhereOrNull((element) => element.groupIdx == preGroupIdx);
+            if (item != null) {
+              _changeSelected(_settingItemList.indexOf(item));
+            }
+          }
+          // 下一分组
+          else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+            final nextGroupIdx = _settingItemList.elementAt(_selectedIdx).groupIdx + 1;
+            final item = _settingItemList.firstWhereOrNull((element) => element.groupIdx == nextGroupIdx);
+            if (item != null) {
+              _changeSelected(_settingItemList.indexOf(item));
+            }
           } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
             _changeSelected(_selectedIdx - 1);
           } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {

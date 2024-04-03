@@ -39,7 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   left: 0,
                   right: 0,
                   child: Container(
-                    padding: const EdgeInsets.all(40).r,
+                    padding: const EdgeInsets.fromLTRB(40, 40, 0, 40).r,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
