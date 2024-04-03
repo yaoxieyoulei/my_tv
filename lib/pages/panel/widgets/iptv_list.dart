@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -85,7 +84,7 @@ class _PanelIptvListState extends State<PanelIptvList> {
     return SizedBox(
       height: 240.h,
       child: Observer(
-        builder: (_) => ListView.separated(
+        builder: (_) => SliverListView.separated(
           controller: _groupScrollController,
           itemBuilder: (context, index) {
             final group = iptvStore.iptvGroupList[index];
@@ -111,6 +110,7 @@ class _PanelIptvListState extends State<PanelIptvList> {
             );
           },
           separatorBuilder: (context, index) => SizedBox(height: 20.h),
+          endSeparator: true,
           itemCount: iptvStore.iptvGroupList.length,
         ),
       ),
@@ -121,10 +121,11 @@ class _PanelIptvListState extends State<PanelIptvList> {
   Widget _buildIptvList(IptvGroup group) {
     return SizedBox(
       height: 80.h,
-      child: ListView.separated(
+      child: SliverListView.separated(
         controller: group.idx == _selectedIptv.groupIdx ? _listScrollController : null,
         itemBuilder: (context, index) => _buildIptvItem(group.list[index]),
         separatorBuilder: (context, idx) => SizedBox(width: 20.w),
+        endSeparator: true,
         itemCount: group.list.length,
         scrollDirection: Axis.horizontal,
       ),
