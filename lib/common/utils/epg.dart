@@ -16,7 +16,7 @@ class EpgUtil {
   static Future<String> _fetchXml() async {
     _logger.debug('获取远程xml: ${Constants.iptvEpgXml}');
     final result = await RequestUtil.get(Constants.iptvEpgXml);
-    return result.toString();
+    return result;
   }
 
   /// 获取缓存epg xml文件

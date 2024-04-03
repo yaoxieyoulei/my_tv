@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:mobx/mobx.dart';
 import 'package:my_tv/common/index.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -46,7 +48,7 @@ abstract class UpdateStoreBase with Store {
     final packageInfo = await PackageInfo.fromPlatform();
     currentVersion = packageInfo.version;
 
-    final result = await RequestUtil.get(Constants.githubReleaseLatest);
+    final result = jsonDecode(await RequestUtil.get(Constants.githubReleaseLatest));
     latestRelease = GithubRelease(
       tagName: result['tag_name'],
       downloadUrl: result['assets'][0]['browser_download_url'],

@@ -26,7 +26,7 @@ class IptvUtil {
 
     _logger.debug('获取远程直播源: $iptvSource');
     final result = await RequestUtil.get(iptvSource);
-    return result.toString();
+    return result;
   }
 
   /// 获取缓存直播源文件

@@ -27,7 +27,6 @@ void main() async {
   // 初始化
   await PrefsUtil.init();
   LoggerUtil.init();
-  HttpOverridesUtil.init();
   RequestUtil.init();
 
   // 注册全局Store
