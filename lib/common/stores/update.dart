@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:mobx/mobx.dart';
 import 'package:my_tv/common/index.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 part 'update.g.dart';
@@ -57,5 +58,9 @@ abstract class UpdateStoreBase with Store {
 
     _logger.debug('检查更新成功: $latestRelease');
     AppSettings.updateCheckTime = DateTime.now().millisecondsSinceEpoch;
+
+    if (needUpdate) {
+      showToast('发现新版本: ${latestRelease.tagName}');
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:oktoast/oktoast.dart';
 
 class DoubleBackExit extends StatefulWidget {
   final Widget child;
@@ -23,15 +24,7 @@ class _DoubleBackExitState extends State<DoubleBackExit> {
         } else {
           if (_lastPressedAt == null || DateTime.now().difference(_lastPressedAt!) > const Duration(seconds: 2)) {
             _lastPressedAt = DateTime.now();
-
-            ScaffoldMessenger.of(context).clearSnackBars();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('再按一次退出'),
-                duration: Duration(seconds: 1),
-              ),
-            );
-
+            showToast('再按一次退出', duration: const Duration(seconds: 2));
             return;
           }
 

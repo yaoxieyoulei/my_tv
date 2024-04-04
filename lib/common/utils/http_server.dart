@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:my_tv/common/index.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
@@ -38,6 +39,12 @@ class HttpServerUtil {
       IptvSettings.iptvSourceCacheTime = 0;
       IptvSettings.epgCacheHash = 0;
 
+      if (source.isNotEmpty) {
+        showToast('直播源设置成功');
+      } else {
+        showToast('已恢复默认直播源');
+      }
+
       return shelf.Response.ok('success');
     });
 
@@ -47,6 +54,8 @@ class HttpServerUtil {
 
     _isInitialized = true;
     serverUrl = 'http://${await _getLocalIPV4()}:${server.port}';
+    showToast('设置服务启动成功');
+
     _logger.debug('启动 $serverUrl');
   }
 

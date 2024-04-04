@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -52,7 +53,7 @@ class _PanelPageState extends State<PanelPage> {
             builder: (_) => PanelIptvChannel(iptvStore.currentIptv.channel.toString().padLeft(2, '0')),
           ),
           // 分隔符
-          Container(
+          Padding(
             padding: const EdgeInsets.fromLTRB(4, 0, 12, 0).r,
             child: SizedBox(
               height: 50.w,
@@ -74,7 +75,7 @@ class _PanelPageState extends State<PanelPage> {
       bottom: 0,
       left: 0,
       right: 0,
-      child: Container(
+      child: Padding(
         padding: const EdgeInsets.only(top: 20, left: 40).r,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

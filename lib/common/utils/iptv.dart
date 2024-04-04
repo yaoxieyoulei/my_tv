@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:my_tv/common/index.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 
 final _logger = LoggerUtil.create(['iptv']);
@@ -22,11 +23,18 @@ class IptvUtil {
 
   /// 获取远程直播源
   static Future<String> _fetchSource() async {
-    final iptvSource = IptvSettings.customIptvSource.isNotEmpty ? IptvSettings.customIptvSource : Constants.iptvSource;
+    try {
+      final iptvSource =
+          IptvSettings.customIptvSource.isNotEmpty ? IptvSettings.customIptvSource : Constants.iptvSource;
 
-    _logger.debug('获取远程直播源: $iptvSource');
-    final result = await RequestUtil.get(iptvSource);
-    return result;
+      _logger.debug('获取远程直播源: $iptvSource');
+      final result = await RequestUtil.get(iptvSource);
+      return result;
+    } catch (e, st) {
+      _logger.handle(e, st);
+      showToast('获取直播源失败，请检查网络连接');
+      rethrow;
+    }
   }
 
   /// 获取缓存直播源文件
@@ -144,10 +152,16 @@ class IptvUtil {
 
   /// 解析直播源
   static List<IptvGroup> _parseSource(String source) {
-    if (source.startsWith('#EXTM3U')) {
-      return _parseSourceM3u(source);
-    } else {
-      return _parseSourceTvbox(source);
+    try {
+      if (source.startsWith('#EXTM3U')) {
+        return _parseSourceM3u(source);
+      } else {
+        return _parseSourceTvbox(source);
+      }
+    } catch (e, st) {
+      _logger.handle(e, st);
+      showToast('解析直播源失败，请检查直播源格式');
+      rethrow;
     }
   }
 

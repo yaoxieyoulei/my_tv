@@ -189,9 +189,14 @@ class _SettingsMainState extends State<SettingsMain> {
     return SizedBox(
       height: 190.w,
       child: ListView.separated(
-        itemBuilder: (context, index) => _buildSettingItem(_settingItemList[index]),
+        itemBuilder: (context, index) {
+          if (index == _settingItemList.length) {
+            return const SizedBox();
+          }
+          return _buildSettingItem(_settingItemList[index]);
+        },
         separatorBuilder: ((context, idx) => SizedBox(width: 20.w)),
-        itemCount: _settingItemList.length,
+        itemCount: _settingItemList.length + 1,
         scrollDirection: Axis.horizontal,
         controller: _scrollController,
       ),

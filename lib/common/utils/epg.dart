@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:my_tv/common/index.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xml/xml.dart';
 
@@ -14,9 +15,15 @@ class EpgUtil {
 
   /// 获取远程epg xml
   static Future<String> _fetchXml() async {
-    _logger.debug('获取远程xml: ${Constants.iptvEpgXml}');
-    final result = await RequestUtil.get(Constants.iptvEpgXml);
-    return result;
+    try {
+      _logger.debug('获取远程xml: ${Constants.iptvEpgXml}');
+      final result = await RequestUtil.get(Constants.iptvEpgXml);
+      return result;
+    } catch (e, st) {
+      _logger.handle(e, st);
+      showToast('获取EPG失败，请检查网络连接');
+      rethrow;
+    }
   }
 
   /// 获取缓存epg xml文件

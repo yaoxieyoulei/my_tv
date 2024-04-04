@@ -5,6 +5,7 @@ import 'package:my_tv/common/index.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_tv/pages/index.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 void main() async {
@@ -56,6 +57,14 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: const [...GlobalMaterialLocalizations.delegates, GlobalWidgetsLocalizations.delegate],
         supportedLocales: const [Locale("zh", "CH"), Locale("en", "US")],
         home: const DoubleBackExit(child: IptvPage()),
+        builder: (BuildContext context, Widget? widget) {
+          return OKToast(
+            position: const ToastPosition(align: Alignment.topCenter, offset: 0),
+            textPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            dismissOtherOnShow: true,
+            child: widget!,
+          );
+        },
       ),
     );
   }
