@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tv/common/index.dart';
@@ -52,15 +53,17 @@ class _SettingsMainState extends State<SettingsMain> {
           value: () => updateStore.needUpdate ? '新版本' : '无更新',
           description: () => '最新版本：${updateStore.latestRelease.tagName}',
           onTap: () {
-            showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: Text(updateStore.latestRelease.tagName),
-                content: SingleChildScrollView(
-                  child: Text(updateStore.latestRelease.description),
+            if (updateStore.needUpdate) {
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: Text(updateStore.latestRelease.tagName),
+                  content: SingleChildScrollView(
+                    child: Text(updateStore.latestRelease.description),
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           },
         ),
         SettingItem(
@@ -196,58 +199,60 @@ class _SettingsMainState extends State<SettingsMain> {
   }
 
   Widget _buildSettingItem(SettingItem item) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () => setState(() {
-        _selectedIdx = _settingItemList.indexOf(item);
-        item.onTap();
-      }),
-      child: Container(
-        width: 400.w,
-        padding: const EdgeInsets.all(30).r,
-        decoration: BoxDecoration(
-          color: _selectedIdx == _settingItemList.indexOf(item)
-              ? Theme.of(context).colorScheme.onBackground
-              : Theme.of(context).colorScheme.background.withOpacity(0.8),
-          borderRadius: BorderRadius.circular(20).r,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  item.title,
-                  style: TextStyle(
-                    color: _selectedIdx == _settingItemList.indexOf(item)
-                        ? Theme.of(context).colorScheme.background
-                        : Theme.of(context).colorScheme.onBackground,
-                    fontSize: 30.sp,
+    return Observer(
+      builder: (_) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => setState(() {
+          _selectedIdx = _settingItemList.indexOf(item);
+          item.onTap();
+        }),
+        child: Container(
+          width: 400.w,
+          padding: const EdgeInsets.all(30).r,
+          decoration: BoxDecoration(
+            color: _selectedIdx == _settingItemList.indexOf(item)
+                ? Theme.of(context).colorScheme.onBackground
+                : Theme.of(context).colorScheme.background.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(20).r,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    item.title,
+                    style: TextStyle(
+                      color: _selectedIdx == _settingItemList.indexOf(item)
+                          ? Theme.of(context).colorScheme.background
+                          : Theme.of(context).colorScheme.onBackground,
+                      fontSize: 30.sp,
+                    ),
                   ),
-                ),
-                Text(
-                  item.value(),
-                  style: TextStyle(
-                    color: _selectedIdx == _settingItemList.indexOf(item)
-                        ? Theme.of(context).colorScheme.background
-                        : Theme.of(context).colorScheme.onBackground,
-                    fontSize: 30.sp,
+                  Text(
+                    item.value(),
+                    style: TextStyle(
+                      color: _selectedIdx == _settingItemList.indexOf(item)
+                          ? Theme.of(context).colorScheme.background
+                          : Theme.of(context).colorScheme.onBackground,
+                      fontSize: 30.sp,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Text(
-              item.description(),
-              style: TextStyle(
-                color: _selectedIdx == _settingItemList.indexOf(item)
-                    ? Theme.of(context).colorScheme.background
-                    : Theme.of(context).colorScheme.onBackground,
-                fontSize: 24.sp,
+                ],
               ),
-            )
-          ],
+              Text(
+                item.description(),
+                style: TextStyle(
+                  color: _selectedIdx == _settingItemList.indexOf(item)
+                      ? Theme.of(context).colorScheme.background
+                      : Theme.of(context).colorScheme.onBackground,
+                  fontSize: 24.sp,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

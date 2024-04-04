@@ -59,7 +59,10 @@ class _IptvPageState extends State<IptvPage> {
     await iptvStore.refreshIptvList();
     iptvStore.currentIptv = iptvStore.iptvList.elementAtOrNull(IptvSettings.initialIptvIdx) ?? iptvStore.iptvList.first;
 
-    updateStore.refreshLatestRelease();
+    // 每6小时检查一次更新
+    if (DateTime.now().millisecondsSinceEpoch - AppSettings.updateCheckTime > 6 * 60 * 60 * 1000) {
+      updateStore.refreshLatestRelease();
+    }
   }
 
   @override

@@ -43,10 +43,10 @@ abstract class UpdateStoreBase with Store {
   /// 获取最新release
   @action
   Future<void> refreshLatestRelease() async {
-    _logger.debug('开始检查更新: ${Constants.githubReleaseLatest}');
-
     final packageInfo = await PackageInfo.fromPlatform();
     currentVersion = packageInfo.version;
+
+    _logger.debug('开始检查更新: ${Constants.githubReleaseLatest}');
 
     final result = jsonDecode(await RequestUtil.get(Constants.githubReleaseLatest));
     latestRelease = GithubRelease(
@@ -56,5 +56,6 @@ abstract class UpdateStoreBase with Store {
     );
 
     _logger.debug('检查更新成功: $latestRelease');
+    AppSettings.updateCheckTime = DateTime.now().millisecondsSinceEpoch;
   }
 }
