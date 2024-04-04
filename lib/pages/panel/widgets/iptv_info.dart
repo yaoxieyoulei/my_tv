@@ -7,7 +7,7 @@ import 'package:my_tv/common/index.dart';
 class PanelIptvInfo extends StatelessWidget {
   PanelIptvInfo({this.epgShowFull = true, super.key});
 
-  late final epgShowFull;
+  late final bool epgShowFull;
 
   final iptvStore = GetIt.I<IptvStore>();
   final playerStore = GetIt.I<PlayerStore>();

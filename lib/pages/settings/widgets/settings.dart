@@ -185,10 +185,9 @@ class _SettingsMainState extends State<SettingsMain> {
   Widget _buildSettingGroupList() {
     return SizedBox(
       height: 190.w,
-      child: SliverListView.separated(
+      child: ListView.separated(
         itemBuilder: (context, index) => _buildSettingItem(_settingItemList[index]),
         separatorBuilder: ((context, idx) => SizedBox(width: 20.w)),
-        endSeparator: true,
         itemCount: _settingItemList.length,
         scrollDirection: Axis.horizontal,
         controller: _scrollController,

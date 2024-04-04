@@ -7,19 +7,17 @@ class DoubleBackExit extends StatefulWidget {
   const DoubleBackExit({super.key, required this.child});
 
   @override
-  DoubleBackExitState createState() {
-    return DoubleBackExitState();
-  }
+  State<DoubleBackExit> createState() => _DoubleBackExitState();
 }
 
-class DoubleBackExitState extends State<DoubleBackExit> {
+class _DoubleBackExitState extends State<DoubleBackExit> {
   DateTime? _lastPressedAt; //上次点击时间
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (bool didPop) {
+      onPopInvoked: (didPop) {
         if (didPop) {
           return;
         } else {

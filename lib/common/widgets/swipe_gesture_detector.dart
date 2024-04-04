@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+/// 滑动手势监听
 class SwipeGestureDetector extends StatelessWidget {
   SwipeGestureDetector({
     super.key,
@@ -12,14 +13,23 @@ class SwipeGestureDetector extends StatelessWidget {
   });
 
   final Widget child;
+
+  /// 向上滑动
   final void Function()? onSwipeUp;
+
+  /// 向下滑动
   final void Function()? onSwipeDown;
+
+  /// 向左滑动
   final void Function()? onSwipeLeft;
+
+  /// 向右滑动
   final void Function()? onSwipeRight;
 
   final _verticalTracker = VelocityTracker.withKind(PointerDeviceKind.touch);
   final _horizontalTracker = VelocityTracker.withKind(PointerDeviceKind.touch);
 
+  /// 滑动阈值
   final _swipeThreshold = 100;
 
   @override
