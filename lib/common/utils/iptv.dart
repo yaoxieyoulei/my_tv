@@ -105,15 +105,24 @@ class IptvUtil {
     IptvGroup? group;
     for (final line in lines) {
       if (line.isEmpty) continue;
+      if (line.startsWith('#')) continue;
 
       if (line.endsWith('#genre#')) {
         final groupName = line.split(',')[0];
         group = IptvGroup(idx: groupList.length, name: groupName, list: []);
         groupList.add(group);
       } else {
-        print(line);
-        final name = line.split(',')[0];
-        final url = line.split(',')[1];
+        List<String> separators = ['，'];
+        final newLine = line.splitMapJoin(
+          RegExp('[${separators.map((s) => '\\$s').join('')}]'),
+          onMatch: (m) => ',',
+          onNonMatch: (n) => n,
+        );
+
+        if (newLine.split(',').length < 2) continue;
+
+        final name = newLine.split(',')[0];
+        final url = newLine.split(',')[1];
 
         final iptv = Iptv(
           idx: group!.list.length,
@@ -135,7 +144,7 @@ class IptvUtil {
 
   /// 解析直播源
   static List<IptvGroup> _parseSource(String source) {
-    if (_getSourceType() == 'm3u') {
+    if (source.startsWith('#EXTM3U')) {
       return _parseSourceM3u(source);
     } else {
       return _parseSourceTvbox(source);
