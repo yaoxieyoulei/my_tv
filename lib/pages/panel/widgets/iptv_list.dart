@@ -39,12 +39,10 @@ class _PanelIptvListState extends State<PanelIptvList> {
         _groupScrollController.position.maxScrollExtent,
       ));
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _listScrollController.jumpTo(((iptvListStore.selectedIptv.idx - 1) * 280.w).clamp(
-          _listScrollController.position.minScrollExtent,
-          _listScrollController.position.maxScrollExtent,
-        ));
-      });
+      _listScrollController.jumpTo(((iptvListStore.selectedIptv.idx - 1) * 280.w).clamp(
+        _listScrollController.position.minScrollExtent,
+        _listScrollController.position.maxScrollExtent,
+      ));
     });
   }
 
@@ -60,16 +58,14 @@ class _PanelIptvListState extends State<PanelIptvList> {
       curve: Curves.linear,
     );
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _listScrollController.animateTo(
-        ((iptvListStore.selectedIptv.idx - 1) * 280.w).clamp(
-          _listScrollController.position.minScrollExtent,
-          _listScrollController.position.maxScrollExtent,
-        ),
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.linear,
-      );
-    });
+    await _listScrollController.animateTo(
+      ((iptvListStore.selectedIptv.idx - 1) * 280.w).clamp(
+        _listScrollController.position.minScrollExtent,
+        _listScrollController.position.maxScrollExtent,
+      ),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.linear,
+    );
   }
 
   @override
@@ -151,6 +147,7 @@ class _PanelIptvListState extends State<PanelIptvList> {
       builder: (_) => GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () {
+          _changeSelectedIptv(iptv);
           iptvStore.currentIptv = iptv;
           Navigator.pop(context);
         },
