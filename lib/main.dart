@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
+import 'package:my_tv/common/enums/debug_setting.dart';
 import 'package:my_tv/common/index.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,22 +50,29 @@ class MyApp extends StatelessWidget {
       designSize: const Size(1920, 1080),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: MaterialApp(
-        title: '我的电视',
-        theme: ThemeData(
-          colorScheme: colorScheme,
+      child: RestartWidget(
+        child: MaterialApp(
+          title: '我的电视',
+          theme: ThemeData(
+            colorScheme: colorScheme,
+          ),
+          localizationsDelegates: const [...GlobalMaterialLocalizations.delegates, GlobalWidgetsLocalizations.delegate],
+          supportedLocales: const [Locale("zh", "CH"), Locale("en", "US")],
+          home: ShowFPS(
+            visible: DebugSettings.showFPS,
+            child: const DoubleBackExit(
+              child: IptvPage(),
+            ),
+          ),
+          builder: (BuildContext context, Widget? widget) {
+            return OKToast(
+              position: const ToastPosition(align: Alignment.topCenter, offset: 0),
+              textPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              dismissOtherOnShow: true,
+              child: widget!,
+            );
+          },
         ),
-        localizationsDelegates: const [...GlobalMaterialLocalizations.delegates, GlobalWidgetsLocalizations.delegate],
-        supportedLocales: const [Locale("zh", "CH"), Locale("en", "US")],
-        home: const DoubleBackExit(child: IptvPage()),
-        builder: (BuildContext context, Widget? widget) {
-          return OKToast(
-            position: const ToastPosition(align: Alignment.topCenter, offset: 0),
-            textPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            dismissOtherOnShow: true,
-            child: widget!,
-          );
-        },
       ),
     );
   }

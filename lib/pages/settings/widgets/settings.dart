@@ -146,6 +146,16 @@ class _SettingsMainState extends State<SettingsMain> {
           },
         ),
       ]),
+      SettingGroup(name: '调试', items: [
+        SettingItem(
+          title: '显示FPS',
+          value: () => DebugSettings.showFPS ? '启用' : '禁用',
+          description: () => '显示当前帧率，重启应用后生效',
+          onTap: () {
+            DebugSettings.showFPS = !DebugSettings.showFPS;
+          },
+        ),
+      ]),
     ];
 
     // 设置组索引

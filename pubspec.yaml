@@ -38,7 +38,6 @@ dependencies:
   cupertino_icons: ^1.0.6
 
   # 状态管理
-  # get: ^4.6.6
   get_it: ^7.6.7
   mobx: ^2.3.3+1
   flutter_mobx: ^2.2.1+1
@@ -61,20 +60,22 @@ dependencies:
 
   # 数据存储
   shared_preferences: ^2.2.2
+  path_provider: ^2.1.2
 
   # 网络
   shelf: ^1.4.1
   shelf_router: ^1.1.4
   http: ^1.2.1
 
+  # 权限
+  permission_handler: ^11.3.1
+
   # 工具
-  path_provider: ^2.1.2
   xml: ^6.5.0
   collection: ^1.18.0
   json_annotation: ^4.8.1
   package_info_plus: ^6.0.0
   oktoast: ^3.4.0
-  permission_handler: ^11.3.1
   open_filex: ^4.4.0
 
 dev_dependencies:
