@@ -166,6 +166,18 @@ class _IptvPageState extends State<IptvPage> {
         LogicalKeyboardKey.settings: () => _openSettings(),
         LogicalKeyboardKey.contextMenu: () => _openSettings(),
         LogicalKeyboardKey.help: () => _openSettings(),
+
+        // 数字选台
+        LogicalKeyboardKey.digit0: () => iptvStore.inputChannelNo('0'),
+        LogicalKeyboardKey.digit1: () => iptvStore.inputChannelNo('1'),
+        LogicalKeyboardKey.digit2: () => iptvStore.inputChannelNo('2'),
+        LogicalKeyboardKey.digit3: () => iptvStore.inputChannelNo('3'),
+        LogicalKeyboardKey.digit4: () => iptvStore.inputChannelNo('4'),
+        LogicalKeyboardKey.digit5: () => iptvStore.inputChannelNo('5'),
+        LogicalKeyboardKey.digit6: () => iptvStore.inputChannelNo('6'),
+        LogicalKeyboardKey.digit7: () => iptvStore.inputChannelNo('7'),
+        LogicalKeyboardKey.digit8: () => iptvStore.inputChannelNo('8'),
+        LogicalKeyboardKey.digit9: () => iptvStore.inputChannelNo('9'),
       },
       onKeyLongTap: {
         LogicalKeyboardKey.select: () => _openSettings(),
