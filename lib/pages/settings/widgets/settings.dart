@@ -18,6 +18,7 @@ class SettingItem {
   final String Function() value;
   final String Function() description;
   final void Function() onTap;
+  final void Function()? onLongTap;
   int groupIdx;
 
   SettingItem({
@@ -25,6 +26,7 @@ class SettingItem {
     required this.value,
     required this.description,
     required this.onTap,
+    this.onLongTap,
     this.groupIdx = 0,
   });
 }
@@ -64,6 +66,9 @@ class _SettingsMainState extends State<SettingsMain> {
                 ),
               );
             }
+          },
+          onLongTap: () {
+            updateStore.downloadAndInstall();
           },
         ),
         SettingItem(
@@ -210,6 +215,9 @@ class _SettingsMainState extends State<SettingsMain> {
         onTap: () => setState(() {
           _selectedIdx = _settingItemList.indexOf(item);
           item.onTap();
+        }),
+        onLongPress: () => setState(() {
+          item.onLongTap?.call();
         }),
         child: Container(
           width: 400.w,
