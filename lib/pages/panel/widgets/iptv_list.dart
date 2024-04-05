@@ -20,8 +20,8 @@ class _PanelIptvListState extends State<PanelIptvList> {
   final iptvListStore = IptvListStore();
 
   final _focusNode = FocusNode();
-  final _groupScrollController = ScrollController();
-  final _listScrollController = ScrollController();
+  late final ScrollController _groupScrollController;
+  late final ScrollController _listScrollController;
 
   @override
   void initState() {
@@ -32,6 +32,9 @@ class _PanelIptvListState extends State<PanelIptvList> {
   void _initData() {
     _focusNode.requestFocus();
     iptvListStore.selectedIptv = iptvStore.currentIptv;
+
+    _groupScrollController = ScrollController(initialScrollOffset: (iptvListStore.selectedIptv.groupIdx * 140.h));
+    _listScrollController = ScrollController(initialScrollOffset: ((iptvListStore.selectedIptv.idx - 1) * 280.w));
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _groupScrollController.jumpTo((iptvListStore.selectedIptv.groupIdx * 140.h).clamp(
