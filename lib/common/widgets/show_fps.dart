@@ -7,13 +7,34 @@ extension FPS on Duration {
 
 /// 显示FPS
 class ShowFPS extends StatefulWidget {
-  final Widget child;
-  final bool visible;
-
-  const ShowFPS({super.key, required this.child, required this.visible});
+  const ShowFPS({super.key});
 
   @override
   State<ShowFPS> createState() => _ShowFPSState();
+
+  static OverlayEntry? _entry;
+
+  static void show(BuildContext context) {
+    _entry = OverlayEntry(builder: (context) => const ShowFPS());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Overlay.of(context).insert(_entry!);
+    });
+  }
+
+  static void hide() {
+    _entry?.remove();
+    _entry = null;
+  }
+
+  static void toggle(BuildContext context) {
+    if (_entry == null) {
+      show(context);
+    } else {
+      hide();
+    }
+  }
+
+  static bool get isShowing => _entry != null;
 }
 
 class _ShowFPSState extends State<ShowFPS> {
@@ -30,7 +51,7 @@ class _ShowFPSState extends State<ShowFPS> {
   }
 
   update(Duration duration) {
-    if (!mounted || !widget.visible) {
+    if (!mounted) {
       return;
     }
 
@@ -57,83 +78,67 @@ class _ShowFPSState extends State<ShowFPS> {
   }
 
   @override
-  void didUpdateWidget(covariant ShowFPS oldWidget) {
-    if (oldWidget.visible && !widget.visible) {
-      previous = null;
-    }
-
-    if (!oldWidget.visible && widget.visible) {
-      SchedulerBinding.instance.addPostFrameCallback(update);
-    }
-
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.topLeft,
-      children: [
-        widget.child,
-        if (widget.visible)
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Container(
-              height: chartHeight,
-              width: chartWidth + 17,
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.8),
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (timings.isNotEmpty)
-                    Text(
-                      'FPS: ${getAvgFPS()}',
-                      style: const TextStyle(
-                        color: Color(0xffffffff),
-                        fontSize: 14,
-                      ),
-                    ),
-                  const SizedBox(height: 4),
-                  Expanded(
-                    child: SizedBox(
-                      width: chartWidth,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ...timings.map((timing) {
-                            final p = (timing.fps / 60).clamp(0.0, 1.0);
-
-                            return Padding(
-                              padding: const EdgeInsets.only(
-                                right: 1.0,
-                              ),
-                              child: Container(
-                                width: 4,
-                                height: p * chartHeight,
-                                decoration: BoxDecoration(
-                                  color: Color.lerp(
-                                    const Color(0xfff44336),
-                                    const Color.fromARGB(255, 0, 162, 255),
-                                    p,
-                                  ),
-                                  borderRadius: BorderRadius.circular(2),
-                                ),
-                              ),
-                            );
-                          })
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    return Positioned(
+      top: 0,
+      left: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Container(
+          height: chartHeight,
+          width: chartWidth + 17,
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background.withOpacity(0.8),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
-      ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (timings.isNotEmpty)
+                Text(
+                  'FPS: ${getAvgFPS()}',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    fontSize: 14,
+                  ),
+                ),
+              const SizedBox(height: 4),
+              Expanded(
+                child: SizedBox(
+                  width: chartWidth,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      ...timings.map((timing) {
+                        final p = (timing.fps / 60).clamp(0.0, 1.0);
+
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            right: 1.0,
+                          ),
+                          child: Container(
+                            width: 4,
+                            height: p * chartHeight,
+                            decoration: BoxDecoration(
+                              color: Color.lerp(
+                                const Color(0xfff44336),
+                                const Color.fromARGB(255, 0, 162, 255),
+                                p,
+                              ),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        );
+                      })
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

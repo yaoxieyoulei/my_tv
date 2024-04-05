@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:my_tv/common/enums/debug_setting.dart';
 import 'package:my_tv/common/index.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -58,11 +57,8 @@ class MyApp extends StatelessWidget {
           ),
           localizationsDelegates: const [...GlobalMaterialLocalizations.delegates, GlobalWidgetsLocalizations.delegate],
           supportedLocales: const [Locale("zh", "CH"), Locale("en", "US")],
-          home: ShowFPS(
-            visible: DebugSettings.showFPS,
-            child: const DoubleBackExit(
-              child: IptvPage(),
-            ),
+          home: const DoubleBackExit(
+            child: IptvPage(),
           ),
           builder: (BuildContext context, Widget? widget) {
             return OKToast(
