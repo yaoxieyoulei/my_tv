@@ -191,7 +191,7 @@ class _SettingsMainState extends State<SettingsMain> {
     });
 
     _scrollController.animateTo(
-      ((_selectedIdx - 1) * 400.w).clamp(
+      ((_selectedIdx - 1) * 420.w).clamp(
         _scrollController.position.minScrollExtent,
         _scrollController.position.maxScrollExtent,
       ),
