@@ -326,6 +326,16 @@ class _SettingsMainState extends State<SettingsMain> {
           //   }
           // }
         }
+
+        if (event.runtimeType == KeyRepeatEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.select) {
+            setState(() {
+              if (_selectedIdx >= 0) {
+                _settingItemList.elementAtOrNull(_selectedIdx)?.onLongTap?.call();
+              }
+            });
+          }
+        }
       },
     );
   }
