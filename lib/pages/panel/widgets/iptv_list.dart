@@ -19,7 +19,6 @@ class _PanelIptvListState extends State<PanelIptvList> {
   final iptvStore = GetIt.I<IptvStore>();
   final iptvListStore = IptvListStore();
 
-  final _focusNode = FocusNode();
   late final ScrollController _groupScrollController;
   late final ScrollController _listScrollController;
 
@@ -30,7 +29,6 @@ class _PanelIptvListState extends State<PanelIptvList> {
   }
 
   void _initData() {
-    _focusNode.requestFocus();
     iptvListStore.selectedIptv = iptvStore.currentIptv;
 
     _groupScrollController = ScrollController(initialScrollOffset: (iptvListStore.selectedIptv.groupIdx * 140.h));
@@ -195,26 +193,27 @@ class _PanelIptvListState extends State<PanelIptvList> {
 
   /// 键盘事件监听
   Widget _buildKeyboardListener() {
-    return KeyboardListener(
+    return EasyKeyboardListener(
       autofocus: true,
-      focusNode: _focusNode,
-      child: Container(),
-      onKeyEvent: (event) {
-        if (event.runtimeType == KeyUpEvent) {
-          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            _changeSelectedIptv(iptvStore.getPrevGroupIptv(iptvListStore.selectedIptv));
-          } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            _changeSelectedIptv(iptvStore.getNextGroupIptv(iptvListStore.selectedIptv));
-          } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-            _changeSelectedIptv(iptvStore.getPrevIptv(iptvListStore.selectedIptv));
-          } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-            _changeSelectedIptv(iptvStore.getNextIptv(iptvListStore.selectedIptv));
-          } else if (event.logicalKey == LogicalKeyboardKey.select) {
-            iptvStore.currentIptv = iptvListStore.selectedIptv;
-            Navigator.pop(context);
-          }
-        }
+      onKeyTap: {
+        LogicalKeyboardKey.arrowUp: () {
+          _changeSelectedIptv(iptvStore.getPrevGroupIptv(iptvListStore.selectedIptv));
+        },
+        LogicalKeyboardKey.arrowDown: () {
+          _changeSelectedIptv(iptvStore.getNextGroupIptv(iptvListStore.selectedIptv));
+        },
+        LogicalKeyboardKey.arrowLeft: () {
+          _changeSelectedIptv(iptvStore.getPrevIptv(iptvListStore.selectedIptv));
+        },
+        LogicalKeyboardKey.arrowRight: () {
+          _changeSelectedIptv(iptvStore.getNextIptv(iptvListStore.selectedIptv));
+        },
+        LogicalKeyboardKey.select: () {
+          iptvStore.currentIptv = iptvListStore.selectedIptv;
+          Navigator.pop(context);
+        },
       },
+      child: Container(),
     );
   }
 }

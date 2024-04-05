@@ -137,76 +137,40 @@ class _IptvPageState extends State<IptvPage> {
 
   /// 键盘事件监听
   Widget _buildKeyboardListener() {
-    return KeyboardListener(
+    return EasyKeyboardListener(
       autofocus: true,
       focusNode: _focusNode,
-      child: Container(),
-      onKeyEvent: (event) {
-        if (event.runtimeType == KeyUpEvent) {
-          // 频道切换
-          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            if (IptvSettings.channelChangeFlip) {
-              iptvStore.currentIptv = iptvStore.getNextIptv();
-            } else {
-              iptvStore.currentIptv = iptvStore.getPrevIptv();
-            }
-          } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            if (IptvSettings.channelChangeFlip) {
-              iptvStore.currentIptv = iptvStore.getPrevIptv();
-            } else {
-              iptvStore.currentIptv = iptvStore.getNextIptv();
-            }
+      onKeyTap: {
+        // 频道切换
+        LogicalKeyboardKey.arrowUp: () {
+          if (IptvSettings.channelChangeFlip) {
+            iptvStore.currentIptv = iptvStore.getNextIptv();
+          } else {
+            iptvStore.currentIptv = iptvStore.getPrevIptv();
           }
-          // else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-          //   iptvStore.currentIptv = iptvStore.getPrevGroupIptv();
-          // } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-          //   iptvStore.currentIptv = iptvStore.getNextGroupIptv();
-          // }
+        },
+        LogicalKeyboardKey.arrowDown: () {
+          if (IptvSettings.channelChangeFlip) {
+            iptvStore.currentIptv = iptvStore.getPrevIptv();
+          } else {
+            iptvStore.currentIptv = iptvStore.getNextIptv();
+          }
+        },
+        // LogicalKeyboardKey.arrowLeft: ()=> iptvStore.currentIptv = iptvStore.getPrevGroupIptv(),
+        // LogicalKeyboardKey.arrowRight: ()=> iptvStore.currentIptv = iptvStore.getNextGroupIptv(),
 
-          // 打开面板
-          else if (event.logicalKey == LogicalKeyboardKey.select) {
-            _openPanel();
-          }
+        // 打开面板
+        LogicalKeyboardKey.select: () => _openPanel(),
 
-          // 打开设置
-          else if ([
-            LogicalKeyboardKey.settings,
-            LogicalKeyboardKey.contextMenu,
-            LogicalKeyboardKey.help,
-          ].any((it) => it == event.logicalKey)) {
-            _openSettings();
-          }
-
-          // 数字选台
-          else if (event.logicalKey == LogicalKeyboardKey.digit0) {
-            iptvStore.inputChannelNo('0');
-          } else if (event.logicalKey == LogicalKeyboardKey.digit1) {
-            iptvStore.inputChannelNo('1');
-          } else if (event.logicalKey == LogicalKeyboardKey.digit2) {
-            iptvStore.inputChannelNo('2');
-          } else if (event.logicalKey == LogicalKeyboardKey.digit3) {
-            iptvStore.inputChannelNo('3');
-          } else if (event.logicalKey == LogicalKeyboardKey.digit4) {
-            iptvStore.inputChannelNo('4');
-          } else if (event.logicalKey == LogicalKeyboardKey.digit5) {
-            iptvStore.inputChannelNo('5');
-          } else if (event.logicalKey == LogicalKeyboardKey.digit6) {
-            iptvStore.inputChannelNo('6');
-          } else if (event.logicalKey == LogicalKeyboardKey.digit7) {
-            iptvStore.inputChannelNo('7');
-          } else if (event.logicalKey == LogicalKeyboardKey.digit8) {
-            iptvStore.inputChannelNo('8');
-          } else if (event.logicalKey == LogicalKeyboardKey.digit9) {
-            iptvStore.inputChannelNo('9');
-          }
-        }
-
-        if (event.runtimeType == KeyRepeatEvent) {
-          if (event.logicalKey == LogicalKeyboardKey.select) {
-            _openSettings();
-          }
-        }
+        // 打开设置
+        LogicalKeyboardKey.settings: () => _openSettings(),
+        LogicalKeyboardKey.contextMenu: () => _openSettings(),
+        LogicalKeyboardKey.help: () => _openSettings(),
       },
+      onKeyLongTap: {
+        LogicalKeyboardKey.select: () => _openSettings(),
+      },
+      child: Container(),
     );
   }
 
@@ -222,9 +186,7 @@ class _IptvPageState extends State<IptvPage> {
           _focusNode.requestFocus();
           _openPanel();
         },
-        onDoubleTap: () {
-          _openSettings();
-        },
+        onDoubleTap: () => _openSettings(),
         child: child,
       ),
     );

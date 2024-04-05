@@ -282,61 +282,42 @@ class _SettingsMainState extends State<SettingsMain> {
   }
 
   Widget _buildKeyboardListener() {
-    return KeyboardListener(
+    return EasyKeyboardListener(
       autofocus: true,
       focusNode: _focusNode,
-      child: Container(),
-      onKeyEvent: (event) {
-        if (event.runtimeType == KeyUpEvent) {
-          // 上一分组
-          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            final preGroupIdx = _settingItemList.elementAt(_selectedIdx).groupIdx - 1;
-            final item = _settingItemList.firstWhereOrNull((element) => element.groupIdx == preGroupIdx);
-            if (item != null) {
-              _changeSelected(_settingItemList.indexOf(item));
+      onKeyTap: {
+        LogicalKeyboardKey.arrowUp: () {
+          final preGroupIdx = _settingItemList.elementAt(_selectedIdx).groupIdx - 1;
+          final item = _settingItemList.firstWhereOrNull((element) => element.groupIdx == preGroupIdx);
+          if (item != null) {
+            _changeSelected(_settingItemList.indexOf(item));
+          }
+        },
+        LogicalKeyboardKey.arrowDown: () {
+          final nextGroupIdx = _settingItemList.elementAt(_selectedIdx).groupIdx + 1;
+          final item = _settingItemList.firstWhereOrNull((element) => element.groupIdx == nextGroupIdx);
+          if (item != null) {
+            _changeSelected(_settingItemList.indexOf(item));
+          }
+        },
+        LogicalKeyboardKey.arrowLeft: () => _changeSelected(_selectedIdx - 1),
+        LogicalKeyboardKey.arrowRight: () => _changeSelected(_selectedIdx + 1),
+        LogicalKeyboardKey.select: () {
+          setState(() {
+            if (_selectedIdx >= 0) {
+              _settingItemList.elementAtOrNull(_selectedIdx)?.onTap();
             }
-          }
-          // 下一分组
-          else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            final nextGroupIdx = _settingItemList.elementAt(_selectedIdx).groupIdx + 1;
-            final item = _settingItemList.firstWhereOrNull((element) => element.groupIdx == nextGroupIdx);
-            if (item != null) {
-              _changeSelected(_settingItemList.indexOf(item));
-            }
-          } else if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-            _changeSelected(_selectedIdx - 1);
-          } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-            _changeSelected(_selectedIdx + 1);
-          } else if (event.logicalKey == LogicalKeyboardKey.select) {
-            setState(() {
-              if (_selectedIdx >= 0) {
-                _settingItemList.elementAtOrNull(_selectedIdx)?.onTap();
-              }
-            });
-          }
-          // else {
-          //   if (_selectedIdx == _settingItemList.length - 1) {
-          //     ScaffoldMessenger.of(context).clearSnackBars();
-          //     ScaffoldMessenger.of(context).showSnackBar(
-          //       SnackBar(
-          //         content: Text(
-          //             '按键: keyLabel(${event.logicalKey.keyLabel}), keyId(${event.logicalKey.keyId}), usbHidUsage(${event.physicalKey.usbHidUsage})'),
-          //       ),
-          //     );
-          //   }
-          // }
-        }
-
-        if (event.runtimeType == KeyRepeatEvent) {
-          if (event.logicalKey == LogicalKeyboardKey.select) {
-            setState(() {
-              if (_selectedIdx >= 0) {
-                _settingItemList.elementAtOrNull(_selectedIdx)?.onLongTap?.call();
-              }
-            });
-          }
-        }
+          });
+        },
       },
+      onKeyLongTap: {
+        LogicalKeyboardKey.select: () {
+          if (_selectedIdx >= 0) {
+            _settingItemList.elementAtOrNull(_selectedIdx)?.onLongTap?.call();
+          }
+        },
+      },
+      child: Container(),
     );
   }
 }
