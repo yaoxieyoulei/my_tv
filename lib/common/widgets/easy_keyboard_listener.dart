@@ -1,21 +1,19 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-class EasyKeyboardListener extends StatelessWidget {
-  const EasyKeyboardListener({
-    super.key,
-    required this.child,
-    this.focusNode,
-    this.onKeyTap,
-    this.onKeyLongTap,
-    this.autofocus = false,
-  });
-
-  final Widget child;
-  final FocusNode? focusNode;
-  final bool autofocus;
+class EasyKeyboardListener extends KeyboardListener {
   final Map<LogicalKeyboardKey, void Function()>? onKeyTap;
   final Map<LogicalKeyboardKey, void Function()>? onKeyLongTap;
+
+  const EasyKeyboardListener({
+    super.key,
+    required super.child,
+    required super.focusNode,
+    super.autofocus,
+    super.includeSemantics,
+    this.onKeyTap,
+    this.onKeyLongTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +35,9 @@ class EasyKeyboardListener extends StatelessWidget {
           }
         }
       },
-      focusNode: focusNode ?? FocusNode(),
+      focusNode: focusNode,
       autofocus: autofocus,
+      includeSemantics: includeSemantics,
       child: child,
     );
   }

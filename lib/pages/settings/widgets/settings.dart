@@ -1,7 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tv/common/index.dart';
@@ -19,7 +17,6 @@ class SettingItem {
   final String Function() description;
   final void Function() onTap;
   final void Function()? onLongTap;
-  int groupIdx;
 
   SettingItem({
     required this.title,
@@ -27,7 +24,6 @@ class SettingItem {
     required this.description,
     required this.onTap,
     this.onLongTap,
-    this.groupIdx = 0,
   });
 }
 
@@ -42,10 +38,7 @@ class _SettingsMainState extends State<SettingsMain> {
   final iptvStore = GetIt.I<IptvStore>();
   final updateStore = GetIt.I<UpdateStore>();
 
-  final _focusNode = FocusNode();
   late final List<SettingItem> _settingItemList;
-  var _selectedIdx = 0;
-  final _scrollController = ScrollController();
 
   void refreshSettingGroupList() {
     final groupList = [
@@ -98,7 +91,7 @@ class _SettingsMainState extends State<SettingsMain> {
           onTap: () {
             IptvSettings.iptvSourceSimplify = !IptvSettings.iptvSourceSimplify;
             IptvSettings.epgCacheHash = 0;
-            iptvStore.refreshIptvList();
+            iptvStore.refreshIptvList().then((_) => setState(() {}));
           },
         ),
         SettingItem(
@@ -107,7 +100,7 @@ class _SettingsMainState extends State<SettingsMain> {
           description: () => '访问以下网址进行配置：${HttpServerUtil.serverUrl}',
           onTap: () {
             if (IptvSettings.customIptvSource.isNotEmpty) {
-              iptvStore.refreshIptvList();
+              iptvStore.refreshIptvList().then((_) => setState(() {}));
             }
           },
         ),
@@ -118,7 +111,7 @@ class _SettingsMainState extends State<SettingsMain> {
           onTap: () {
             if (IptvSettings.iptvSourceCacheTime > 0) {
               IptvSettings.iptvSourceCacheTime = 0;
-              iptvStore.refreshIptvList();
+              iptvStore.refreshIptvList().then((_) => setState(() {}));
             }
           },
         ),
@@ -130,7 +123,7 @@ class _SettingsMainState extends State<SettingsMain> {
           description: () => '首次加载时可能会有跳帧风险',
           onTap: () {
             IptvSettings.epgEnable = !IptvSettings.epgEnable;
-            iptvStore.refreshEpgList();
+            iptvStore.refreshEpgList().then((_) => setState(() {}));
           },
         ),
         SettingItem(
@@ -141,7 +134,7 @@ class _SettingsMainState extends State<SettingsMain> {
             if (IptvSettings.epgXmlCacheTime > 0) {
               IptvSettings.epgXmlCacheTime = 0;
               IptvSettings.epgCacheHash = 0;
-              iptvStore.refreshEpgList();
+              iptvStore.refreshEpgList().then((_) => setState(() {}));
             }
           },
         ),
@@ -158,13 +151,6 @@ class _SettingsMainState extends State<SettingsMain> {
       ]),
     ];
 
-    // 设置组索引
-    for (var i = 0; i < groupList.length; i++) {
-      for (var j = 0; j < groupList[i].items.length; j++) {
-        groupList[i].items[j].groupIdx = i;
-      }
-    }
-
     _settingItemList = groupList.expand((element) => element.items).toList();
   }
 
@@ -172,152 +158,83 @@ class _SettingsMainState extends State<SettingsMain> {
   void initState() {
     super.initState();
     refreshSettingGroupList();
+
+    HttpServerUtil.init().then((_) => setState(() {}));
+    updateStore.refreshLatestRelease().then((_) => setState(() {}));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSettingGroupList(),
-        _buildKeyboardListener(),
-      ],
-    );
-  }
-
-  void _changeSelected(int idx) {
-    setState(() {
-      _selectedIdx = idx.clamp(0, _settingItemList.length - 1);
-    });
-
-    _scrollController.animateTo(
-      ((_selectedIdx - 1) * 420.w).clamp(
-        _scrollController.position.minScrollExtent,
-        _scrollController.position.maxScrollExtent,
-      ),
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.linear,
-    );
-  }
-
-  Widget _buildSettingGroupList() {
     return SizedBox(
-      height: 190.w,
-      child: ListView.separated(
-        itemBuilder: (context, index) {
-          if (index == _settingItemList.length) {
-            return const SizedBox();
-          }
-          return _buildSettingItem(_settingItemList[index]);
+      height: 190.w + 20.h,
+      child: TwoDimensionListView(
+        size: (rowHeight: 190.w, colWidth: 400.w),
+        scrollOffset: (row: 0, col: -1),
+        gap: (row: 20.h, col: 20.w),
+        itemCount: (
+          row: 1,
+          col: (_) => _settingItemList.length,
+        ),
+        onSelect: (position) => setState(() {
+          _settingItemList.elementAtOrNull(position.col)?.onTap();
+        }),
+        onLongSelect: (position) => setState(() {
+          _settingItemList.elementAtOrNull(position.col)?.onLongTap?.call();
+        }),
+        itemBuilder: (context, position, isSelected) {
+          final item = _settingItemList[position.col];
+
+          return _buildSettingItem(item, isSelected);
         },
-        separatorBuilder: ((context, idx) => SizedBox(width: 20.w)),
-        itemCount: _settingItemList.length + 1,
-        scrollDirection: Axis.horizontal,
-        controller: _scrollController,
       ),
     );
   }
 
-  Widget _buildSettingItem(SettingItem item) {
-    return Observer(
-      builder: (_) => GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => setState(() {
-          _selectedIdx = _settingItemList.indexOf(item);
-          item.onTap();
-        }),
-        onLongPress: () => setState(() {
-          item.onLongTap?.call();
-        }),
-        child: Container(
-          width: 400.w,
-          padding: const EdgeInsets.all(30).r,
-          decoration: BoxDecoration(
-            color: _selectedIdx == _settingItemList.indexOf(item)
-                ? Theme.of(context).colorScheme.onBackground
-                : Theme.of(context).colorScheme.background.withOpacity(0.8),
-            borderRadius: BorderRadius.circular(20).r,
-          ),
-          child: Column(
+  Widget _buildSettingItem(SettingItem item, bool isSelected) {
+    return Container(
+      padding: const EdgeInsets.all(30).r,
+      decoration: BoxDecoration(
+        color: isSelected
+            ? Theme.of(context).colorScheme.onBackground
+            : Theme.of(context).colorScheme.background.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(20).r,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    item.title,
-                    style: TextStyle(
-                      color: _selectedIdx == _settingItemList.indexOf(item)
-                          ? Theme.of(context).colorScheme.background
-                          : Theme.of(context).colorScheme.onBackground,
-                      fontSize: 30.sp,
-                    ),
-                  ),
-                  Text(
-                    item.value(),
-                    style: TextStyle(
-                      color: _selectedIdx == _settingItemList.indexOf(item)
-                          ? Theme.of(context).colorScheme.background
-                          : Theme.of(context).colorScheme.onBackground,
-                      fontSize: 30.sp,
-                    ),
-                  ),
-                ],
-              ),
               Text(
-                item.description(),
+                item.title,
                 style: TextStyle(
-                  color: _selectedIdx == _settingItemList.indexOf(item)
+                  color: isSelected
                       ? Theme.of(context).colorScheme.background
                       : Theme.of(context).colorScheme.onBackground,
-                  fontSize: 24.sp,
+                  fontSize: 30.sp,
                 ),
-              )
+              ),
+              Text(
+                item.value(),
+                style: TextStyle(
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.background
+                      : Theme.of(context).colorScheme.onBackground,
+                  fontSize: 30.sp,
+                ),
+              ),
             ],
           ),
-        ),
+          Text(
+            item.description(),
+            style: TextStyle(
+              color: isSelected ? Theme.of(context).colorScheme.background : Theme.of(context).colorScheme.onBackground,
+              fontSize: 24.sp,
+            ),
+          )
+        ],
       ),
-    );
-  }
-
-  Widget _buildKeyboardListener() {
-    return EasyKeyboardListener(
-      autofocus: true,
-      focusNode: _focusNode,
-      onKeyTap: {
-        LogicalKeyboardKey.arrowUp: () {
-          final preGroupIdx = _settingItemList.elementAt(_selectedIdx).groupIdx - 1;
-          final item = _settingItemList.firstWhereOrNull((element) => element.groupIdx == preGroupIdx);
-          if (item != null) {
-            _changeSelected(_settingItemList.indexOf(item));
-          }
-        },
-        LogicalKeyboardKey.arrowDown: () {
-          final nextGroupIdx = _settingItemList.elementAt(_selectedIdx).groupIdx + 1;
-          final item = _settingItemList.firstWhereOrNull((element) => element.groupIdx == nextGroupIdx);
-          if (item != null) {
-            _changeSelected(_settingItemList.indexOf(item));
-          }
-        },
-        LogicalKeyboardKey.arrowLeft: () => _changeSelected(_selectedIdx - 1),
-        LogicalKeyboardKey.arrowRight: () => _changeSelected(_selectedIdx + 1),
-        LogicalKeyboardKey.select: () {
-          setState(() {
-            if (_selectedIdx >= 0) {
-              _settingItemList.elementAtOrNull(_selectedIdx)?.onTap();
-            }
-          });
-        },
-      },
-      onKeyLongTap: {
-        LogicalKeyboardKey.select: () {
-          if (_selectedIdx >= 0) {
-            _settingItemList.elementAtOrNull(_selectedIdx)?.onLongTap?.call();
-          }
-        },
-      },
-      child: Container(),
     );
   }
 }

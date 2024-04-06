@@ -20,9 +20,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-
-    HttpServerUtil.init();
-    updateStore.refreshLatestRelease();
   }
 
   @override
@@ -41,7 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   left: 0,
                   right: 0,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(40, 40, 0, 40).r,
+                    padding: const EdgeInsets.only(left: 40).r,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

@@ -76,7 +76,7 @@ class _PanelPageState extends State<PanelPage> {
       left: 0,
       right: 0,
       child: Padding(
-        padding: const EdgeInsets.only(top: 20, left: 40).r,
+        padding: const EdgeInsets.only(left: 40).r,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
