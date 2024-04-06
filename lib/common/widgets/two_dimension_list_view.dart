@@ -95,23 +95,47 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
     );
   }
 
+  int _getRowDelay(int index) {
+    if (!DebugSettings.listDelayRender) return 0;
+
+    try {
+      return (index - _verticalScrollController.offset ~/ (widget.size.rowHeight + widget.gap.row)).abs();
+    } catch (_) {
+      return index;
+    }
+  }
+
+  int _getColDelay(int row, int index) {
+    if (!DebugSettings.listDelayRender) return 0;
+
+    try {
+      if (row == _position.row) {
+        return (index - _horizontalScrollController.offset ~/ (widget.size.colWidth + widget.gap.col)).abs();
+      } else {
+        return index;
+      }
+    } catch (_) {
+      return index;
+    }
+  }
+
   void _initData() {
     _verticalScrollController =
         ScrollController(initialScrollOffset: _getVerticalScrollOffset(widget.initialPosition.row));
     _horizontalScrollController =
         ScrollController(initialScrollOffset: _getHorizontalScrollOffset(widget.initialPosition.col));
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _verticalScrollController.jumpTo(_getVerticalScrollOffset(widget.initialPosition.row).clamp(
-        _verticalScrollController.position.minScrollExtent,
-        _verticalScrollController.position.maxScrollExtent,
-      ));
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _verticalScrollController.jumpTo(_getVerticalScrollOffset(widget.initialPosition.row).clamp(
+    //     _verticalScrollController.position.minScrollExtent,
+    //     _verticalScrollController.position.maxScrollExtent,
+    //   ));
 
-      _horizontalScrollController.jumpTo(_getHorizontalScrollOffset(widget.initialPosition.col).clamp(
-        _horizontalScrollController.position.minScrollExtent,
-        _horizontalScrollController.position.maxScrollExtent,
-      ));
-    });
+    //   _horizontalScrollController.jumpTo(_getHorizontalScrollOffset(widget.initialPosition.col).clamp(
+    //     _horizontalScrollController.position.minScrollExtent,
+    //     _horizontalScrollController.position.maxScrollExtent,
+    //   ));
+    // });
   }
 
   @override
@@ -143,7 +167,7 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
               widget.rowTopBuilder?.call(context, index) ?? Container(),
               Expanded(child: _buildColList(row: index)),
             ],
-          ),
+          ).delayed(_getRowDelay(index)),
         );
       },
     );
@@ -171,11 +195,13 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
           },
           child: SizedBox(
             width: widget.size.colWidth,
-            child: widget.itemBuilder(
-              context,
-              (row: row, col: index),
-              row == _position.row && index == _position.col,
-            ),
+            child: widget
+                .itemBuilder(
+                  context,
+                  (row: row, col: index),
+                  row == _position.row && index == _position.col,
+                )
+                .delayed(_getColDelay(row, index)),
           ),
         );
       },
