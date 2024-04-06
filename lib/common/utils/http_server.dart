@@ -54,7 +54,6 @@ class HttpServerUtil {
 
     _isInitialized = true;
     serverUrl = 'http://${await _getLocalIPV4()}:${server.port}';
-    showToast('设置服务启动成功');
 
     _logger.debug('启动 $serverUrl');
   }

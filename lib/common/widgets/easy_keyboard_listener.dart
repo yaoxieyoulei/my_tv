@@ -5,7 +5,7 @@ class EasyKeyboardListener extends KeyboardListener {
   final Map<LogicalKeyboardKey, void Function()>? onKeyTap;
   final Map<LogicalKeyboardKey, void Function()>? onKeyLongTap;
 
-  const EasyKeyboardListener({
+  EasyKeyboardListener({
     super.key,
     required super.child,
     required super.focusNode,
@@ -15,20 +15,29 @@ class EasyKeyboardListener extends KeyboardListener {
     this.onKeyLongTap,
   });
 
+  final _keyDown = <int, bool>{};
+
   @override
   Widget build(BuildContext context) {
     return KeyboardListener(
       onKeyEvent: (event) {
-        if (event.runtimeType == KeyUpEvent) {
+        if (event.runtimeType == KeyDownEvent) {
           final key = event.logicalKey;
+          _keyDown[key.keyId] = true;
+        } else if (event.runtimeType == KeyUpEvent) {
+          final key = event.logicalKey;
+
+          if (!_keyDown.containsKey(key.keyId)) return;
+          _keyDown.remove(key.keyId);
 
           if (onKeyTap?.containsKey(key) == true) {
             onKeyTap![key]!();
           }
-        }
-
-        if (event.runtimeType == KeyRepeatEvent) {
+        } else if (event.runtimeType == KeyRepeatEvent) {
           final key = event.logicalKey;
+
+          if (!_keyDown.containsKey(key.keyId)) return;
+          _keyDown.remove(key.keyId);
 
           if (onKeyLongTap?.containsKey(key) == true) {
             onKeyLongTap![key]!();
@@ -42,3 +51,5 @@ class EasyKeyboardListener extends KeyboardListener {
     );
   }
 }
+
+class WindgetBinding {}
