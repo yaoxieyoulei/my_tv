@@ -222,7 +222,7 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
       },
       onKeyLongTap: {
         LogicalKeyboardKey.select: () {
-          widget.onSelect?.call(_position);
+          widget.onLongSelect?.call(_position);
         },
       },
       child: child,
