@@ -48,17 +48,15 @@ class _SettingsMainState extends State<SettingsMain> {
           value: () => updateStore.needUpdate ? '新版本' : '无更新',
           description: () => '最新版本：${updateStore.latestRelease.tagName}',
           onTap: () {
-            if (updateStore.needUpdate) {
-              showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                  title: Text(updateStore.latestRelease.tagName),
-                  content: SingleChildScrollView(
-                    child: Text(updateStore.latestRelease.description),
-                  ),
+            showDialog(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: Text(updateStore.latestRelease.tagName),
+                content: SingleChildScrollView(
+                  child: Text(updateStore.latestRelease.description),
                 ),
-              );
-            }
+              ),
+            );
           },
           onLongTap: () {
             updateStore.downloadAndInstall();
@@ -77,7 +75,7 @@ class _SettingsMainState extends State<SettingsMain> {
         SettingItem(
           title: '换台反转',
           value: () => IptvSettings.channelChangeFlip ? '反转' : '正常',
-          description: () => IptvSettings.channelChangeFlip ? '方向键上：下一个频道，方向键下：上一个频道' : '方向键上：上一个频道，方向键下：下一个频道',
+          description: () => IptvSettings.channelChangeFlip ? '方向键上：下一个频道\n方向键下：上一个频道' : '方向键上：上一个频道\n方向键下：下一个频道',
           onTap: () {
             IptvSettings.channelChangeFlip = !IptvSettings.channelChangeFlip;
           },

@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tv/common/index.dart';
-import 'package:my_tv/pages/panel/stores/iptv_list.dart';
 
 class PanelIptvList extends StatefulWidget {
   const PanelIptvList({super.key});
@@ -14,7 +13,6 @@ class PanelIptvList extends StatefulWidget {
 
 class _PanelIptvListState extends State<PanelIptvList> {
   final iptvStore = GetIt.I<IptvStore>();
-  final iptvListStore = IptvListStore();
 
   @override
   Widget build(BuildContext context) {
