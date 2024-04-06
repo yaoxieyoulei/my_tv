@@ -76,7 +76,6 @@ dependencies:
   json_annotation: ^4.8.1
   package_info_plus: ^6.0.0
   oktoast: ^3.4.0
-  open_filex: ^4.4.0
 
 dev_dependencies:
   flutter_test:

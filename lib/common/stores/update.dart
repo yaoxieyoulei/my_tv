@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:my_tv/common/index.dart';
 import 'package:oktoast/oktoast.dart';
-import 'package:open_filex/open_filex.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -79,25 +77,14 @@ abstract class UpdateStoreBase with Store {
     if (updating) return;
 
     _logger.debug('正在下载更新: ${latestRelease.tagName}');
-
     updating = true;
     showToast('正在下载更新: ${latestRelease.tagName}', duration: const Duration(seconds: 10));
 
-    // 删除旧安装包
-    final directory = Directory((await getTemporaryDirectory()).path);
-    if (directory.existsSync()) {
-      final files = directory.listSync();
-      for (final file in files) {
-        if (file is File && file.path.endsWith('.apk')) {
-          await file.delete();
-          _logger.debug('删除旧安装包: ${file.path}');
-        }
-      }
-    }
-
     try {
-      final path = await RequestUtil.downloadTemporary(
-        'https://mirror.ghproxy.com/${latestRelease.downloadUrl}',
+      final path = await RequestUtil.download(
+        url: 'https://mirror.ghproxy.com/${latestRelease.downloadUrl}',
+        directory: (await getTemporaryDirectory()).path,
+        name: 'my_tv-latest.apk',
         onProgress: (percent) {
           _logger.debug('正在下载更新: ${percent.toInt()}%');
           showToast('正在下载更新: ${percent.toInt()}%', duration: const Duration(seconds: 10));
@@ -108,7 +95,7 @@ abstract class UpdateStoreBase with Store {
       showToast('下载更新成功');
 
       if (await Permission.requestInstallPackages.request().isGranted) {
-        OpenFilex.open(path);
+        await ApkInstaller.installApk(path);
       } else {
         showToast('请授予安装权限');
       }

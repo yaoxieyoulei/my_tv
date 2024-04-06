@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:my_tv/common/index.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
@@ -39,10 +37,13 @@ class RequestUtil {
     }
   }
 
-  static Future<String> downloadTemporary(
-    String url, {
+  static Future<String> download({
+    required String url,
+    required String directory,
+    required String name,
     Function(double)? onProgress,
   }) async {
+    final file = await File('$directory/$name').create();
     final thr = Throttle(duration: const Duration(seconds: 1));
 
     final client = http.Client();
@@ -52,11 +53,10 @@ class RequestUtil {
       throw Exception('请求失败: ${response.statusCode}: ${response.reasonPhrase}');
     }
 
-    final file = await File('${(await getTemporaryDirectory()).path}/${url.split('/').last}').create();
-
     final totalBytes = response.contentLength ?? 1;
     var downloadedBytes = 0;
 
+    // FIXME UI线程卡顿
     await file.openWrite().addStream(response.stream.transform(StreamTransformer.fromHandlers(
       handleData: (data, sink) {
         downloadedBytes += data.length;
