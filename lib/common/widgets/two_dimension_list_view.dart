@@ -166,6 +166,7 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
             widget.onSelect?.call((row: row, col: index));
           },
           onLongPress: () {
+            HapticFeedback.mediumImpact();
             _changePosition(row: row, col: index);
             widget.onLongSelect?.call((row: row, col: index));
           },
