@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class Logger {
@@ -35,7 +34,12 @@ class LoggerUtil {
 
   /// 初始化
   static init() {
-    logger = TalkerFlutter.init(settings: TalkerSettings(enabled: kDebugMode, useHistory: false));
+    logger = TalkerFlutter.init(
+      settings: TalkerSettings(
+        useHistory: true,
+        maxHistoryItems: 100,
+      ),
+    );
   }
 
   static void verbose(dynamic msg) => logger.verbose(msg);
@@ -55,4 +59,6 @@ class LoggerUtil {
   static Logger create(List<String> prefixList) {
     return Logger._(prefixList);
   }
+
+  static List<TalkerData> get history => logger.history;
 }

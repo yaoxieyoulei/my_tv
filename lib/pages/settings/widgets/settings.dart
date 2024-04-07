@@ -4,6 +4,8 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tv/common/index.dart';
+import 'package:my_tv/pages/settings/widgets/logger.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class SettingGroup {
@@ -279,6 +281,18 @@ class _SettingsMainState extends State<SettingsMain> {
           value: () => '',
           description: () => _displayMode.toString(),
           onTap: () {},
+        ),
+        SettingItem(
+          title: '日志',
+          value: () => '${LoggerUtil.history.length}条',
+          description: () => '点击查看日志',
+          onTap: () {
+            if (LoggerUtil.history.isNotEmpty) {
+              NavigatorUtil.push(context, SettingsLogger());
+            } else {
+              showToast('无日志记录');
+            }
+          },
         ),
       ]),
     ];
