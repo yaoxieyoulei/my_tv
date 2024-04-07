@@ -77,6 +77,7 @@ dependencies:
   package_info_plus: ^6.0.0
   oktoast: ^3.4.0
   flutter_displaymode: ^0.6.0
+  pretty_qr_code: ^3.3.0
 
 dev_dependencies:
   flutter_test:

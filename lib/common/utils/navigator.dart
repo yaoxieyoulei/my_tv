@@ -21,7 +21,18 @@ class NavigatorUtil {
           );
         },
         pageBuilder: (context, _, __) {
-          return page;
+          return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.5),
+            body: SafeArea(
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  color: Colors.transparent,
+                  child: page,
+                ),
+              ),
+            ),
+          );
         },
       ),
     );

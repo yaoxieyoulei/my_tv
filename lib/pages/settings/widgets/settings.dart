@@ -4,6 +4,7 @@ import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tv/common/index.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class SettingGroup {
   final String name;
@@ -188,6 +189,34 @@ class _SettingsMainState extends State<SettingsMain> {
           value: () => IptvSettings.customIptvSource.isNotEmpty ? '已启用' : '未启用',
           description: () => '访问以下网址进行配置：${HttpServerUtil.serverUrl}',
           onTap: () {
+            NavigatorUtil.push(
+              context,
+              Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onBackground,
+                    borderRadius: BorderRadius.circular(20).r,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: SizedBox(
+                      height: 200.h,
+                      width: 200.h,
+                      child: PrettyQrView.data(
+                        data: HttpServerUtil.serverUrl,
+                        decoration: PrettyQrDecoration(
+                          shape: PrettyQrSmoothSymbol(
+                            color: Theme.of(context).colorScheme.background,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+          onLongTap: () {
             if (IptvSettings.customIptvSource.isNotEmpty) {
               iptvStore.refreshIptvList().then((_) => setState(() {}));
             }

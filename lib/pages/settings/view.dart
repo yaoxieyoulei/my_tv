@@ -24,36 +24,25 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.5),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Container(
-            color: Colors.transparent,
-            child: Stack(
+    return Stack(
+      children: [
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 40).r,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 40).r,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SettingsAppInfo(),
-                        SizedBox(height: 30.h),
-                        const SettingsMain(),
-                      ],
-                    ),
-                  ),
-                ),
+                SettingsAppInfo(),
+                SizedBox(height: 30.h),
+                const SettingsMain(),
               ],
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -22,22 +22,11 @@ class _PanelPageState extends State<PanelPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background.withOpacity(0.5),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Container(
-            color: Colors.transparent,
-            child: Stack(
-              children: [
-                _buildTopRight(context),
-                _buildBottom(),
-              ].delayed(enable: DebugSettings.delayRender),
-            ),
-          ),
-        ),
-      ),
+    return Stack(
+      children: [
+        _buildTopRight(context),
+        _buildBottom(),
+      ].delayed(enable: DebugSettings.delayRender),
     );
   }
 
