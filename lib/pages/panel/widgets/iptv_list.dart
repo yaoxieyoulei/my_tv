@@ -74,15 +74,17 @@ class _PanelIptvListState extends State<PanelIptvList> {
             ),
             maxLines: 1,
           ),
-          Text(
-            iptvStore.getIptvProgrammes(iptv).current,
-            style: TextStyle(
-              color: isSelected
-                  ? Theme.of(context).colorScheme.background.withOpacity(0.8)
-                  : Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
-              fontSize: 24.sp,
+          Observer(
+            builder: (_) => Text(
+              iptvStore.getIptvProgrammes(iptv).current,
+              style: TextStyle(
+                color: isSelected
+                    ? Theme.of(context).colorScheme.background.withOpacity(0.8)
+                    : Theme.of(context).colorScheme.onBackground.withOpacity(0.8),
+                fontSize: 24.sp,
+              ),
+              maxLines: 1,
             ),
-            maxLines: 1,
           ),
         ],
       ),
