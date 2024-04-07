@@ -30,17 +30,17 @@ int _compareVersions(String version1, String version2) {
 final _logger = LoggerUtil.create(['更新']);
 
 abstract class UpdateStoreBase with Store {
-  /// 最新release
-  @observable
-  var latestRelease = GithubRelease(tagName: 'v0.0.0', downloadUrl: '', description: '');
-
   /// 当前版本
   @observable
   String currentVersion = '0.0.0';
 
+  /// 最新release
+  @observable
+  var latestRelease = GithubRelease(tagName: 'v0.0.0', downloadUrl: '', description: '');
+
   /// 发现更新
   @computed
-  bool get needUpdate => _compareVersions(latestRelease.tagName.substring(1), currentVersion) > 0;
+  bool get hasUpdate => _compareVersions(latestRelease.tagName.substring(1), currentVersion) > 0;
 
   /// 正在更新
   @observable
@@ -49,35 +49,39 @@ abstract class UpdateStoreBase with Store {
   /// 获取最新release
   @action
   Future<void> refreshLatestRelease() async {
-    final packageInfo = await PackageInfo.fromPlatform();
-    currentVersion = packageInfo.version;
+    if (hasUpdate) return;
 
-    if (needUpdate) return;
+    try {
+      _logger.debug('开始检查更新: ${Constants.githubReleaseLatest}');
 
-    _logger.debug('开始检查更新: ${Constants.githubReleaseLatest}');
+      currentVersion = (await PackageInfo.fromPlatform()).version;
 
-    final result = jsonDecode(await RequestUtil.get(Constants.githubReleaseLatest));
-    latestRelease = GithubRelease(
-      tagName: result['tag_name'],
-      downloadUrl: result['assets'][0]['browser_download_url'],
-      description: result['body'],
-    );
+      final result = jsonDecode(await RequestUtil.get(Constants.githubReleaseLatest));
+      latestRelease = GithubRelease(
+        tagName: result['tag_name'],
+        downloadUrl: result['assets'][0]['browser_download_url'],
+        description: result['body'],
+      );
 
-    _logger.debug('检查更新成功: $latestRelease');
-    AppSettings.updateCheckTime = DateTime.now().millisecondsSinceEpoch;
+      _logger.debug('检查更新成功: ${latestRelease.tagName}');
 
-    if (needUpdate) {
-      showToast('发现新版本: ${latestRelease.tagName}');
+      if (hasUpdate) {
+        showToast('发现新版本: ${latestRelease.tagName}');
+      }
+    } catch (e, st) {
+      _logger.handle(e, st);
+      showToast('检查更新失败');
+      rethrow;
     }
   }
 
   /// 下载安装包并安装
   Future<void> downloadAndInstall() async {
-    if (!needUpdate) return;
+    if (!hasUpdate) return;
     if (updating) return;
 
-    _logger.debug('正在下载更新: ${latestRelease.tagName}');
     updating = true;
+    _logger.debug('正在下载更新: ${latestRelease.tagName}');
     showToast('正在下载更新: ${latestRelease.tagName}', duration: const Duration(seconds: 10));
 
     try {

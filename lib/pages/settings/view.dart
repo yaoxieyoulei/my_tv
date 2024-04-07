@@ -35,7 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SettingsAppInfo(),
+                const SettingsAppInfo(),
                 SizedBox(height: 30.h),
                 const SettingsMain(),
               ],

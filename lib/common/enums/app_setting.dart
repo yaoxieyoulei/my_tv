@@ -7,9 +7,6 @@ enum AppSetting {
 
   /// 首次启动
   firstLaunch,
-
-  /// 更新检测时间
-  updateCheckTime,
 }
 
 /// 应用设置
@@ -21,7 +18,4 @@ class AppSettings {
 
   static bool get firstLaunch => PrefsUtil.getBool(AppSetting.firstLaunch.toString()) ?? true;
   static set firstLaunch(bool value) => PrefsUtil.setBool(AppSetting.firstLaunch.toString(), value);
-
-  static int get updateCheckTime => PrefsUtil.getInt(AppSetting.updateCheckTime.toString()) ?? 0;
-  static set updateCheckTime(int value) => PrefsUtil.setInt(AppSetting.updateCheckTime.toString(), value);
 }

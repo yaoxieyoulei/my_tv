@@ -138,10 +138,10 @@ class _SettingsMainState extends State<SettingsMain> {
       SettingGroup(name: '应用', items: [
         SettingItem(
           title: '应用更新',
-          value: () => updateStore.needUpdate ? '新版本' : '无更新',
+          value: () => updateStore.hasUpdate ? '新版本' : '无更新',
           description: () => '最新版本：${updateStore.latestRelease.tagName}',
           onTap: () {
-            if (updateStore.needUpdate) {
+            if (updateStore.hasUpdate) {
               showDialog(
                 context: context,
                 builder: (_) => AlertDialog(
@@ -154,7 +154,7 @@ class _SettingsMainState extends State<SettingsMain> {
             } else {
               showToast('开始检测更新');
               updateStore.refreshLatestRelease().then((_) {
-                if (!updateStore.needUpdate) {
+                if (!updateStore.hasUpdate) {
                   showToast('已是最新版本');
                 } else {
                   setState(() {});
