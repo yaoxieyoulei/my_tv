@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tv/common/index.dart';
@@ -39,6 +40,96 @@ class _SettingsMainState extends State<SettingsMain> {
   final updateStore = GetIt.I<UpdateStore>();
 
   late final List<SettingItem> _settingItemList;
+  String _displayMode = '平台不支持';
+
+  @override
+  void initState() {
+    super.initState();
+    refreshSettingGroupList();
+
+    HttpServerUtil.init().then((_) => setState(() {}));
+    updateStore.refreshLatestRelease().then((_) => setState(() {}));
+    FlutterDisplayMode.active.then((value) {
+      setState(() {
+        _displayMode = value.toString();
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 190.w + 20.h,
+      child: TwoDimensionListView(
+        size: (rowHeight: 190.w, colWidth: 400.w),
+        scrollOffset: (row: 0, col: -1),
+        gap: (row: 20.h, col: 20.w),
+        itemCount: (
+          row: 1,
+          col: (_) => _settingItemList.length,
+        ),
+        onSelect: (position) => setState(() {
+          _settingItemList.elementAtOrNull(position.col)?.onTap();
+        }),
+        onLongSelect: (position) => setState(() {
+          _settingItemList.elementAtOrNull(position.col)?.onLongTap?.call();
+        }),
+        itemBuilder: (context, position, isSelected) {
+          final item = _settingItemList[position.col];
+
+          return _buildSettingItem(item, isSelected);
+        },
+      ),
+    );
+  }
+
+  Widget _buildSettingItem(SettingItem item, bool isSelected) {
+    return Container(
+      padding: const EdgeInsets.all(30).r,
+      decoration: BoxDecoration(
+        color: isSelected
+            ? Theme.of(context).colorScheme.onBackground
+            : Theme.of(context).colorScheme.background.withOpacity(0.8),
+        borderRadius: BorderRadius.circular(20).r,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                item.title,
+                style: TextStyle(
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.background
+                      : Theme.of(context).colorScheme.onBackground,
+                  fontSize: 30.sp,
+                ),
+              ),
+              Text(
+                item.value(),
+                style: TextStyle(
+                  color: isSelected
+                      ? Theme.of(context).colorScheme.background
+                      : Theme.of(context).colorScheme.onBackground,
+                  fontSize: 30.sp,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            item.description(),
+            style: TextStyle(
+              color: isSelected ? Theme.of(context).colorScheme.background : Theme.of(context).colorScheme.onBackground,
+              fontSize: 24.sp,
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
   void refreshSettingGroupList() {
     final groupList = [
@@ -154,93 +245,15 @@ class _SettingsMainState extends State<SettingsMain> {
             DebugSettings.delayRender = !DebugSettings.delayRender;
           },
         ),
+        SettingItem(
+          title: '显示模式',
+          value: () => '',
+          description: () => _displayMode.toString(),
+          onTap: () {},
+        ),
       ]),
     ];
 
     _settingItemList = groupList.expand((element) => element.items).toList();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    refreshSettingGroupList();
-
-    HttpServerUtil.init().then((_) => setState(() {}));
-    updateStore.refreshLatestRelease().then((_) => setState(() {}));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 190.w + 20.h,
-      child: TwoDimensionListView(
-        size: (rowHeight: 190.w, colWidth: 400.w),
-        scrollOffset: (row: 0, col: -1),
-        gap: (row: 20.h, col: 20.w),
-        itemCount: (
-          row: 1,
-          col: (_) => _settingItemList.length,
-        ),
-        onSelect: (position) => setState(() {
-          _settingItemList.elementAtOrNull(position.col)?.onTap();
-        }),
-        onLongSelect: (position) => setState(() {
-          _settingItemList.elementAtOrNull(position.col)?.onLongTap?.call();
-        }),
-        itemBuilder: (context, position, isSelected) {
-          final item = _settingItemList[position.col];
-
-          return _buildSettingItem(item, isSelected);
-        },
-      ),
-    );
-  }
-
-  Widget _buildSettingItem(SettingItem item, bool isSelected) {
-    return Container(
-      padding: const EdgeInsets.all(30).r,
-      decoration: BoxDecoration(
-        color: isSelected
-            ? Theme.of(context).colorScheme.onBackground
-            : Theme.of(context).colorScheme.background.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(20).r,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                item.title,
-                style: TextStyle(
-                  color: isSelected
-                      ? Theme.of(context).colorScheme.background
-                      : Theme.of(context).colorScheme.onBackground,
-                  fontSize: 30.sp,
-                ),
-              ),
-              Text(
-                item.value(),
-                style: TextStyle(
-                  color: isSelected
-                      ? Theme.of(context).colorScheme.background
-                      : Theme.of(context).colorScheme.onBackground,
-                  fontSize: 30.sp,
-                ),
-              ),
-            ],
-          ),
-          Text(
-            item.description(),
-            style: TextStyle(
-              color: isSelected ? Theme.of(context).colorScheme.background : Theme.of(context).colorScheme.onBackground,
-              fontSize: 24.sp,
-            ),
-          )
-        ],
-      ),
-    );
   }
 }
