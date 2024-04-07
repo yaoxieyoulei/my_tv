@@ -51,7 +51,6 @@ class _SettingsMainState extends State<SettingsMain> {
     refreshSettingGroupList();
 
     HttpServerUtil.init().then((_) => setState(() {}));
-    updateStore.refreshLatestRelease().then((_) => setState(() {}));
     FlutterDisplayMode.active.then((value) {
       setState(() {
         _displayMode = value.toString();
@@ -142,15 +141,26 @@ class _SettingsMainState extends State<SettingsMain> {
           value: () => updateStore.needUpdate ? '新版本' : '无更新',
           description: () => '最新版本：${updateStore.latestRelease.tagName}',
           onTap: () {
-            showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
-                title: Text(updateStore.latestRelease.tagName),
-                content: SingleChildScrollView(
-                  child: Text(updateStore.latestRelease.description),
+            if (updateStore.needUpdate) {
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: Text(updateStore.latestRelease.tagName),
+                  content: SingleChildScrollView(
+                    child: Text(updateStore.latestRelease.description),
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              showToast('开始检测更新');
+              updateStore.refreshLatestRelease().then((_) {
+                if (!updateStore.needUpdate) {
+                  showToast('已是最新版本');
+                } else {
+                  setState(() {});
+                }
+              });
+            }
           },
           onLongTap: () {
             updateStore.downloadAndInstall();
