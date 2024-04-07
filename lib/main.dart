@@ -57,8 +57,10 @@ class MyApp extends StatelessWidget {
           ),
           localizationsDelegates: const [...GlobalMaterialLocalizations.delegates, GlobalWidgetsLocalizations.delegate],
           supportedLocales: const [Locale("zh", "CH"), Locale("en", "US")],
-          home: const DoubleBackExit(
-            child: IptvPage(),
+          home: const DelayRenderer(
+            child: DoubleBackExit(
+              child: IptvPage(),
+            ),
           ),
           builder: (BuildContext context, Widget? widget) {
             return OKToast(

@@ -95,30 +95,6 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
     );
   }
 
-  int _getRowDelay(int index) {
-    if (!DebugSettings.listDelayRender) return 0;
-
-    try {
-      return (index - _verticalScrollController.offset ~/ (widget.size.rowHeight + widget.gap.row)).abs();
-    } catch (_) {
-      return index;
-    }
-  }
-
-  int _getColDelay(int row, int index) {
-    if (!DebugSettings.listDelayRender) return 0;
-
-    try {
-      if (row == _position.row) {
-        return (index - _horizontalScrollController.offset ~/ (widget.size.colWidth + widget.gap.col)).abs();
-      } else {
-        return index;
-      }
-    } catch (_) {
-      return index;
-    }
-  }
-
   void _initData() {
     _verticalScrollController =
         ScrollController(initialScrollOffset: _getVerticalScrollOffset(widget.initialPosition.row));
@@ -167,7 +143,7 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
               widget.rowTopBuilder?.call(context, index) ?? Container(),
               Expanded(child: _buildColList(row: index)),
             ],
-          ).delayed(_getRowDelay(index)),
+          ).delayed(enable: DebugSettings.delayRender),
         );
       },
     );
@@ -201,7 +177,7 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
                   (row: row, col: index),
                   row == _position.row && index == _position.col,
                 )
-                .delayed(_getColDelay(row, index)),
+                .delayed(enable: DebugSettings.delayRender),
           ),
         );
       },

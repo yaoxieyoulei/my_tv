@@ -147,11 +147,11 @@ class _SettingsMainState extends State<SettingsMain> {
           },
         ),
         SettingItem(
-          title: '列表延时渲染',
-          value: () => DebugSettings.listDelayRender ? '启用' : '禁用',
-          description: () => '列表按顺序延时渲染，减少卡顿掉帧',
+          title: '延时渲染',
+          value: () => DebugSettings.delayRender ? '启用' : '禁用',
+          description: () => '对各个组件延时渲染，减少卡顿掉帧',
           onTap: () {
-            DebugSettings.listDelayRender = !DebugSettings.listDelayRender;
+            DebugSettings.delayRender = !DebugSettings.delayRender;
           },
         ),
       ]),

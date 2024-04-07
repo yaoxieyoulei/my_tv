@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
@@ -34,7 +33,7 @@ class _PanelPageState extends State<PanelPage> {
               children: [
                 _buildTopRight(context),
                 _buildBottom(),
-              ],
+              ].delayed(enable: DebugSettings.delayRender),
             ),
           ),
         ),
@@ -85,7 +84,7 @@ class _PanelPageState extends State<PanelPage> {
             PanelPlayerInfo(),
             SizedBox(height: 30.h),
             const PanelIptvList(),
-          ],
+          ].delayed(enable: DebugSettings.delayRender),
         ),
       ),
     );
