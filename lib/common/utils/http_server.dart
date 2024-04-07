@@ -62,7 +62,9 @@ class HttpServerUtil {
     for (var interface in await NetworkInterface.list()) {
       for (var addr in interface.addresses) {
         if (addr.type == InternetAddressType.IPv4) {
-          return addr.address;
+          if (addr.address.startsWith('192')) {
+            return addr.address;
+          }
         }
       }
     }
