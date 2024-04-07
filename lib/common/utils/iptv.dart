@@ -69,12 +69,12 @@ class IptvUtil {
 
     var channel = 0;
     for (final (lineIdx, line) in lines.indexed) {
-      if (line.isEmpty || !line.startsWith('#EXTINF:')) {
+      if (!line.startsWith('#EXTINF:')) {
         continue;
       }
 
       final groupName = RegExp('group-title="(.*?)"').firstMatch(line)?.group(1) ?? '其他';
-      final name = line.split(',')[1];
+      final name = line.split(',').last;
 
       if (IptvSettings.iptvSourceSimplify) {
         if (!name.toLowerCase().startsWith('cctv') && !name.endsWith('卫视')) continue;
