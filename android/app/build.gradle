@@ -28,11 +28,6 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-def _storeFile = file(System.getenv("KEYSTORE") ?: keystoreProperties["storeFile"] ?: "keystore.jks")
-def _storePassword = System.getenv("KEYSTORE_PASSWORD") ?: keystoreProperties["storePassword"]
-def _keyAlias = System.getenv("KEY_ALIAS") ?: keystoreProperties["keyAlias"]
-def _keyPassword = System.getenv("KEY_PASSWORD") ?: keystoreProperties["keyPassword"]
-
 android {
     namespace "com.example.my_tv"
     compileSdk flutter.compileSdkVersion
@@ -66,10 +61,10 @@ android {
         // 添加签名配置
         release {
             // 配置密钥库文件的位置、别名、密码等信息
-            storeFile _storeFile
-            storePassword _storePassword
-            keyAlias _keyAlias
-            keyPassword _keyPassword
+            storeFile file(System.getenv("KEYSTORE") ?: keystoreProperties["storeFile"] ?: "keystore.jks")
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: keystoreProperties["storePassword"]
+            keyAlias System.getenv("KEY_ALIAS") ?: keystoreProperties["keyAlias"]
+            keyPassword System.getenv("KEY_PASSWORD") ?: keystoreProperties["keyPassword"]
             v1SigningEnabled true
             v2SigningEnabled true
         }
@@ -77,9 +72,7 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }
