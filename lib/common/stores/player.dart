@@ -49,7 +49,7 @@ abstract class PlayerStoreBase with Store {
       await controller.pause();
       await controller.dispose();
 
-      controller = VideoPlayerController.networkUrl(Uri.parse(iptv.url));
+      controller = VideoPlayerController.networkUrl(Uri.parse(iptv.url), formatHint: VideoFormat.hls);
       await controller.initialize();
       await controller.play();
 
