@@ -35,7 +35,6 @@ class _IptvPageState extends State<IptvPage> {
 
   @override
   void dispose() {
-    playerStore.controller.pause().then((_) => playerStore.controller.dispose());
     super.dispose();
   }
 

@@ -13,3 +13,4 @@ export 'values/index.dart';
 export 'widgets/index.dart';
 export 'enums/index.dart';
 export 'stores/index.dart';
+export 'plugins/index.dart';

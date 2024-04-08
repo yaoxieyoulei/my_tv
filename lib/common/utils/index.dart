@@ -9,4 +9,3 @@ export 'request.dart';
 export 'prefs.dart';
 export 'navigator.dart';
 export 'throttle.dart';
-export 'apk_installer.dart';
