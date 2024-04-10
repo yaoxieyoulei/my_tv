@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tv/common/index.dart';
@@ -43,7 +42,6 @@ class _SettingsMainState extends State<SettingsMain> {
   final updateStore = GetIt.I<UpdateStore>();
 
   late final List<SettingItem> _settingItemList;
-  String _displayMode = '平台不支持';
 
   @override
   void initState() {
@@ -51,11 +49,6 @@ class _SettingsMainState extends State<SettingsMain> {
     refreshSettingGroupList();
 
     HttpServerUtil.init().then((_) => setState(() {}));
-    FlutterDisplayMode.active.then((value) {
-      setState(() {
-        _displayMode = value.toString();
-      });
-    });
   }
 
   @override
@@ -285,12 +278,6 @@ class _SettingsMainState extends State<SettingsMain> {
           onTap: () {
             DebugSettings.delayRender = !DebugSettings.delayRender;
           },
-        ),
-        SettingItem(
-          title: '显示模式',
-          value: () => '',
-          description: () => _displayMode.toString(),
-          onTap: () {},
         ),
         SettingItem(
           title: '日志',
