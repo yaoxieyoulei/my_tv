@@ -9,24 +9,7 @@ part of 'player.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$PlayerStore on PlayerStoreBase, Store {
-  late final _$controllerAtom =
-      Atom(name: 'PlayerStoreBase.controller', context: context);
-
-  @override
-  VideoPlayerController get controller {
-    _$controllerAtom.reportRead();
-    return super.controller;
-  }
-
-  @override
-  set controller(VideoPlayerController value) {
-    _$controllerAtom.reportWrite(value, super.controller, () {
-      super.controller = value;
-    });
-  }
-
-  late final _$aspectRatioAtom =
-      Atom(name: 'PlayerStoreBase.aspectRatio', context: context);
+  late final _$aspectRatioAtom = Atom(name: 'PlayerStoreBase.aspectRatio', context: context);
 
   @override
   double? get aspectRatio {
@@ -41,8 +24,7 @@ mixin _$PlayerStore on PlayerStoreBase, Store {
     });
   }
 
-  late final _$resolutionAtom =
-      Atom(name: 'PlayerStoreBase.resolution', context: context);
+  late final _$resolutionAtom = Atom(name: 'PlayerStoreBase.resolution', context: context);
 
   @override
   Size get resolution {
@@ -57,8 +39,7 @@ mixin _$PlayerStore on PlayerStoreBase, Store {
     });
   }
 
-  late final _$stateAtom =
-      Atom(name: 'PlayerStoreBase.state', context: context);
+  late final _$stateAtom = Atom(name: 'PlayerStoreBase.state', context: context);
 
   @override
   PlayerState get state {
@@ -73,8 +54,14 @@ mixin _$PlayerStore on PlayerStoreBase, Store {
     });
   }
 
-  late final _$playIptvAsyncAction =
-      AsyncAction('PlayerStoreBase.playIptv', context: context);
+  late final _$initAsyncAction = AsyncAction('PlayerStoreBase.init', context: context);
+
+  @override
+  Future<void> init() {
+    return _$initAsyncAction.run(() => super.init());
+  }
+
+  late final _$playIptvAsyncAction = AsyncAction('PlayerStoreBase.playIptv', context: context);
 
   @override
   Future<void> playIptv(Iptv iptv) {
@@ -84,7 +71,6 @@ mixin _$PlayerStore on PlayerStoreBase, Store {
   @override
   String toString() {
     return '''
-controller: ${controller},
 aspectRatio: ${aspectRatio},
 resolution: ${resolution},
 state: ${state}

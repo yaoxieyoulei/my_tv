@@ -21,7 +21,7 @@ class EpgUtil {
       return result;
     } catch (e, st) {
       _logger.handle(e, st);
-      showToast('获取EPG失败，请检查网络连接');
+      showToast('获取epg失败，请检查网络连接');
       rethrow;
     }
   }
@@ -77,47 +77,64 @@ class EpgUtil {
   }
 
   /// 解析epg
-  static List<Epg> _parseFromXml(String xml, List<String> filteredChannels) {
-    int parseTime(String? time) {
-      if (time == null || time.length < 14) return 0;
+  static Future<List<Epg>> _parseFromXml(String xml, List<String> filteredChannels) async {
+    _logger.debug('开始解析epg');
+    final startAt = DateTime.now().millisecondsSinceEpoch;
 
-      return DateTime(
-        int.parse(time.substring(0, 4)),
-        int.parse(time.substring(4, 6)),
-        int.parse(time.substring(6, 8)),
-        int.parse(time.substring(8, 10)),
-        int.parse(time.substring(10, 12)),
-        int.parse(time.substring(12, 14)),
-      ).millisecondsSinceEpoch;
+    try {
+      final epgList = await compute((message) {
+        final xml = message[0] as String;
+        final filteredChannels = message[1] as List<String>;
+
+        int parseTime(String? time) {
+          if (time == null || time.length < 14) return 0;
+
+          return DateTime(
+            int.parse(time.substring(0, 4)),
+            int.parse(time.substring(4, 6)),
+            int.parse(time.substring(6, 8)),
+            int.parse(time.substring(8, 10)),
+            int.parse(time.substring(10, 12)),
+            int.parse(time.substring(12, 14)),
+          ).millisecondsSinceEpoch;
+        }
+
+        final doc = XmlDocument.parse(xml);
+        final tvEl = doc.getElement('tv');
+
+        final epgMap = <String, Epg>{};
+        tvEl?.childElements.forEach((el) {
+          final id = el.getAttribute('id');
+
+          if (id != null) {
+            final channelName = el.getElement('display-name')?.innerText ?? '';
+
+            if (filteredChannels.contains(channelName)) {
+              epgMap[id] = Epg(channel: channelName, programmes: []);
+            }
+          } else {
+            final channel = el.getAttribute('channel');
+
+            if (epgMap.containsKey(channel)) {
+              final start = parseTime(el.getAttribute('start'));
+              final stop = parseTime(el.getAttribute('stop'));
+              final title = el.getElement('title')?.innerText ?? '';
+
+              epgMap[channel]!.programmes.add(EpgProgramme(start: start, stop: stop, title: title));
+            }
+          }
+        });
+
+        return epgMap.values.toList();
+      }, [xml, filteredChannels]);
+
+      _logger.debug('解析epg完成，共${epgList.length}个频道，耗时：${DateTime.now().millisecondsSinceEpoch - startAt}ms');
+      return epgList;
+    } catch (e, st) {
+      _logger.handle(e, st);
+      showToast('解析epg失败');
+      rethrow;
     }
-
-    final doc = XmlDocument.parse(xml);
-    final tvEl = doc.getElement('tv');
-
-    final epgMap = <String, Epg>{};
-    tvEl?.childElements.forEach((el) {
-      final id = el.getAttribute('id');
-
-      if (id != null) {
-        final channelName = el.getElement('display-name')?.innerText ?? '';
-
-        if (filteredChannels.contains(channelName)) {
-          epgMap[id] = Epg(channel: channelName, programmes: []);
-        }
-      } else {
-        final channel = el.getAttribute('channel');
-
-        if (epgMap.containsKey(channel)) {
-          final start = parseTime(el.getAttribute('start'));
-          final stop = parseTime(el.getAttribute('stop'));
-          final title = el.getElement('title')?.innerText ?? '';
-
-          epgMap[channel]!.programmes.add(EpgProgramme(start: start, stop: stop, title: title));
-        }
-      }
-    });
-
-    return epgMap.values.toList();
   }
 
   /// 获取缓存文件
@@ -159,10 +176,7 @@ class EpgUtil {
       }
     }
 
-    _logger.debug('开始解析epg');
-    final startAt = DateTime.now().millisecondsSinceEpoch;
-    final epgList = await compute((_) => _parseFromXml(xml, filteredChannels), 0);
-    _logger.debug('解析epg完成，共${epgList.length}个频道，耗时：${DateTime.now().millisecondsSinceEpoch - startAt}ms');
+    final epgList = await _parseFromXml(xml, filteredChannels);
 
     final cacheFile = await _getCacheFile();
     await cacheFile.writeAsString(jsonEncode(epgList.map((e) => e.toJson()).toList()));

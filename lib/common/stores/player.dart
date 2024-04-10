@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:my_tv/common/index.dart';
-import 'package:video_player/video_player.dart';
 
 part 'player.g.dart';
 
@@ -22,9 +23,7 @@ enum PlayerState {
 final _logger = LoggerUtil.create(['播放器']);
 
 abstract class PlayerStoreBase with Store {
-  /// 播放器
-  @observable
-  VideoPlayerController controller = VideoPlayerController.networkUrl(Uri.parse(''));
+  final controller = Media3PlayerController();
 
   /// 宽高比
   @observable
@@ -38,6 +37,11 @@ abstract class PlayerStoreBase with Store {
   @observable
   PlayerState state = PlayerState.waiting;
 
+  @action
+  Future<void> init() async {
+    await controller.create();
+  }
+
   /// 播放直播源
   @action
   Future<void> playIptv(Iptv iptv) async {
@@ -45,17 +49,11 @@ abstract class PlayerStoreBase with Store {
       _logger.debug('播放直播源: $iptv');
       state = PlayerState.waiting;
 
-      // TODO 切换频道时存在黑屏问题
-      await controller.pause();
-      await controller.dispose();
+      final contentType = Uri.parse(iptv.url).path.endsWith('.php') ? Media3PlayerVideoContentType.hls : null;
+      await controller.prepare(iptv.url, contentType: contentType, playWhenReady: true);
 
-      controller = VideoPlayerController.networkUrl(Uri.parse(iptv.url), formatHint: VideoFormat.hls);
-      await controller.initialize();
-      await controller.play();
-
-      state = PlayerState.playing;
+      resolution = controller.value.resolution;
       aspectRatio = controller.value.aspectRatio;
-      resolution = controller.value.size;
     } catch (e, st) {
       _logger.handle(e, st);
       state = PlayerState.failed;

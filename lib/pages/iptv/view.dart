@@ -10,7 +10,6 @@ import 'package:my_tv/common/index.dart';
 import 'package:my_tv/pages/index.dart';
 import 'package:my_tv/pages/panel/widgets/iptv_ch.dart';
 import 'package:my_tv/pages/panel/widgets/iptv_info.dart';
-import 'package:video_player/video_player.dart';
 import 'package:collection/collection.dart';
 
 class IptvPage extends StatefulWidget {
@@ -39,6 +38,8 @@ class _IptvPageState extends State<IptvPage> {
   }
 
   Future<void> _initData() async {
+    await playerStore.init();
+
     reaction((_) => iptvStore.currentIptv, (iptv) async {
       IptvSettings.initialIptvIdx = iptvStore.iptvList.indexOf(iptv);
 
@@ -86,7 +87,7 @@ class _IptvPageState extends State<IptvPage> {
       child: Observer(
         builder: (_) => AspectRatio(
           aspectRatio: playerStore.aspectRatio ?? 16 / 9,
-          child: VideoPlayer(playerStore.controller),
+          child: Media3Player(controller: playerStore.controller),
         ),
       ),
     );
