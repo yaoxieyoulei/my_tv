@@ -234,6 +234,36 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
           }
         },
       },
+      onKeyRepeat: {
+        LogicalKeyboardKey.arrowUp: () {
+          if (_position.row > 0) {
+            _changePosition(row: _position.row - 1, col: 0);
+          } else {
+            _changePosition(row: widget.itemCount.row - 1, col: 0);
+          }
+        },
+        LogicalKeyboardKey.arrowDown: () {
+          if (_position.row < widget.itemCount.row - 1) {
+            _changePosition(row: _position.row + 1, col: 0);
+          } else {
+            _changePosition(row: 0, col: 0);
+          }
+        },
+        LogicalKeyboardKey.arrowLeft: () {
+          if (_position.col > 0) {
+            _changePosition(row: _position.row, col: _position.col - 1);
+          } else {
+            _changePosition(row: _position.row, col: widget.itemCount.col(_position.row) - 1);
+          }
+        },
+        LogicalKeyboardKey.arrowRight: () {
+          if (_position.col < widget.itemCount.col(_position.row) - 1) {
+            _changePosition(row: _position.row, col: _position.col + 1);
+          } else {
+            _changePosition(row: _position.row, col: 0);
+          }
+        },
+      },
       child: child,
     );
   }

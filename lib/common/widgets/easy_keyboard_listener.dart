@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 class EasyKeyboardListener extends KeyboardListener {
   final Map<LogicalKeyboardKey, void Function()>? onKeyTap;
   final Map<LogicalKeyboardKey, void Function()>? onKeyLongTap;
+  final Map<LogicalKeyboardKey, void Function()>? onKeyRepeat;
 
   EasyKeyboardListener({
     super.key,
@@ -13,6 +14,7 @@ class EasyKeyboardListener extends KeyboardListener {
     super.includeSemantics,
     this.onKeyTap,
     this.onKeyLongTap,
+    this.onKeyRepeat,
   });
 
   final _keyDown = <int, bool>{};
@@ -35,6 +37,10 @@ class EasyKeyboardListener extends KeyboardListener {
           }
         } else if (event.runtimeType == KeyRepeatEvent) {
           final key = event.logicalKey;
+
+          if (onKeyRepeat?.containsKey(key) == true) {
+            onKeyRepeat![key]!();
+          }
 
           if (!_keyDown.containsKey(key.keyId)) return;
           _keyDown.remove(key.keyId);
