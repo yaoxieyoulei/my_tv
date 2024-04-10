@@ -127,6 +127,7 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
 
   Widget _buildRowList() {
     return ListView.separated(
+      cacheExtent: 0,
       controller: _verticalScrollController,
       separatorBuilder: (context, index) => SizedBox(height: widget.gap.row),
       itemCount: widget.itemCount.row + 1,
@@ -151,6 +152,7 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
 
   Widget _buildColList({required int row}) {
     return ListView.separated(
+      cacheExtent: 0,
       controller: _position.row == row ? _horizontalScrollController : null,
       scrollDirection: Axis.horizontal,
       separatorBuilder: (context, index) => SizedBox(width: widget.gap.col),
