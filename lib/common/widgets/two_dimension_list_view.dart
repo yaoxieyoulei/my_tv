@@ -71,28 +71,40 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
   }
 
   /// 改变选中
-  Future<void> _changePosition({required int row, required int col}) async {
+  Future<void> _changePosition({required int row, required int col, bool jumpTo = false}) async {
     setState(() {
       _position = (row: row, col: col);
     });
 
-    await _verticalScrollController.animateTo(
-      _getVerticalScrollOffset(_position.row).clamp(
+    if (jumpTo) {
+      _verticalScrollController.jumpTo(_getVerticalScrollOffset(_position.row).clamp(
         _verticalScrollController.position.minScrollExtent,
         _verticalScrollController.position.maxScrollExtent,
-      ),
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.linear,
-    );
+      ));
 
-    await _horizontalScrollController.animateTo(
-      _getHorizontalScrollOffset(_position.col).clamp(
+      _horizontalScrollController.jumpTo(_getHorizontalScrollOffset(_position.col).clamp(
         _horizontalScrollController.position.minScrollExtent,
         _horizontalScrollController.position.maxScrollExtent,
-      ),
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.linear,
-    );
+      ));
+    } else {
+      await _verticalScrollController.animateTo(
+        _getVerticalScrollOffset(_position.row).clamp(
+          _verticalScrollController.position.minScrollExtent,
+          _verticalScrollController.position.maxScrollExtent,
+        ),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.linear,
+      );
+
+      await _horizontalScrollController.animateTo(
+        _getHorizontalScrollOffset(_position.col).clamp(
+          _horizontalScrollController.position.minScrollExtent,
+          _horizontalScrollController.position.maxScrollExtent,
+        ),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.linear,
+      );
+    }
   }
 
   void _initData() {
@@ -237,30 +249,22 @@ class _TwoDimensionListViewState extends State<TwoDimensionListView> {
       onKeyRepeat: {
         LogicalKeyboardKey.arrowUp: () {
           if (_position.row > 0) {
-            _changePosition(row: _position.row - 1, col: 0);
-          } else {
-            _changePosition(row: widget.itemCount.row - 1, col: 0);
+            _changePosition(row: _position.row - 1, col: 0, jumpTo: true);
           }
         },
         LogicalKeyboardKey.arrowDown: () {
           if (_position.row < widget.itemCount.row - 1) {
-            _changePosition(row: _position.row + 1, col: 0);
-          } else {
-            _changePosition(row: 0, col: 0);
+            _changePosition(row: _position.row + 1, col: 0, jumpTo: true);
           }
         },
         LogicalKeyboardKey.arrowLeft: () {
           if (_position.col > 0) {
-            _changePosition(row: _position.row, col: _position.col - 1);
-          } else {
-            _changePosition(row: _position.row, col: widget.itemCount.col(_position.row) - 1);
+            _changePosition(row: _position.row, col: _position.col - 1, jumpTo: true);
           }
         },
         LogicalKeyboardKey.arrowRight: () {
           if (_position.col < widget.itemCount.col(_position.row) - 1) {
-            _changePosition(row: _position.row, col: _position.col + 1);
-          } else {
-            _changePosition(row: _position.row, col: 0);
+            _changePosition(row: _position.row, col: _position.col + 1, jumpTo: true);
           }
         },
       },
