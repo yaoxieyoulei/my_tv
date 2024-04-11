@@ -132,7 +132,7 @@ class _SettingsMainState extends State<SettingsMain> {
         SettingItem(
           title: '应用更新',
           value: () => updateStore.hasUpdate ? '新版本' : '无更新',
-          description: () => '最新版本：${updateStore.latestRelease.tagName}',
+          description: () => '最新版本：${updateStore.latestRelease.tagName} ${updateStore.hasUpdate ? '（长按更新）' : ''}',
           onTap: () {
             if (updateStore.hasUpdate) {
               showDialog(
