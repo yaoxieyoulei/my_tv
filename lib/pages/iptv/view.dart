@@ -39,16 +39,20 @@ class _IptvPageState extends State<IptvPage> {
 
   Future<void> _initData() async {
     await playerStore.init();
+    final debounce = Debounce(duration: const Duration(milliseconds: 100));
 
     reaction((_) => iptvStore.currentIptv, (iptv) async {
-      IptvSettings.initialIptvIdx = iptvStore.iptvList.indexOf(iptv);
-
       iptvStore.iptvInfoVisible = true;
-      await playerStore.playIptv(iptvStore.currentIptv);
-      Timer(const Duration(seconds: 1), () {
-        if (iptv == iptvStore.currentIptv) {
-          iptvStore.iptvInfoVisible = false;
-        }
+
+      debounce.debounce(() async {
+        IptvSettings.initialIptvIdx = iptvStore.iptvList.indexOf(iptv);
+
+        await playerStore.playIptv(iptvStore.currentIptv);
+        Timer(const Duration(seconds: 1), () {
+          if (iptv == iptvStore.currentIptv) {
+            iptvStore.iptvInfoVisible = false;
+          }
+        });
       });
     });
 
@@ -178,6 +182,23 @@ class _IptvPageState extends State<IptvPage> {
       },
       onKeyLongTap: {
         LogicalKeyboardKey.select: () => _openSettings(),
+      },
+      onKeyRepeat: {
+        // 频道切换
+        LogicalKeyboardKey.arrowUp: () {
+          if (IptvSettings.channelChangeFlip) {
+            iptvStore.currentIptv = iptvStore.getNextIptv();
+          } else {
+            iptvStore.currentIptv = iptvStore.getPrevIptv();
+          }
+        },
+        LogicalKeyboardKey.arrowDown: () {
+          if (IptvSettings.channelChangeFlip) {
+            iptvStore.currentIptv = iptvStore.getPrevIptv();
+          } else {
+            iptvStore.currentIptv = iptvStore.getNextIptv();
+          }
+        },
       },
       child: Container(),
     );
