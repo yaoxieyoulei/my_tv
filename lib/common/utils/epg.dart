@@ -60,8 +60,8 @@ class EpgUtil {
       }
     } else {
       // 1点前，远程epg可能未更新
-      if (now.hour < 1) {
-        _logger.debug('未到1点，不刷新epg');
+      if (now.hour < Constants.epgRefreshTimeThreshold) {
+        _logger.debug('未到时间点，不刷新epg');
         return XmlBuilder().buildDocument().toXmlString();
       }
     }

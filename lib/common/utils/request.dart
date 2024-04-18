@@ -18,8 +18,8 @@ class RequestUtil {
   static RetryClient _client() {
     return RetryClient(
       http.Client(),
-      retries: 10,
-      delay: (retryCount) => Duration(seconds: retryCount.clamp(3, 5)),
+      retries: Constants.httpRetryCount,
+      delay: (retryCount) => const Duration(milliseconds: Constants.httpRetryCount),
       when: (resp) => resp.statusCode != 200,
       whenError: (_, __) => true,
       onRetry: (req, resp, retryCount) {

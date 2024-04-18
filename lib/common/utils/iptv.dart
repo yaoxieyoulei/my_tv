@@ -169,7 +169,7 @@ class IptvUtil {
   static Future<List<IptvGroup>> refreshAndGet() async {
     final now = DateTime.now().millisecondsSinceEpoch;
 
-    if (now - IptvSettings.iptvSourceCacheTime < 24 * 60 * 60 * 1000) {
+    if (now - IptvSettings.iptvSourceCacheTime < Constants.iptvSourceCacheTime) {
       final cache = await _getCache();
 
       if (cache.isNotEmpty) {
