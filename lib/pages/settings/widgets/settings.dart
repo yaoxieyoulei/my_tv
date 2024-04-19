@@ -43,6 +43,45 @@ class _SettingsMainState extends State<SettingsMain> {
 
   late final List<SettingItem> _settingItemList;
 
+  String _formatDuration(int ms) {
+    if (ms < 60000) {
+      return '${ms ~/ 1000}秒';
+    } else if (ms < 3600000) {
+      return '${ms ~/ 60000}分钟';
+    } else {
+      return '${ms ~/ 3600000}小时';
+    }
+  }
+
+  void _showServerQrcode() {
+    NavigatorUtil.push(
+      context,
+      Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onBackground,
+            borderRadius: BorderRadius.circular(20).r,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: SizedBox(
+              height: 200.h,
+              width: 200.h,
+              child: PrettyQrView.data(
+                data: HttpServerUtil.serverUrl,
+                decoration: PrettyQrDecoration(
+                  shape: PrettyQrSmoothSymbol(
+                    color: Theme.of(context).colorScheme.background,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -120,6 +159,8 @@ class _SettingsMainState extends State<SettingsMain> {
               color: isSelected ? Theme.of(context).colorScheme.background : Theme.of(context).colorScheme.onBackground,
               fontSize: 24.sp,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           )
         ],
       ),
@@ -192,44 +233,17 @@ class _SettingsMainState extends State<SettingsMain> {
         SettingItem(
           title: '自定义直播源',
           value: () => IptvSettings.customIptvSource.isNotEmpty ? '已启用' : '未启用',
-          description: () => '访问以下网址进行配置：${HttpServerUtil.serverUrl}',
-          onTap: () {
-            NavigatorUtil.push(
-              context,
-              Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onBackground,
-                    borderRadius: BorderRadius.circular(20).r,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: SizedBox(
-                      height: 200.h,
-                      width: 200.h,
-                      child: PrettyQrView.data(
-                        data: HttpServerUtil.serverUrl,
-                        decoration: PrettyQrDecoration(
-                          shape: PrettyQrSmoothSymbol(
-                            color: Theme.of(context).colorScheme.background,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
+          description: () => IptvSettings.customIptvSource.isNotEmpty ? '长按恢复默认' : '点击查看网址二维码',
+          onTap: () => _showServerQrcode(),
           onLongTap: () {
-            if (IptvSettings.customIptvSource.isNotEmpty) {
-              iptvStore.refreshIptvList().then((_) => setState(() {}));
-            }
+            IptvSettings.customIptvSource = '';
+            IptvSettings.iptvSourceCacheTime = 0;
+            iptvStore.refreshIptvList().then((_) => setState(() {}));
           },
         ),
         SettingItem(
           title: '直播源缓存',
-          value: () => '24小时',
+          value: () => _formatDuration(IptvSettings.iptvSourceCacheKeepTime),
           description: () => IptvSettings.iptvSourceCacheTime > 0 ? "已缓存(点击清除缓存)" : "未缓存",
           onTap: () {
             if (IptvSettings.iptvSourceCacheTime > 0) {
@@ -246,6 +260,18 @@ class _SettingsMainState extends State<SettingsMain> {
           description: () => '首次加载时可能会有跳帧风险',
           onTap: () {
             IptvSettings.epgEnable = !IptvSettings.epgEnable;
+            iptvStore.refreshEpgList().then((_) => setState(() {}));
+          },
+        ),
+        SettingItem(
+          title: '自定义节目单',
+          value: () => IptvSettings.customEpgXml.isNotEmpty ? '已启用' : '未启用',
+          description: () => IptvSettings.customEpgXml.isNotEmpty ? '长按恢复默认' : '点击查看网址二维码',
+          onTap: () => _showServerQrcode(),
+          onLongTap: () {
+            IptvSettings.customEpgXml = '';
+            IptvSettings.epgXmlCacheTime = 0;
+            IptvSettings.epgCacheHash = 0;
             iptvStore.refreshEpgList().then((_) => setState(() {}));
           },
         ),
@@ -290,6 +316,14 @@ class _SettingsMainState extends State<SettingsMain> {
               showToast('无日志记录');
             }
           },
+        ),
+      ]),
+      SettingGroup(name: '更多', items: [
+        SettingItem(
+          title: '更多设置',
+          value: () => '',
+          description: () => '访问以下网址进行配置：${HttpServerUtil.serverUrl}',
+          onTap: () => _showServerQrcode(),
         ),
       ]),
     ];

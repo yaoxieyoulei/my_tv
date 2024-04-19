@@ -10,17 +10,6 @@ final _logger = LoggerUtil.create(['iptv']);
 class IptvUtil {
   IptvUtil._();
 
-  /// 获取远程直播源类型
-  static String _getSourceType() {
-    final iptvSource = IptvSettings.customIptvSource.isNotEmpty ? IptvSettings.customIptvSource : Constants.iptvSource;
-
-    if (iptvSource.endsWith('.m3u')) {
-      return 'm3u';
-    } else {
-      return 'tvbox';
-    }
-  }
-
   /// 获取远程直播源
   static Future<String> _fetchSource() async {
     try {
@@ -39,11 +28,7 @@ class IptvUtil {
 
   /// 获取缓存直播源文件
   static Future<File> _getCacheFile() async {
-    if (_getSourceType() == 'm3u') {
-      return File('${(await getTemporaryDirectory()).path}/iptv.m3u');
-    } else {
-      return File('${(await getTemporaryDirectory()).path}/iptv-tvbox.txt');
-    }
+    return File('${(await getTemporaryDirectory()).path}/iptv.txt');
   }
 
   /// 获取缓存直播源
@@ -169,7 +154,7 @@ class IptvUtil {
   static Future<List<IptvGroup>> refreshAndGet() async {
     final now = DateTime.now().millisecondsSinceEpoch;
 
-    if (now - IptvSettings.iptvSourceCacheTime < Constants.iptvSourceCacheTime) {
+    if (now - IptvSettings.iptvSourceCacheTime < IptvSettings.iptvSourceCacheKeepTime) {
       final cache = await _getCache();
 
       if (cache.isNotEmpty) {

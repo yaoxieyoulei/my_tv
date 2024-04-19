@@ -4,18 +4,19 @@ class Constants {
   static const iptvSource = 'https://mirror.ghproxy.com/https://raw.githubusercontent.com/zhumeng11/IPTV/main/IPTV.m3u';
 
   /// 直播源缓存时间
-  static const iptvSourceCacheTime = 1000 * 60 * 60 * 24; // 24小时
+  static const iptvSourceCacheKeepTime = 1000 * 60 * 60 * 24; // 24小时
 
   /// epg xml
   static const iptvEpgXml = 'https://live.fanmingming.com/e.xml';
 
   /// epg 刷新时间阈值（小时）
-  ///
-  /// 不到这个时间点不刷新
-  static const epgRefreshTimeThreshold = 2; // 不到2点不刷新
+  static const epgRefreshTimeThreshold = 6; // 不到6点不刷新
 
   /// github release latest
   static const githubReleaseLatest = 'https://api.github.com/repos/yaoxieyoulei/my_tv/releases/latest';
+
+  /// github代理加速地址
+  static const githubProxy = 'https://mirror.ghproxy.com/';
 
   /// 设置服务器端口
   static const httpServerPort = 10381;

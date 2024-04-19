@@ -9,11 +9,10 @@
 </div>
     <p>使用Flutter开发的电视直播软件</p>
     
-<img src="./screenshots/shot_3.png" width="96%"/>
-<br/>
 <img src="./screenshots/shot_1.png" width="96%"/>
 <br/>
-<img src="./screenshots/shot_2.png" width="96%"/>
+<img src="./screenshots/shot_3.png" width="48%"/>
+<img src="./screenshots/shot_2.png" width="48%"/>
 </div>
 
 ## 使用
@@ -26,13 +25,15 @@
 - 频道选择：OK键；单击屏幕；
 - 设置页面：菜单、帮助键、长按OK键；双击屏幕；
 
-### 自定义直播源
+### 自定义设置
 
 1. 进入设置页面
 2. 请求网址：`http://<设备IP>:10381`
 3. 按界面提示操作
 
-不支持多源，多源会存在频道重复问题
+支持修改直播源、节目单、缓存时间等
+
+直播源：不支持多源，多源会存在频道重复问题
 
 ## 下载
 
@@ -56,8 +57,9 @@
 - [x] 数字选台
 - [x] 节目单
 - [x] 开机自启
-- [x] 检测更新
+- [x] 自动更新
 - [x] 自定义直播源
+- [x] 自定义节目单
 - [ ] 性能优化
 
 ## 更新日志

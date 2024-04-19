@@ -1,8 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:my_tv/common/index.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as io;
 import 'package:shelf_router/shelf_router.dart';
@@ -30,20 +30,40 @@ class HttpServerUtil {
       );
     });
 
-    app.get('/api/IptvSettings/customIptvSource', (request) async {
-      var source = request.url.queryParameters['source'] as String;
+    app.get('/api/settings', (request) async {
+      return shelf.Response.ok(
+        json.encode({
+          "appBootLaunch": AppSettings.bootLaunch,
+          "iptvChannelChangeFlip": IptvSettings.channelChangeFlip,
+          "iptvSourceSimplify": IptvSettings.iptvSourceSimplify,
+          "iptvSourceCacheTime": IptvSettings.iptvSourceCacheTime,
+          "iptvSourceCacheKeepTime": IptvSettings.iptvSourceCacheKeepTime,
+          "iptvCustomSource": IptvSettings.customIptvSource,
+          "epgEnable": IptvSettings.epgEnable,
+          "epgXmlCacheTime": IptvSettings.epgXmlCacheTime,
+          "epgCacheHash": IptvSettings.epgCacheHash,
+          "epgCustomXml": IptvSettings.customEpgXml,
+          "epgRefreshTimeThreshold": IptvSettings.epgRefreshTimeThreshold,
+        }),
+        headers: {'content-type': 'application/json'},
+      );
+    });
 
-      _logger.debug('设置自定义直播源: $source');
-      IptvSettings.customIptvSource = source;
-      IptvSettings.iptvSourceSimplify = false;
-      IptvSettings.iptvSourceCacheTime = 0;
-      IptvSettings.epgCacheHash = 0;
+    app.post('/api/settings', (request) async {
+      var body = await request.readAsString();
+      var data = jsonDecode(body);
 
-      if (source.isNotEmpty) {
-        showToast('直播源设置成功');
-      } else {
-        showToast('已恢复默认直播源');
-      }
+      AppSettings.bootLaunch = data['appBootLaunch'];
+      IptvSettings.channelChangeFlip = data['iptvChannelChangeFlip'];
+      IptvSettings.iptvSourceSimplify = data['iptvSourceSimplify'];
+      IptvSettings.iptvSourceCacheTime = data['iptvSourceCacheTime'];
+      IptvSettings.iptvSourceCacheKeepTime = data['iptvSourceCacheKeepTime'];
+      IptvSettings.customIptvSource = data['iptvCustomSource'];
+      IptvSettings.epgEnable = data['epgEnable'];
+      IptvSettings.epgXmlCacheTime = data['epgXmlCacheTime'];
+      IptvSettings.epgCacheHash = data['epgCacheHash'];
+      IptvSettings.customEpgXml = data['epgCustomXml'];
+      IptvSettings.epgRefreshTimeThreshold = data['epgRefreshTimeThreshold'];
 
       return shelf.Response.ok('success');
     });

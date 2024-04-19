@@ -86,7 +86,7 @@ abstract class UpdateStoreBase with Store {
 
     try {
       final path = await RequestUtil.download(
-        url: 'https://mirror.ghproxy.com/${latestRelease.downloadUrl}',
+        url: '${Constants.githubProxy}${latestRelease.downloadUrl}',
         directory: (await getTemporaryDirectory()).path,
         name: 'my_tv-latest.apk',
         onProgress: (percent) {

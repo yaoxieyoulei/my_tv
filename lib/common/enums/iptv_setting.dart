@@ -14,6 +14,9 @@ enum IptvSetting {
   /// 直播源缓存时间
   iptvSourceCacheTime,
 
+  /// 直播源缓存保持时间
+  iptvSourceCacheKeepTime,
+
   /// 自定义直播源
   customIptvSource,
 
@@ -25,6 +28,12 @@ enum IptvSetting {
 
   /// epg解析缓存hash
   epgCacheHash,
+
+  /// 自定义epg
+  customEpgXml,
+
+  /// epg 刷新时间阈值（小时）
+  epgRefreshTimeThreshold,
 }
 
 /// 直播设置
@@ -43,6 +52,11 @@ class IptvSettings {
   static int get iptvSourceCacheTime => PrefsUtil.getInt(IptvSetting.iptvSourceCacheTime.toString()) ?? 0;
   static set iptvSourceCacheTime(int value) => PrefsUtil.setInt(IptvSetting.iptvSourceCacheTime.toString(), value);
 
+  static int get iptvSourceCacheKeepTime =>
+      PrefsUtil.getInt(IptvSetting.iptvSourceCacheKeepTime.toString()) ?? Constants.iptvSourceCacheKeepTime;
+  static set iptvSourceCacheKeepTime(int value) =>
+      PrefsUtil.setInt(IptvSetting.iptvSourceCacheKeepTime.toString(), value);
+
   static String get customIptvSource => PrefsUtil.getString(IptvSetting.customIptvSource.toString()) ?? '';
   static set customIptvSource(String value) => PrefsUtil.setString(IptvSetting.customIptvSource.toString(), value);
 
@@ -54,4 +68,12 @@ class IptvSettings {
 
   static int get epgCacheHash => PrefsUtil.getInt(IptvSetting.epgCacheHash.toString()) ?? 0;
   static set epgCacheHash(int value) => PrefsUtil.setInt(IptvSetting.epgCacheHash.toString(), value);
+
+  static String get customEpgXml => PrefsUtil.getString(IptvSetting.customEpgXml.toString()) ?? '';
+  static set customEpgXml(String value) => PrefsUtil.setString(IptvSetting.customEpgXml.toString(), value);
+
+  static int get epgRefreshTimeThreshold =>
+      PrefsUtil.getInt(IptvSetting.epgRefreshTimeThreshold.toString()) ?? Constants.epgRefreshTimeThreshold;
+  static set epgRefreshTimeThreshold(int value) =>
+      PrefsUtil.setInt(IptvSetting.epgRefreshTimeThreshold.toString(), value);
 }

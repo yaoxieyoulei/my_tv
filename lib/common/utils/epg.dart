@@ -16,8 +16,10 @@ class EpgUtil {
   /// 获取远程epg xml
   static Future<String> _fetchXml() async {
     try {
-      _logger.debug('获取远程xml: ${Constants.iptvEpgXml}');
-      final result = await RequestUtil.get(Constants.iptvEpgXml);
+      final url = IptvSettings.customEpgXml.isNotEmpty ? IptvSettings.customEpgXml : Constants.iptvEpgXml;
+
+      _logger.debug('获取远程xml: $url');
+      final result = await RequestUtil.get(url);
       return result;
     } catch (e, st) {
       _logger.handle(e, st);
@@ -60,7 +62,7 @@ class EpgUtil {
       }
     } else {
       // 1点前，远程epg可能未更新
-      if (now.hour < Constants.epgRefreshTimeThreshold) {
+      if (now.hour < IptvSettings.epgRefreshTimeThreshold) {
         _logger.debug('未到时间点，不刷新epg');
         return XmlBuilder().buildDocument().toXmlString();
       }
