@@ -65,8 +65,10 @@ abstract class UpdateStoreBase with Store {
 
       _logger.debug('检查更新成功: ${latestRelease.tagName}');
 
-      if (hasUpdate) {
+      // AppSettings.lastLatestVersion 防止提示频繁
+      if (hasUpdate && AppSettings.lastLatestVersion != latestRelease.tagName) {
         showToast('发现新版本: ${latestRelease.tagName}');
+        AppSettings.lastLatestVersion = latestRelease.tagName;
       }
     } catch (e, st) {
       _logger.handle(e, st);

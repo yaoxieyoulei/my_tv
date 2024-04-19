@@ -185,15 +185,6 @@ class _SettingsMainState extends State<SettingsMain> {
                   ),
                 ),
               );
-            } else {
-              showToast('开始检测更新');
-              updateStore.refreshLatestRelease().then((_) {
-                if (!updateStore.hasUpdate) {
-                  showToast('已是最新版本');
-                } else {
-                  setState(() {});
-                }
-              });
             }
           },
           onLongTap: () {

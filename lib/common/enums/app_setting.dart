@@ -7,6 +7,9 @@ enum AppSetting {
 
   /// 首次启动
   firstLaunch,
+
+  /// 上一次最新版本
+  lastLatestVersion,
 }
 
 /// 应用设置
@@ -18,4 +21,7 @@ class AppSettings {
 
   static bool get firstLaunch => PrefsUtil.getBool(AppSetting.firstLaunch.toString()) ?? true;
   static set firstLaunch(bool value) => PrefsUtil.setBool(AppSetting.firstLaunch.toString(), value);
+
+  static String get lastLatestVersion => PrefsUtil.getString(AppSetting.lastLatestVersion.toString()) ?? '';
+  static set lastLatestVersion(String value) => PrefsUtil.setString(AppSetting.lastLatestVersion.toString(), value);
 }
