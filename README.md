@@ -41,10 +41,9 @@
 
 ## 说明
 
-- Android4.4.4未测试
-- 仅支持Android5及以上，其他端未测试
+- 仅支持Android5及以上，Android4.4未测试（项目最低api为19）
+- **网络环境必须支持IPV6**（默认源）
 - 低端设备播放4K频道可能会出现卡顿，请移步[mytv-android](https://github.com/yaoxieyoulei/mytv-android)
-- 网络环境必须支持IPV6
 - 只在自家电视上测过，其他电视稳定性未知
 - 为了减少安装包大小，仅支持`armeabi-v7a`、`arm64-v8a`架构，`x86_64`自行编译
 - 自行编译: 直播源、epg等参数位于[该文件](https://github.com/yaoxieyoulei/my_tv/blob/main/lib/common/values/constants.dart)
